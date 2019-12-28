@@ -48,6 +48,10 @@ public class WRAddonEventHandler
 
     @SubscribeEvent
     public void serverTick(ServerTickEvent event) {
+		if(RedstoneEtherAddons.server() == null){
+			RedstoneEtherAddons.loadServerWorld();
+		}
+		
         if(event.phase == Phase.START)
             RedstoneEtherAddons.server().processTrackers();
         else {
