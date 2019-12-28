@@ -25,6 +25,9 @@ repositories {
 
 apply plugin: 'forge'
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 group = "codechicken" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "WR-CBE"
 
@@ -52,7 +55,7 @@ minecraft {
     version = config.mc_version + "-" + config.forge_version
 }
 
-def root = project.projectDir.parentFile
+def root = project.projectDir
 sourceSets {
     main {
         java {
