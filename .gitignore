@@ -8,3 +8,6 @@
 .project
 .classpath
 *.bat
+WRCBE.iml
+WRCBE.ipr
+WRCBE.iws
