@@ -11,7 +11,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = "WR-CBE|Core", dependencies = "required-after:CodeChickenCore@[" + CodeChickenCorePlugin.version + ",);" +
+@Mod(modid = "WR-CBE|Core", version = "GRADLETOKEN_VERSION",
+        dependencies = "required-after:CodeChickenCore@[" + CodeChickenCorePlugin.version + ",);" +
         "required-after:ForgeMultipart")//have to make sure it's before all mods within this container until FML fixes proxy injection.
 public class WirelessRedstoneCore
 {
