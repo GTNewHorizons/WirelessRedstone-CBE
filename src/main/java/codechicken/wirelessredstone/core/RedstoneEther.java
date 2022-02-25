@@ -228,7 +228,11 @@ public abstract class RedstoneEther
             serverEther = (RedstoneEtherServer) this;
 
         freqarray = new RedstoneEtherFrequency[numfreqs + 1];
-        for (int freq = 1; freq <= numfreqs; freq++) {
+        // it appears freq==0 is not supposed to happen
+        // however under certain circumstance some device will end up being freq==0
+        // I don't quite have a good idea on how it ends up that way, so I will just
+        // put freq==0 into use
+        for (int freq = 0; freq <= numfreqs; freq++) {
             freqarray[freq] = new RedstoneEtherFrequency(this, freq);
         }
         jammedentities = new HashMap<EntityLivingBase, Integer>();
