@@ -246,7 +246,12 @@ public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUs
         } else if (ident.equals("toggleSize")) {
             toggle = true;
         } else if (ident.equals("setFreq")) {
-            selectedfreq = Integer.parseInt(textboxfreq.getText());
+            try {
+                selectedfreq = Integer.parseInt(textboxfreq.getText());
+            } catch (NumberFormatException e) {
+                // revert to previous selected frequency if number format is wrong somehow
+                textboxfreq.setText(String.valueOf(selectedfreq));
+            }
             setNewFreq();
         } else if (ident.equals("setName")) {
             if (setnamebutton.isEnabled()) {
