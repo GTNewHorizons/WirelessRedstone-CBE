@@ -11,11 +11,13 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = "WR-CBE|Core", version = "GRADLETOKEN_VERSION",
-        dependencies = "required-after:CodeChickenCore@[" + CodeChickenCorePlugin.version + ",);" +
-        "required-after:ForgeMultipart")//have to make sure it's before all mods within this container until FML fixes proxy injection.
-public class WirelessRedstoneCore
-{
+@Mod(modid = "WR-CBE|Core",
+        version = WirelessRedstoneCore.version,
+        dependencies = "required-after:CodeChickenCore@[" + CodeChickenCorePlugin.version + ",);required-after:ForgeMultipart",
+        acceptedMinecraftVersions = "[1.7.10]",
+        name = "WR-CBE Core")
+public class WirelessRedstoneCore {
+
     public static Item obsidianStick;
     public static Item stoneBowl;
     public static Item retherPearl;
@@ -26,6 +28,7 @@ public class WirelessRedstoneCore
 
     public static DamageSource damagebolt;
     public static final String channel = "WRCBE";
+    public static final String version = "GRADLETOKEN_VERSION";
 
     @SidedProxy(clientSide = "codechicken.wirelessredstone.core.WRCoreClientProxy",
             serverSide = "codechicken.wirelessredstone.core.WRCoreProxy")

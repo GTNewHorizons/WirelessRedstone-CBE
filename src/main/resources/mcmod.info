@@ -2,12 +2,10 @@
 {
   "modid": "${modId}",
   "name": "${modName}",
-  "description": "Wireless Redstone ChickenBones Edition Core API
-
-Supporters: Vizerei",
+  "description": "Wireless Redstone ChickenBones Edition Core API\n\nSupporters: Vizerei",
   "version": "${modVersion}",
   "mcversion": "${minecraftVersion}",
-  "url": "http://www.minecraftforum.net/topic/909223",
+  "url": "https://www.minecraftforum.net/topic/909223",
   "authorList": [ "ChickenBones" ],
   "dependencies": [ "CodeChickenCore" ]
 },
@@ -19,7 +17,7 @@ Supporters: Vizerei",
 Supporters: Vizerei",
   "version": "${modVersion}",
   "mcversion": "${minecraftVersion}",
-  "url": "http://www.minecraftforum.net/topic/909223",
+  "url": "https://www.minecraftforum.net/topic/909223",
   "authorList": [ "ChickenBones" ],
   "dependencies": [ "WR-CBE Core" ]
 },
@@ -31,7 +29,7 @@ Supporters: Vizerei",
 Supporters: Vizerei",
   "version": "${modVersion}",
   "mcversion": "${minecraftVersion}",
-  "url": "http://www.minecraftforum.net/topic/909223",
+  "url": "https://www.minecraftforum.net/topic/909223",
   "authorList": [ "ChickenBones" ],
   "dependencies": [ "WR-CBE Core, ForgeMultipart" ]
 }
