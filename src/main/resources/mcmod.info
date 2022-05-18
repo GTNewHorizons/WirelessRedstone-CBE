@@ -12,9 +12,7 @@
 {
   "modid": "WR-CBE|Addons",
   "name": "WR-CBE Addons",
-  "description": "Various wireless gadgets to play with!
-
-Supporters: Vizerei",
+  "description": "Various wireless gadgets to play with!\n\nSupporters: Vizerei",
   "version": "${modVersion}",
   "mcversion": "${minecraftVersion}",
   "url": "https://www.minecraftforum.net/topic/909223",
@@ -24,9 +22,7 @@ Supporters: Vizerei",
 {
   "modid": "WR-CBE|Logic",
   "name": "WR-CBE Logic",
-  "description": "Transmitter, Receiver and Jammer blocks. Integrated with ForgeMultipart for covers and other cool stuff
-
-Supporters: Vizerei",
+  "description": "Transmitter, Receiver and Jammer blocks. Integrated with ForgeMultipart for covers and other cool stuff\n\nSupporters: Vizerei",
   "version": "${modVersion}",
   "mcversion": "${minecraftVersion}",
   "url": "https://www.minecraftforum.net/topic/909223",
