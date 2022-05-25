@@ -2,6 +2,7 @@ package codechicken.wirelessredstone.addons;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemMap;
+import codechicken.wirelessredstone.core.WirelessRedstoneCore;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
@@ -9,7 +10,11 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "WR-CBE|Addons", dependencies = "required-after:WR-CBE|Core")
+@Mod(modid = "WR-CBE|Addons",
+        dependencies = "required-after:WR-CBE|Core",
+        acceptedMinecraftVersions = "[1.7.10]",
+        name = "WR-CBE Addons",
+        version = WirelessRedstoneCore.version)
 public class WirelessRedstoneAddons
 {
     public static ItemWirelessTriangulator triangulator;
