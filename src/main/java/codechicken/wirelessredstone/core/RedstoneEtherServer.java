@@ -746,7 +746,7 @@ public class RedstoneEtherServer extends RedstoneEther
             return;
         
         int dimension = CommonUtils.getDimension(world);
-        if (ethers.get(dimension) == null || ethers.get(dimension).jammednodes == null)
+        if (ethers.get(dimension) == null || ethers.get(dimension).jammerset == null)
             return;
         for(Iterator<BlockCoord> iterator = ethers.get(dimension).jammerset.iterator(); iterator.hasNext();)
         {
