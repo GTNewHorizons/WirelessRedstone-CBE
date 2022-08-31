@@ -1,11 +1,9 @@
 package codechicken.wirelessredstone.core;
 
 import codechicken.core.commands.CoreCommand.WCommandSender;
-
 import java.util.Arrays;
 
-public class ParamOpen extends FreqParam
-{
+public class ParamOpen extends FreqParam {
     @Override
     public void printHelp(WCommandSender listener) {
         listener.chatT("wrcbe_core.param.open.usage");

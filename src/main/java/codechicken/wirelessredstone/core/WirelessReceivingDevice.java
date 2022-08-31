@@ -1,6 +1,5 @@
 package codechicken.wirelessredstone.core;
 
-public interface WirelessReceivingDevice
-{
+public interface WirelessReceivingDevice {
     void updateDevice(int freq, boolean on);
 }

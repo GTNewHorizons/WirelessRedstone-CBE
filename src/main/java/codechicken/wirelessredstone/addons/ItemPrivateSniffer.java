@@ -7,8 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ItemPrivateSniffer extends Item
-{
+public class ItemPrivateSniffer extends Item {
     public ItemPrivateSniffer() {
         setMaxStackSize(1);
     }

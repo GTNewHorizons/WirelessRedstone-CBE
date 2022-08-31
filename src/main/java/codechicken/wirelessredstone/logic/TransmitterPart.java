@@ -1,26 +1,25 @@
 package codechicken.wirelessredstone.logic;
 
-import net.minecraft.item.ItemStack;
+import static codechicken.lib.vec.Rotation.*;
+import static codechicken.lib.vec.Vector3.*;
 
 import codechicken.core.ClientUtils;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
 import codechicken.wirelessredstone.core.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 
-import static codechicken.lib.vec.Rotation.*;
-import static codechicken.lib.vec.Vector3.*;
-
-public class TransmitterPart extends TransceiverPart
-{
+public class TransmitterPart extends TransceiverPart {
     public static Cuboid6[] extensionBB = new Cuboid6[24];
 
     static {
         Cuboid6 base = new Cuboid6(7 / 16D, 1 / 8D, 2 / 8D, 9 / 16D, 7 / 8D, 3 / 8D);
         for (int s = 0; s < 6; s++)
             for (int r = 0; r < 4; r++)
-                extensionBB[s << 2 | r] = base.copy().apply(sideOrientation(s, r).at(center));
+                extensionBB[s << 2 | r] =
+                        base.copy().apply(sideOrientation(s, r).at(center));
     }
 
     @Override
@@ -30,14 +29,11 @@ public class TransmitterPart extends TransceiverPart
 
     @Override
     public void onNeighborChanged() {
-        if (dropIfCantStay())
-            return;
+        if (dropIfCantStay()) return;
 
         int gettingPowered = getPoweringLevel();
-        if (!active() && gettingPowered > 0)
-            trySetState(true);
-        else if (active() && gettingPowered == 0)
-            trySetState(false);
+        if (!active() && gettingPowered > 0) trySetState(true);
+        else if (active() && gettingPowered == 0) trySetState(false);
     }
 
     private void trySetState(boolean on) {
@@ -50,11 +46,11 @@ public class TransmitterPart extends TransceiverPart
     }
 
     private void changeSpinState(boolean on) {
-        if (on && spinoffset < 0)//turning on
+        if (on && spinoffset < 0) // turning on
         {
             int time = (int) ((world().getTotalWorldTime() + spinoffset) % 100000);
             spinoffset = time;
-        } else if (!on && spinoffset >= 0)//turning off
+        } else if (!on && spinoffset >= 0) // turning off
         {
             int time = (int) ((world().getTotalWorldTime() - spinoffset) % 100000);
             spinoffset = -time;
@@ -86,8 +82,7 @@ public class TransmitterPart extends TransceiverPart
 
     @Override
     public double getPearlSpin() {
-        if (spinoffset < 0)
-            return RedstoneEther.getRotation(-spinoffset, currentfreq);
+        if (spinoffset < 0) return RedstoneEther.getRotation(-spinoffset, currentfreq);
 
         return RedstoneEther.getRotation(ClientUtils.getRenderTime() - spinoffset, currentfreq);
     }

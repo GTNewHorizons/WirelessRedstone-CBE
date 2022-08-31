@@ -2,8 +2,7 @@ package codechicken.wirelessredstone.core;
 
 import codechicken.core.commands.CoreCommand.WCommandSender;
 
-public class ParamPrivate extends FreqParam
-{
+public class ParamPrivate extends FreqParam {
     @Override
     public void printHelp(WCommandSender listener) {
         listener.chatT("wrcbe_core.param.private.usage");
@@ -31,17 +30,14 @@ public class ParamPrivate extends FreqParam
             StringBuilder returnString = new StringBuilder();
             for (int freq = 1; freq <= RedstoneEther.numfreqs; freq++) {
                 if (ether.isFreqPrivate(freq)) {
-                    if (returnString.length() > 0)
-                        returnString.append(", ");
+                    if (returnString.length() > 0) returnString.append(", ");
 
                     returnString.append(freq);
                 }
             }
 
-            if (returnString.length() == 0)
-                listener.chatT("wrcbe_core.param.private.none");
-            else
-                listener.chatT("wrcbe_core.param.private.", returnString);
+            if (returnString.length() == 0) listener.chatT("wrcbe_core.param.private.none");
+            else listener.chatT("wrcbe_core.param.private.", returnString);
             return;
         }
 
@@ -54,7 +50,8 @@ public class ParamPrivate extends FreqParam
             int freq = -1;
             try {
                 freq = Integer.parseInt(subArray[2]);
-            } catch (NumberFormatException ne) {}
+            } catch (NumberFormatException ne) {
+            }
 
             if (freq != -1) {
                 if (freq < 1 || freq > RedstoneEther.numfreqs) {
@@ -83,8 +80,7 @@ public class ParamPrivate extends FreqParam
             for (freq = 1; freq <= RedstoneEther.numfreqs; freq++) {
                 if (ether.isFreqPrivate(freq)) {
                     if (scanPlayer.equals("all") || ether.getFreqOwner(freq).equalsIgnoreCase(scanPlayer)) {
-                        if (returnString.length() > 0)
-                            returnString.append(", ");
+                        if (returnString.length() > 0) returnString.append(", ");
 
                         returnString.append(freq);
                         ether.removeFreqOwner(freq);
@@ -93,19 +89,17 @@ public class ParamPrivate extends FreqParam
             }
 
             if (returnString.length() == 0)
-                if (scanPlayer.equals("all"))
-                    listener.chatT("wrcbe_core.param.private.none");
-                else
-                    listener.chatT("wrcbe_core.param.private.noneowned", scanPlayer);
-            else
-                listener.chatT("wrcbe_core.param.private.nowshared2", returnString);
+                if (scanPlayer.equals("all")) listener.chatT("wrcbe_core.param.private.none");
+                else listener.chatT("wrcbe_core.param.private.noneowned", scanPlayer);
+            else listener.chatT("wrcbe_core.param.private.nowshared2", returnString);
             return;
         }
 
         int freq = -1;
         try {
             freq = Integer.parseInt(subArray[1]);
-        } catch (NumberFormatException ne) {}
+        } catch (NumberFormatException ne) {
+        }
 
         if (freq != -1) {
             if (freq < 1 || freq > RedstoneEther.numfreqs) {
@@ -132,17 +126,14 @@ public class ParamPrivate extends FreqParam
             StringBuilder returnString = new StringBuilder();
             for (freq = 1; freq <= RedstoneEther.numfreqs; freq++) {
                 if (ether.isFreqPrivate(freq) && ether.getFreqOwner(freq).equalsIgnoreCase(scanPlayer)) {
-                    if (returnString.length() > 0)
-                        returnString.append(", ");
+                    if (returnString.length() > 0) returnString.append(", ");
 
                     returnString.append(freq);
                 }
             }
 
-            if (returnString.length() == 0)
-                listener.chatT("wrcbe_core.param.private.noneowned", scanPlayer);
-            else
-                listener.chatT("wrcbe_core.param.private.owns", scanPlayer, returnString);
+            if (returnString.length() == 0) listener.chatT("wrcbe_core.param.private.noneowned", scanPlayer);
+            else listener.chatT("wrcbe_core.param.private.owns", scanPlayer, returnString);
             return;
         }
 
@@ -171,8 +162,6 @@ public class ParamPrivate extends FreqParam
         ether.setFreqOwner(freq, scanPlayer);
         if (ether.isFreqPrivate(freq) && ether.getFreqOwner(freq).equalsIgnoreCase(scanPlayer))
             listener.chatT("wrcbe_core.param.private.nowownedby", scanPlayer);
-        else
-            listener.chatT("wrcbe_core.param.private.limit", scanPlayer, ether.getNumPrivateFreqs());
+        else listener.chatT("wrcbe_core.param.private.limit", scanPlayer, ether.getNumPrivateFreqs());
     }
-
 }

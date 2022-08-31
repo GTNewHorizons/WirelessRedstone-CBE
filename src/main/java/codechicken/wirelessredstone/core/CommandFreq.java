@@ -1,15 +1,12 @@
 package codechicken.wirelessredstone.core;
 
+import codechicken.core.commands.CoreCommand;
 import java.util.LinkedList;
 
-import codechicken.core.commands.CoreCommand;
-
-public class CommandFreq extends CoreCommand
-{    
+public class CommandFreq extends CoreCommand {
     public static LinkedList<FreqParam> paramHandlers = new LinkedList<FreqParam>();
-    
-    static
-    {
+
+    static {
         paramHandlers.add(new ParamScan());
         paramHandlers.add(new ParamJam());
         paramHandlers.add(new ParamOpen());
@@ -17,22 +14,17 @@ public class CommandFreq extends CoreCommand
         paramHandlers.add(new ParamSet());
         paramHandlers.add(new ParamPrivate());
     }
-    
+
     @Override
-    public String getCommandName()
-    {
+    public String getCommandName() {
         return "freq";
     }
 
     @Override
-    public void handleCommand(String command, String playername, String[] args, WCommandSender listener)
-    {        
-        if(args[0].equals("help"))
-        {
-            for(FreqParam param : paramHandlers)
-            {
-                if(args[1].equals(param.getName()))
-                {
+    public void handleCommand(String command, String playername, String[] args, WCommandSender listener) {
+        if (args[0].equals("help")) {
+            for (FreqParam param : paramHandlers) {
+                if (args[1].equals(param.getName())) {
                     param.printHelp(listener);
                     return;
                 }
@@ -40,27 +32,22 @@ public class CommandFreq extends CoreCommand
             listener.chatT("wrcbe_core.param.missing");
             return;
         }
-        
-        for(FreqParam param : paramHandlers)
-        {
-            if(args[0].equals(param.getName()))
-            {
+
+        for (FreqParam param : paramHandlers) {
+            if (args[0].equals(param.getName())) {
                 param.handleCommand(playername, args, listener);
                 return;
             }
         }
         listener.chatT("wrcbe_core.param.missing");
     }
-    
+
     @Override
-    public void printHelp(WCommandSender listener)
-    {
+    public void printHelp(WCommandSender listener) {
         listener.chatT("wrcbe_core.command.usage");
         StringBuilder paramNames = new StringBuilder();
-        for(FreqParam param : paramHandlers)
-        {
-            if(paramNames.length() > 0)
-                paramNames.append(", ");
+        for (FreqParam param : paramHandlers) {
+            if (paramNames.length() > 0) paramNames.append(", ");
             paramNames.append(param.getName());
         }
         listener.chatT("wrcbe_core.command.usage1", paramNames.toString());
@@ -68,14 +55,12 @@ public class CommandFreq extends CoreCommand
     }
 
     @Override
-    public boolean OPOnly()
-    {
+    public boolean OPOnly() {
         return true;
     }
 
     @Override
-    public int minimumParameters()
-    {
+    public int minimumParameters() {
         return 1;
     }
 }

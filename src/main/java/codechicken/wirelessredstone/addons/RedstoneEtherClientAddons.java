@@ -1,23 +1,20 @@
 package codechicken.wirelessredstone.addons;
 
-import java.util.HashMap;
-
-import org.lwjgl.input.Mouse;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.storage.MapData;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.world.World;
 import codechicken.wirelessredstone.core.IGuiRemoteUseable;
 import codechicken.wirelessredstone.core.ItemWirelessFreq;
 import codechicken.wirelessredstone.core.RedstoneEther;
 import codechicken.wirelessredstone.core.WirelessRedstoneCore;
+import java.util.HashMap;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.World;
+import net.minecraft.world.storage.MapData;
+import org.lwjgl.input.Mouse;
 
-public class RedstoneEtherClientAddons extends RedstoneEtherAddons
-{
+public class RedstoneEtherClientAddons extends RedstoneEtherAddons {
     private boolean mousedown;
     private boolean wasmousedown;
     private Remote remote;
@@ -73,7 +70,11 @@ public class RedstoneEtherClientAddons extends RedstoneEtherAddons
 
     public void openItemGui(EntityPlayer player) {
         ItemStack helditem = player.inventory.getCurrentItem();
-        if (helditem != null && helditem.getItem() instanceof ItemWirelessFreq && mousedown && !wasmousedown && player.isSneaking()) {
+        if (helditem != null
+                && helditem.getItem() instanceof ItemWirelessFreq
+                && mousedown
+                && !wasmousedown
+                && player.isSneaking()) {
             WirelessRedstoneCore.proxy.openItemWirelessGui(player);
         }
     }
@@ -81,22 +82,28 @@ public class RedstoneEtherClientAddons extends RedstoneEtherAddons
     public void processRemote(World world, EntityPlayer player, GuiScreen currentscreen, MovingObjectPosition mop) {
         boolean jammed = RedstoneEther.client().isPlayerJammed(player);
 
-        if (remote != null && //remote is on
-                (mousedown == false //mouse released
-                        || (currentscreen != null && !(currentscreen instanceof IGuiRemoteUseable))//unsupporting gui open
-                        || jammed))//jammed
+        if (remote != null
+                && // remote is on
+                (mousedown == false // mouse released
+                        || (currentscreen != null
+                                && !(currentscreen instanceof IGuiRemoteUseable)) // unsupporting gui open
+                        || jammed)) // jammed
         {
             deactivateRemote(world, player);
         }
 
-        if (mouseClicked() &&
-                remote == null && //not already using a remote
-                player.inventory.getCurrentItem() != null && player.inventory.getCurrentItem().getItem() == WirelessRedstoneAddons.remote && //holding a remote
-                (currentscreen != null && (currentscreen instanceof IGuiRemoteUseable) && !player.isSneaking()) && //in a remote active gui where onItemRight click won't take it
-                ticksInGui > 0 && !jammed) {
+        if (mouseClicked()
+                && remote == null
+                && // not already using a remote
+                player.inventory.getCurrentItem() != null
+                && player.inventory.getCurrentItem().getItem() == WirelessRedstoneAddons.remote
+                && // holding a remote
+                (currentscreen != null && (currentscreen instanceof IGuiRemoteUseable) && !player.isSneaking())
+                && // in a remote active gui where onItemRight click won't take it
+                ticksInGui > 0
+                && !jammed) {
             ItemStack stack = player.inventory.getCurrentItem();
-            if (stack.getItemDamage() == 0 || ItemWirelessRemote.getTransmitting(stack))
-                return;
+            if (stack.getItemDamage() == 0 || ItemWirelessRemote.getTransmitting(stack)) return;
 
             activateRemote(world, player);
         }
@@ -104,13 +111,11 @@ public class RedstoneEtherClientAddons extends RedstoneEtherAddons
 
     public void activateRemote(World world, EntityPlayer player) {
         if (remote != null) {
-            if (remote.isBeingHeld())
-                return;
+            if (remote.isBeingHeld()) return;
 
             deactivateRemote(world, player);
         }
-        if (RedstoneEther.client().isPlayerJammed(player))
-            return;
+        if (RedstoneEther.client().isPlayerJammed(player)) return;
 
         remote = new Remote(player);
         remote.metaOn();
@@ -118,8 +123,7 @@ public class RedstoneEtherClientAddons extends RedstoneEtherAddons
     }
 
     public boolean deactivateRemote(World world, EntityPlayer player) {
-        if (remote == null)
-            return false;
+        if (remote == null) return false;
 
         remote.metaOff();
         remote = null;
@@ -174,13 +178,10 @@ public class RedstoneEtherClientAddons extends RedstoneEtherAddons
         openItemGui(mc.thePlayer);
         processRemote(mc.theWorld, mc.thePlayer, mc.currentScreen, mc.objectMouseOver);
 
-        if (REPThrowTimeout > 0)
-            REPThrowTimeout--;
+        if (REPThrowTimeout > 0) REPThrowTimeout--;
 
-        if (mc.currentScreen == null)
-            ticksInGui = 0;
-        else
-            ticksInGui++;
+        if (mc.currentScreen == null) ticksInGui = 0;
+        else ticksInGui++;
     }
 
     public boolean detonateREP(EntityPlayer player) {

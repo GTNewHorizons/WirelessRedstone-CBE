@@ -1,9 +1,12 @@
 package codechicken.wirelessredstone.addons;
 
+import codechicken.core.CommonUtils;
+import codechicken.lib.vec.BlockCoord;
+import codechicken.lib.vec.Vector3;
+import codechicken.wirelessredstone.core.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,13 +18,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-import codechicken.core.CommonUtils;
-import codechicken.lib.vec.BlockCoord;
-import codechicken.lib.vec.Vector3;
-import codechicken.wirelessredstone.core.*;
-
-public class EntityREP extends Entity
-{
+public class EntityREP extends Entity {
     public EntityREP(World world) {
         super(world);
         xTileREP = -1;
@@ -43,14 +40,23 @@ public class EntityREP extends Entity
         zTileREP = -1;
         shootingEntity = entityliving;
         setSize(0.25F, 0.25F);
-        setLocationAndAngles(entityliving.posX, entityliving.posY + entityliving.getEyeHeight(), entityliving.posZ, entityliving.rotationYaw, entityliving.rotationPitch);
+        setLocationAndAngles(
+                entityliving.posX,
+                entityliving.posY + entityliving.getEyeHeight(),
+                entityliving.posZ,
+                entityliving.rotationYaw,
+                entityliving.rotationPitch);
         posX -= MathHelper.cos((rotationYaw / 180F) * 3.141593F) * 0.16F;
         posY -= 0.10000000149011612D;
         posZ -= MathHelper.sin((rotationYaw / 180F) * 3.141593F) * 0.16F;
         setPosition(posX, posY, posZ);
         float f = 0.4F;
-        motionX = -MathHelper.sin((rotationYaw / 180F) * 3.141593F) * MathHelper.cos((rotationPitch / 180F) * 3.141593F) * f;
-        motionZ = MathHelper.cos((rotationYaw / 180F) * 3.141593F) * MathHelper.cos((rotationPitch / 180F) * 3.141593F) * f;
+        motionX = -MathHelper.sin((rotationYaw / 180F) * 3.141593F)
+                * MathHelper.cos((rotationPitch / 180F) * 3.141593F)
+                * f;
+        motionZ = MathHelper.cos((rotationYaw / 180F) * 3.141593F)
+                * MathHelper.cos((rotationPitch / 180F) * 3.141593F)
+                * f;
         motionY = -MathHelper.sin((rotationPitch / 180F) * 3.141593F) * f;
         setREPHeading(motionX, motionY, motionZ, 1.5F, 1.0F);
     }
@@ -64,8 +70,7 @@ public class EntityREP extends Entity
         setPosition(d, d1, d2);
     }
 
-    public void setREPHeading(double d, double d1, double d2, float f,
-                              float f1) {
+    public void setREPHeading(double d, double d1, double d2, float f, float f1) {
         float f2 = MathHelper.sqrt_double(d * d + d1 * d1 + d2 * d2);
         d /= f2;
         d1 /= f2;
@@ -129,21 +134,23 @@ public class EntityREP extends Entity
         vec3d = Vec3.createVectorHelper(posX, posY, posZ);
         vec3d1 = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
         if (movingobjectposition != null)
-            vec3d1 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
+            vec3d1 = Vec3.createVectorHelper(
+                    movingobjectposition.hitVec.xCoord,
+                    movingobjectposition.hitVec.yCoord,
+                    movingobjectposition.hitVec.zCoord);
 
         if (!worldObj.isRemote) {
             Entity entity = null;
-            List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
+            List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(
+                    this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
             double d = 0.0D;
             for (Entity entity1 : list) {
-                if (!entity1.canBeCollidedWith() || entity1 == shootingEntity && ticksInAirREP < 5)
-                    continue;
+                if (!entity1.canBeCollidedWith() || entity1 == shootingEntity && ticksInAirREP < 5) continue;
 
                 float f4 = 0.3F;
                 AxisAlignedBB axisalignedbb = entity1.boundingBox.expand(f4, f4, f4);
                 MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3d, vec3d1);
-                if (movingobjectposition1 == null)
-                    continue;
+                if (movingobjectposition1 == null) continue;
 
                 double d1 = vec3d.distanceTo(movingobjectposition1.hitVec);
                 if (d1 < d || d == 0.0D) {
@@ -165,10 +172,12 @@ public class EntityREP extends Entity
         posZ += motionZ;
         float f = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
         rotationYaw = (float) ((Math.atan2(motionX, motionZ) * 180D) / 3.1415927410125732D);
-        for (rotationPitch = (float) ((Math.atan2(motionY, f) * 180D) / 3.1415927410125732D); rotationPitch - prevRotationPitch < -180F; prevRotationPitch -= 360F) { }
-        for (; rotationPitch - prevRotationPitch >= 180F; prevRotationPitch += 360F) { }
-        for (; rotationYaw - prevRotationYaw < -180F; prevRotationYaw -= 360F) { }
-        for (; rotationYaw - prevRotationYaw >= 180F; prevRotationYaw += 360F) { }
+        for (rotationPitch = (float) ((Math.atan2(motionY, f) * 180D) / 3.1415927410125732D);
+                rotationPitch - prevRotationPitch < -180F;
+                prevRotationPitch -= 360F) {}
+        for (; rotationPitch - prevRotationPitch >= 180F; prevRotationPitch += 360F) {}
+        for (; rotationYaw - prevRotationYaw < -180F; prevRotationYaw -= 360F) {}
+        for (; rotationYaw - prevRotationYaw >= 180F; prevRotationYaw += 360F) {}
         rotationPitch = prevRotationPitch + (rotationPitch - prevRotationPitch) * 0.2F;
         rotationYaw = prevRotationYaw + (rotationYaw - prevRotationYaw) * 0.2F;
         float f1 = 0.99F;
@@ -176,7 +185,14 @@ public class EntityREP extends Entity
         if (isInWater()) {
             for (int k = 0; k < 4; k++) {
                 float f3 = 0.25F;
-                worldObj.spawnParticle("bubble", posX - motionX * f3, posY - motionY * f3, posZ - motionZ * f3, motionX, motionY, motionZ);
+                worldObj.spawnParticle(
+                        "bubble",
+                        posX - motionX * f3,
+                        posY - motionY * f3,
+                        posZ - motionZ * f3,
+                        motionX,
+                        motionY,
+                        motionZ);
             }
 
             f1 = 0.8F;
@@ -189,31 +205,39 @@ public class EntityREP extends Entity
     }
 
     public void detonate() {
-        if (worldObj.isRemote)
-            return;
+        if (worldObj.isRemote) return;
 
         int boltsgen = 0;
-        List<Entity> entities = worldObj.getEntitiesWithinAABBExcludingEntity(this, AxisAlignedBB.getBoundingBox(posX - 10, posY - 10, posZ - 10, posX + 10, posY + 10, posZ + 10));
+        List<Entity> entities = worldObj.getEntitiesWithinAABBExcludingEntity(
+                this, AxisAlignedBB.getBoundingBox(posX - 10, posY - 10, posZ - 10, posX + 10, posY + 10, posZ + 10));
         for (Iterator<Entity> iterator = entities.iterator(); iterator.hasNext(); ) {
             if (boltsgen > maxbolts) {
                 break;
             }
             Entity target = iterator.next();
 
-            if (!(target instanceof EntityLivingBase) || Vector3.fromEntity(this).subtract(Vector3.fromEntity(target)).magSquared() > 100) {
+            if (!(target instanceof EntityLivingBase)
+                    || Vector3.fromEntity(this)
+                                    .subtract(Vector3.fromEntity(target))
+                                    .magSquared()
+                            > 100) {
                 continue;
             }
 
-            WirelessBolt bolt = new WirelessBolt(worldObj, Vector3.fromEntity(this), Vector3.fromEntity(target), worldObj.rand.nextLong());
+            WirelessBolt bolt = new WirelessBolt(
+                    worldObj, Vector3.fromEntity(this), Vector3.fromEntity(target), worldObj.rand.nextLong());
             bolt.defaultFractal();
             bolt.finalizeBolt();
-            bolt = new WirelessBolt(worldObj, Vector3.fromEntity(this), Vector3.fromEntity(target), worldObj.rand.nextLong());
+            bolt = new WirelessBolt(
+                    worldObj, Vector3.fromEntity(this), Vector3.fromEntity(target), worldObj.rand.nextLong());
             bolt.defaultFractal();
             bolt.finalizeBolt();
             boltsgen += 2;
         }
 
-        TreeSet<BlockCoord> nodes = RedstoneEther.server().getNodesInRangeofPoint(CommonUtils.getDimension(worldObj), Vector3.fromEntity(this), RedstoneEther.jammerrange, true);
+        TreeSet<BlockCoord> nodes = RedstoneEther.server()
+                .getNodesInRangeofPoint(
+                        CommonUtils.getDimension(worldObj), Vector3.fromEntity(this), RedstoneEther.jammerrange, true);
         for (Iterator<BlockCoord> iterator = nodes.iterator(); iterator.hasNext(); ) {
             if (boltsgen > maxbolts) {
                 break;
@@ -231,10 +255,14 @@ public class EntityREP extends Entity
             if (boltsgen > maxbolts) {
                 break;
             }
-            WirelessBolt bolt = new WirelessBolt(worldObj, Vector3.fromEntity(this), new Vector3(
-                    posX + 20 * worldObj.rand.nextFloat() - 10,
-                    posY + 20 * worldObj.rand.nextFloat() - 10,
-                    posZ + 20 * worldObj.rand.nextFloat() - 10), worldObj.rand.nextLong());
+            WirelessBolt bolt = new WirelessBolt(
+                    worldObj,
+                    Vector3.fromEntity(this),
+                    new Vector3(
+                            posX + 20 * worldObj.rand.nextFloat() - 10,
+                            posY + 20 * worldObj.rand.nextFloat() - 10,
+                            posZ + 20 * worldObj.rand.nextFloat() - 10),
+                    worldObj.rand.nextLong());
             bolt.defaultFractal();
             bolt.finalizeBolt();
             boltsgen++;
@@ -245,8 +273,7 @@ public class EntityREP extends Entity
     public void setDead() {
         super.setDead();
         RedstoneEtherAddons.get(worldObj.isRemote).invalidateREP((EntityPlayer) shootingEntity);
-        if (!worldObj.isRemote)
-            WRAddonSPH.sendKillREP(this);
+        if (!worldObj.isRemote) WRAddonSPH.sendKillREP(this);
     }
 
     public void writeEntityToNBT(NBTTagCompound tag) {

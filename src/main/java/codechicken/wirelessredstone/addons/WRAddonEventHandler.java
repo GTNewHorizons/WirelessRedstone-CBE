@@ -11,15 +11,14 @@ import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.world.ChunkEvent.Unload;
 import net.minecraftforge.event.world.WorldEvent.Load;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class WRAddonEventHandler
-{
+public class WRAddonEventHandler {
     @SubscribeEvent
     public void playerLogin(PlayerLoggedInEvent event) {
         RedstoneEtherAddons.server().onLogin(event.player);
@@ -42,18 +41,16 @@ public class WRAddonEventHandler
 
     @SubscribeEvent
     public void worldTick(WorldTickEvent event) {
-        if(event.phase == Phase.START)
-            RedstoneEtherAddons.server().processSMPMaps(event.world);
+        if (event.phase == Phase.START) RedstoneEtherAddons.server().processSMPMaps(event.world);
     }
 
     @SubscribeEvent
     public void serverTick(ServerTickEvent event) {
-		if(RedstoneEtherAddons.server() == null){
-			RedstoneEtherAddons.loadServerWorld();
-		}
-		
-        if(event.phase == Phase.START)
-            RedstoneEtherAddons.server().processTrackers();
+        if (RedstoneEtherAddons.server() == null) {
+            RedstoneEtherAddons.loadServerWorld();
+        }
+
+        if (event.phase == Phase.START) RedstoneEtherAddons.server().processTrackers();
         else {
             RedstoneEtherAddons.server().tickTriangs();
             RedstoneEtherAddons.server().updateREPTimeouts();
@@ -62,20 +59,16 @@ public class WRAddonEventHandler
 
     @SubscribeEvent
     public void clientTick(ClientTickEvent event) {
-        if(ClientUtils.inWorld()) {
-            if (event.phase == Phase.START)
-                TriangTexManager.processAllTextures();
-            else
-                RedstoneEtherAddons.client().tick();
+        if (ClientUtils.inWorld()) {
+            if (event.phase == Phase.START) TriangTexManager.processAllTextures();
+            else RedstoneEtherAddons.client().tick();
         }
     }
 
     @SubscribeEvent
     public void onWorldLoad(Load event) {
-        if (event.world.isRemote)
-            RedstoneEtherAddons.loadClientManager();
-        else
-            RedstoneEtherAddons.loadServerWorld();
+        if (event.world.isRemote) RedstoneEtherAddons.loadClientManager();
+        else RedstoneEtherAddons.loadServerWorld();
     }
 
     @SubscribeEvent
@@ -84,8 +77,7 @@ public class WRAddonEventHandler
         for (int i = 0; i < chunk.entityLists.length; ++i) {
             for (int j = 0; j < chunk.entityLists[i].size(); ++j) {
                 Object o = chunk.entityLists[i].get(j);
-                if (o instanceof EntityWirelessTracker)
-                    ((EntityWirelessTracker) o).onChunkUnload();
+                if (o instanceof EntityWirelessTracker) ((EntityWirelessTracker) o).onChunkUnload();
             }
         }
     }
@@ -101,10 +93,8 @@ public class WRAddonEventHandler
 
     @SubscribeEvent
     public void onWorldUnload(net.minecraftforge.event.world.WorldEvent.Unload event) {
-        if (event.world.isRemote)
-            return;
+        if (event.world.isRemote) return;
 
-        if (!ServerUtils.mc().isServerRunning())
-            RedstoneEtherAddons.unloadServer();
+        if (!ServerUtils.mc().isServerRunning()) RedstoneEtherAddons.unloadServer();
     }
 }

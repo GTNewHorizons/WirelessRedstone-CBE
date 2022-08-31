@@ -1,20 +1,16 @@
 package codechicken.wirelessredstone.core;
 
-import java.util.ArrayList;
-
-import codechicken.lib.util.LangProxy;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.tileentity.TileEntity;
-
-import org.lwjgl.opengl.GL11;
-
 import codechicken.core.gui.GuiCCButton;
 import codechicken.core.gui.GuiCCTextField;
 import codechicken.core.gui.GuiScreenWidget;
 import codechicken.lib.render.CCRenderState;
+import codechicken.lib.util.LangProxy;
+import java.util.ArrayList;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.tileentity.TileEntity;
+import org.lwjgl.opengl.GL11;
 
-public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUseable
-{
+public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUseable {
     private static LangProxy lang = new LangProxy("wrcbe_core");
     RedstoneEther ether = RedstoneEther.get(true);
 
@@ -59,26 +55,35 @@ public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUs
             add(new GuiCCButton(174, 42, 32, 20, "+1000").setActionCommand("+1000"));
             add(new GuiCCButton(29, 42, 32, 20, "-1000").setActionCommand("-1000"));
 
-            add(new GuiCCButton(118 + 63, 105 + 62, 50, 16, lang.translate("button.simple")).setActionCommand("toggleSize"));
+            add(new GuiCCButton(118 + 63, 105 + 62, 50, 16, lang.translate("button.simple"))
+                    .setActionCommand("toggleSize"));
 
-            add(setfreqbutton = new GuiCCButton(143, 45, 26, 20, lang.translate("button.set")).setActionCommand("setFreq"));
+            add(
+                    setfreqbutton =
+                            new GuiCCButton(143, 45, 26, 20, lang.translate("button.set")).setActionCommand("setFreq"));
             add(setnamebutton = new GuiCCButton(171, 83, 50, 20, "").setActionCommand("setName"));
-            add(setcolourbutton = new GuiCCButton(118 + 53, 105 + 35, 61, 20, lang.translate("button.colour")).setActionCommand("setColour"));
+            add(
+                    setcolourbutton = new GuiCCButton(118 + 53, 105 + 35, 61, 20, lang.translate("button.colour"))
+                            .setActionCommand("setColour"));
 
             add(new GuiButtonArrow(118 + 64, 105 + 17, 12, 12, 3).setActionCommand("nextItem"));
             add(new GuiButtonArrow(118 + 90, 105 + 17, 12, 12, 1).setActionCommand("prevItem"));
 
             add(slotnames = new GuiNameSlot(18, 104));
 
-            add(textboxfreq = new GuiCCTextField(118 - 20, 105 - 59, 40, 18, "")
-                    .setActionCommand("setFreq")
-                    .setMaxStringLength(4)
-                    .setAllowedCharacters("0123456789"));
+            add(
+                    textboxfreq = new GuiCCTextField(118 - 20, 105 - 59, 40, 18, "")
+                            .setActionCommand("setFreq")
+                            .setMaxStringLength(4)
+                            .setAllowedCharacters("0123456789"));
 
-            add(textboxname = new GuiCCTextField(118 - 100, 105 - 20, 150, 16, "")
-                    .setActionCommand("setName")
-                    .setMaxStringLength(20));
-            add(dyeslot = new GuiInvItemSlot(118 + 75, 105 + 15, inventory, RedstoneEther.getColourSetters(), 14).setActionCommand("setColour"));
+            add(
+                    textboxname = new GuiCCTextField(118 - 100, 105 - 20, 150, 16, "")
+                            .setActionCommand("setName")
+                            .setMaxStringLength(20));
+            add(
+                    dyeslot = new GuiInvItemSlot(118 + 75, 105 + 15, inventory, RedstoneEther.getColourSetters(), 14)
+                            .setActionCommand("setColour"));
 
             updateColourSetButton();
             updateFreqSetButton();
@@ -95,12 +100,14 @@ public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUs
             add(new GuiCCButton(88 + 39, 83 - 28, 32, 20, "+1000").setActionCommand("+1000"));
             add(new GuiCCButton(88 - 70, 83 - 28, 32, 20, "-1000").setActionCommand("-1000"));
 
-            add(new GuiCCButton(88 - 27, 83 - 15, 54, 16, lang.translate("button.advanced")).setActionCommand("toggleSize"));
+            add(new GuiCCButton(88 - 27, 83 - 15, 54, 16, lang.translate("button.advanced"))
+                    .setActionCommand("toggleSize"));
         }
     }
 
     public void updateScreen() {
-        if (itile != null && mc.theWorld.getTileEntity(etile.xCoord, etile.yCoord, etile.zCoord) != etile)//tile changed
+        if (itile != null
+                && mc.theWorld.getTileEntity(etile.xCoord, etile.yCoord, etile.zCoord) != etile) // tile changed
         {
             mc.currentScreen = null;
             mc.setIngameFocus();
@@ -140,7 +147,7 @@ public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUs
             drawCentered(lang.translate("label.colour"), 201, 107, ether.getFreqColour(selectedfreq));
 
             String sactualfreq = Integer.toString(getSetObjectFreq());
-            if (!ether.canBroadcastOnFrequency(mc.thePlayer, selectedfreq))//jammed freq render
+            if (!ether.canBroadcastOnFrequency(mc.thePlayer, selectedfreq)) // jammed freq render
             {
                 drawCentered("" + selectedfreq, 118, 105 - 82, 0xFF4040);
                 drawCentered(sactualfreq, 118, 105 - 72, 0x4040FF);
@@ -152,7 +159,7 @@ public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUs
             drawCentered(lang.translate("label.freq"), 88, 83 - 67, 0x404040);
 
             String sactualfreq = Integer.toString(getSetObjectFreq());
-            if (!ether.canBroadcastOnFrequency(mc.thePlayer, selectedfreq))//jammed freq render
+            if (!ether.canBroadcastOnFrequency(mc.thePlayer, selectedfreq)) // jammed freq render
             {
                 drawCentered("" + selectedfreq, 88, 83 - 47, 0xFF4040);
                 drawCentered(sactualfreq, 88, 83 - 37, 0x4040FF);
@@ -191,11 +198,11 @@ public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUs
             setcolourbutton.setEnabled(false);
             return;
         }
-        if (selected == RedstoneEther.numcolours)
-            selected = -1;
+        if (selected == RedstoneEther.numcolours) selected = -1;
 
-        setcolourbutton.setEnabled(selectedfreq != 0 && selected != ether.getFreqColourId(selectedfreq) &&
-                ether.canBroadcastOnFrequency(mc.thePlayer, selectedfreq));
+        setcolourbutton.setEnabled(selectedfreq != 0
+                && selected != ether.getFreqColourId(selectedfreq)
+                && ether.canBroadcastOnFrequency(mc.thePlayer, selectedfreq));
     }
 
     private boolean nameIsUsed(String name) {
@@ -209,14 +216,13 @@ public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUs
         boolean set = name == null || name.equals("") || !name.equals(tname);
         boolean canset = !tname.equals("") && !nameIsUsed(tname) && selectedfreq != 0;
 
-        setnamebutton.setEnabled((set && canset || !set) &&
-                ether.canBroadcastOnFrequency(mc.thePlayer, selectedfreq));
+        setnamebutton.setEnabled((set && canset || !set) && ether.canBroadcastOnFrequency(mc.thePlayer, selectedfreq));
         setnamebutton.text = set ? "Set Name" : "Remove";
 
         if (set) {
             slotnames.updateNameList(mc.thePlayer, textboxname.getText());
         } else if (name.equals(tname)) {
-            slotnames.updateNameList(mc.thePlayer, "");//set name can pick from box
+            slotnames.updateNameList(mc.thePlayer, ""); // set name can pick from box
             slotnames.removeName(tname);
         } else {
             slotnames.clearNameList();
@@ -225,8 +231,7 @@ public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUs
 
     private void reloadNameText() {
         String name = ether.getFreqName(selectedfreq);
-        if (name == null)
-            name = "";
+        if (name == null) name = "";
 
         textboxname.setText(name);
     }
@@ -238,10 +243,8 @@ public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUs
             mc.setIngameFocus();
         } else if (ident.startsWith("+") || ident.startsWith("-")) {
             selectedfreq += Integer.parseInt(ident.startsWith("+") ? ident.substring(1) : ident);
-            if (selectedfreq > RedstoneEther.numfreqs)
-                selectedfreq -= RedstoneEther.numfreqs + 1;
-            if (selectedfreq < 0)
-                selectedfreq += RedstoneEther.numfreqs + 1;
+            if (selectedfreq > RedstoneEther.numfreqs) selectedfreq -= RedstoneEther.numfreqs + 1;
+            if (selectedfreq < 0) selectedfreq += RedstoneEther.numfreqs + 1;
             setNewFreq();
         } else if (ident.equals("toggleSize")) {
             toggle = true;
@@ -266,14 +269,11 @@ public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUs
             }
         } else if (ident.equals("setColour")) {
             int colourid = dyeslot.getSelectedIndex();
-            if (colourid == -1)
-                return;
+            if (colourid == -1) return;
 
-            if (colourid == RedstoneEther.numcolours)
-                colourid = -1;
+            if (colourid == RedstoneEther.numcolours) colourid = -1;
 
-            if (colourid == ether.getFreqColourId(selectedfreq))
-                return;
+            if (colourid == ether.getFreqColourId(selectedfreq)) return;
 
             dyeslot.decrementCurrentStack();
             ether.setFreqColour(selectedfreq, colourid);
@@ -284,8 +284,7 @@ public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUs
             dyeslot.cyclePrevItem();
         } else if (ident.equals("selectName")) {
             String slotname = slotnames.getSelectedName();
-            if (slotname.equals(""))
-                return;
+            if (slotname.equals("")) return;
 
             int freq = ether.getFreqByName(slotname);
             if (freq != -1) {
@@ -299,12 +298,10 @@ public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUs
         if (ether.canBroadcastOnFrequency(mc.thePlayer, selectedfreq)) {
             if (itile == null)
                 item.setFreq(inventory.player, inventory.currentItem, inventory.getCurrentItem(), selectedfreq);
-            else
-                RedstoneEther.get(true).setFreq(itile, selectedfreq);
+            else RedstoneEther.get(true).setFreq(itile, selectedfreq);
         }
 
-        if (largeGui)
-            reloadNameText();
+        if (largeGui) reloadNameText();
     }
 
     private String getSetObjectName() {
@@ -317,10 +314,8 @@ public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUs
 
     @Override
     public void drawBackground() {
-        if (largeGui)
-            CCRenderState.changeTexture("wrcbe_core:textures/gui/wirelessLarge.png");
-        else
-            CCRenderState.changeTexture("wrcbe_core:textures/gui/wirelessSmall.png");
+        if (largeGui) CCRenderState.changeTexture("wrcbe_core:textures/gui/wirelessLarge.png");
+        else CCRenderState.changeTexture("wrcbe_core:textures/gui/wirelessSmall.png");
         GL11.glColor4f(1, 1, 1, 1);
         drawTexturedModalRect(0, 0, 0, 0, xSize, ySize);
     }

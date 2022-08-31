@@ -1,16 +1,14 @@
 package codechicken.wirelessredstone.core;
 
 import codechicken.core.ServerUtils;
-import net.minecraft.entity.player.EntityPlayer;
 import codechicken.core.commands.CoreCommand.WCommandSender;
+import java.util.Arrays;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 
-import java.util.Arrays;
-
-public class ParamJam extends FreqParam
-{
+public class ParamJam extends FreqParam {
     @Override
     public void printHelp(WCommandSender listener) {
         listener.chatT("wrcbe_core.param.jam.usage");
@@ -75,20 +73,24 @@ public class ParamJam extends FreqParam
                 listener.chatT("wrcbe_core.param.jam.errpublic");
                 return;
             }
-            listener.chatOpsT("wrcbe_core.param."+paramName+".opjammed", playername, jamPlayer, startfreq);
+            listener.chatOpsT("wrcbe_core.param." + paramName + ".opjammed", playername, jamPlayer, startfreq);
             if (player != null)
-                player.addChatComponentMessage(new ChatComponentTranslation("wrcbe_core.param."+paramName+".jammed", startfreq).setChatStyle(playerStyle));
+                player.addChatComponentMessage(
+                        new ChatComponentTranslation("wrcbe_core.param." + paramName + ".jammed", startfreq)
+                                .setChatStyle(playerStyle));
         } else {
             if (startfreq <= publicend && endfreq <= publicend) {
                 listener.chatT("wrcbe_core.param.jam.errpublic");
                 return;
             }
-            if (startfreq <= publicend)
-                startfreq = publicend + 1;
+            if (startfreq <= publicend) startfreq = publicend + 1;
 
-            listener.chatOpsT("wrcbe_core.param."+paramName+".opjammed2", playername, jamPlayer, startfreq + "-" + endfreq);
+            listener.chatOpsT(
+                    "wrcbe_core.param." + paramName + ".opjammed2", playername, jamPlayer, startfreq + "-" + endfreq);
             if (player != null)
-                player.addChatComponentMessage(new ChatComponentTranslation("wrcbe_core.param."+paramName+".jammed2", startfreq + "-" + endfreq).setChatStyle(playerStyle));
+                player.addChatComponentMessage(new ChatComponentTranslation(
+                                "wrcbe_core.param." + paramName + ".jammed2", startfreq + "-" + endfreq)
+                        .setChatStyle(playerStyle));
         }
     }
 }
