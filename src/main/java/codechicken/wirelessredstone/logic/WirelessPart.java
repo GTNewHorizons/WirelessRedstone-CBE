@@ -3,7 +3,6 @@ package codechicken.wirelessredstone.logic;
 import java.util.Arrays;
 
 import codechicken.core.ClientUtils;
-import codechicken.core.asm.InterfaceDependancies;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.raytracer.IndexedCuboid6;
@@ -42,7 +41,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import static codechicken.lib.vec.Rotation.*;
 import static codechicken.lib.vec.Vector3.*;
 
-@InterfaceDependancies
 public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIconHitEffects, IFaceRedstonePart, JNormalOcclusion, JPartialOcclusion, JMicroShrinkRender
 {
     private static Cuboid6[] nBoxes = new Cuboid6[6];

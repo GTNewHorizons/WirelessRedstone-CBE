@@ -4,7 +4,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
-import codechicken.core.asm.InterfaceDependancies;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.Vector3;
@@ -13,12 +12,8 @@ import codechicken.wirelessredstone.core.RedstoneEther;
 import codechicken.wirelessredstone.core.WirelessRedstoneCore;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-/*import dan200.computer.api.IComputerAccess;
-import dan200.computer.api.ILuaContext;
-import dan200.computer.api.IPeripheral;*/
 
-@InterfaceDependancies
-public abstract class TransceiverPart extends WirelessPart implements ITileWireless//, IPeripheral
+public abstract class TransceiverPart extends WirelessPart implements ITileWireless
 {
     public byte deadmap;
     public int currentfreq;
