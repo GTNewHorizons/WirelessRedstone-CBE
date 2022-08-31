@@ -3,23 +3,20 @@ package codechicken.wirelessredstone.core;
 import codechicken.lib.packet.PacketCustom;
 import codechicken.lib.packet.PacketCustom.IClientPacketHandler;
 import codechicken.lib.vec.Vector3;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.network.play.INetHandlerPlayClient;
-
 import java.util.LinkedList;
 import java.util.List;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.play.INetHandlerPlayClient;
 
-public class WRCoreCPH implements IClientPacketHandler
-{
+public class WRCoreCPH implements IClientPacketHandler {
     public static List<IClientPacketHandler> delegates = new LinkedList<IClientPacketHandler>();
 
     @Override
     public void handlePacket(PacketCustom packet, Minecraft mc, INetHandlerPlayClient handler) {
         handlePacket(mc.theWorld, mc.thePlayer, packet);
-        for (IClientPacketHandler delegate : delegates)
-            delegate.handlePacket(packet, mc, handler);
+        for (IClientPacketHandler delegate : delegates) delegate.handlePacket(packet, mc, handler);
     }
 
     private void handlePacket(WorldClient world, EntityPlayer player, PacketCustom packet) {
@@ -31,7 +28,12 @@ public class WRCoreCPH implements IClientPacketHandler
                 handleLastFreqInfo(packet.readUShort(), packet.readUByte());
                 break;
             case 3:
-                RedstoneEther.get(true).setFrequencyRange(player.getCommandSenderName(), packet.readUShort(), packet.readUShort(), packet.readBoolean());
+                RedstoneEther.get(true)
+                        .setFrequencyRange(
+                                player.getCommandSenderName(),
+                                packet.readUShort(),
+                                packet.readUShort(),
+                                packet.readBoolean());
                 break;
             case 4:
                 handleFreqInfo(packet);
@@ -40,7 +42,8 @@ public class WRCoreCPH implements IClientPacketHandler
                 RedstoneEther.client().jamEntity(player, packet.readBoolean());
                 break;
             case 8:
-                WirelessBolt bolt = new WirelessBolt(world,
+                WirelessBolt bolt = new WirelessBolt(
+                        world,
                         new Vector3(packet.readFloat(), packet.readFloat(), packet.readFloat()),
                         new Vector3(packet.readFloat(), packet.readFloat(), packet.readFloat()),
                         packet.readLong());
@@ -65,8 +68,7 @@ public class WRCoreCPH implements IClientPacketHandler
 
     private void handleFreqInfoList(PacketCustom packet) {
         int numFreqs = packet.readUShort();
-        for (int i = 0; i < numFreqs; i++)
-            handleFreqInfo(packet);
+        for (int i = 0; i < numFreqs; i++) handleFreqInfo(packet);
     }
 
     private void handleFreqInfo(PacketCustom packet) {

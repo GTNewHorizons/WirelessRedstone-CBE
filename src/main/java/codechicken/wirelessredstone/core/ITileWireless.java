@@ -2,8 +2,7 @@ package codechicken.wirelessredstone.core;
 
 import codechicken.lib.vec.Vector3;
 
-public interface ITileWireless
-{
+public interface ITileWireless {
     /* called when the tile is Jammed
      * Should Deactivate the tile */
     public void jamTile();

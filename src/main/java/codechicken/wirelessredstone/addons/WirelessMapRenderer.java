@@ -1,20 +1,25 @@
 package codechicken.wirelessredstone.addons;
 
-import net.minecraft.client.Minecraft;
-import org.lwjgl.opengl.GL11;
-
 import codechicken.core.ClientUtils;
 import codechicken.wirelessredstone.core.*;
-
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.storage.MapData;
 import net.minecraftforge.client.IItemRenderer;
+import org.lwjgl.opengl.GL11;
 
-public class WirelessMapRenderer implements IItemRenderer
-{
-    private void renderPass(int xCenter, int zCenter, int scale, WirelessMapNodeStorage mapstorage, long worldTime, float size, float alpha, float light) {
+public class WirelessMapRenderer implements IItemRenderer {
+    private void renderPass(
+            int xCenter,
+            int zCenter,
+            int scale,
+            WirelessMapNodeStorage mapstorage,
+            long worldTime,
+            float size,
+            float alpha,
+            float light) {
         Tessellator tessellator = Tessellator.instance;
         float blockscale = 1 << scale;
 
@@ -78,12 +83,10 @@ public class WirelessMapRenderer implements IItemRenderer
         long worldTime = player.worldObj.getTotalWorldTime();
 
         ItemStack currentitem = player.inventory.getCurrentItem();
-        if (currentitem == null || currentitem.getItem() != WirelessRedstoneAddons.wirelessMap)
-            return;
+        if (currentitem == null || currentitem.getItem() != WirelessRedstoneAddons.wirelessMap) return;
 
         ClientMapInfo mapinfo = RedstoneEtherAddons.client().getMPMapInfo((short) currentitem.getItemDamage());
-        if (mapinfo == null)
-            return;
+        if (mapinfo == null) return;
 
         int xCenter = mapinfo.xCenter;
         int zCenter = mapinfo.zCenter;

@@ -1,9 +1,5 @@
 package codechicken.wirelessredstone.logic;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MovingObjectPosition;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.Vector3;
@@ -12,9 +8,12 @@ import codechicken.wirelessredstone.core.RedstoneEther;
 import codechicken.wirelessredstone.core.WirelessRedstoneCore;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MovingObjectPosition;
 
-public abstract class TransceiverPart extends WirelessPart implements ITileWireless
-{
+public abstract class TransceiverPart extends WirelessPart implements ITileWireless {
     public byte deadmap;
     public int currentfreq;
 
@@ -28,8 +27,7 @@ public abstract class TransceiverPart extends WirelessPart implements ITileWirel
         removeFromEther();
         currentfreq = newfreq;
         addToEther();
-        if (disabled())
-            RedstoneEther.server().jamNode(world(), x(), y(), z(), newfreq);
+        if (disabled()) RedstoneEther.server().jamNode(world(), x(), y(), z(), newfreq);
         updateChange();
     }
 
@@ -79,8 +77,7 @@ public abstract class TransceiverPart extends WirelessPart implements ITileWirel
     public void scheduledTick() {
         if (deadmap != 0) {
             deadmap = (byte) ((deadmap & 0xFF) >> 1);
-            if (deadmap != 0)
-                scheduleTick(3);
+            if (deadmap != 0) scheduleTick(3);
 
             updateChange();
         }
@@ -88,12 +85,10 @@ public abstract class TransceiverPart extends WirelessPart implements ITileWirel
 
     @Override
     public boolean activate(EntityPlayer player, MovingObjectPosition hit, ItemStack held) {
-        if (super.activate(player, hit, held))
-            return true;
+        if (super.activate(player, hit, held)) return true;
 
         if (hit.sideHit == (side() ^ 1) && !player.isSneaking()) {
-            if (world().isRemote)
-                WirelessRedstoneCore.proxy.openTileWirelessGui(player, (ITileWireless) tile());
+            if (world().isRemote) WirelessRedstoneCore.proxy.openTileWirelessGui(player, (ITileWireless) tile());
             return true;
         }
         return false;
@@ -103,15 +98,14 @@ public abstract class TransceiverPart extends WirelessPart implements ITileWirel
     @SideOnly(Side.CLIENT)
     public void renderDynamic(Vector3 pos, float frame, int pass) {
         super.renderDynamic(pos, frame, pass);
-        if (pass == 0)
-            RenderWireless.renderFreq(pos, this);
+        if (pass == 0) RenderWireless.renderFreq(pos, this);
     }
-    
+
     /*@Override
     public void attach(IComputerAccess computer)
     {
     }
-    
+
     @Override
     public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
     {
@@ -134,18 +128,18 @@ public abstract class TransceiverPart extends WirelessPart implements ITileWirel
         }
         throw new Exception("derp?");
     }
-    
+
     @Override
     public boolean canAttachToSide(int side)
     {
         return (side&6) != (side()&6);
     }
-    
+
     @Override
     public void detach(IComputerAccess computer)
     {
     }
-    
+
     @Override
     public String[] getMethodNames()
     {

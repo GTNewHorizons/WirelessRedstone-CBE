@@ -3,8 +3,7 @@ package codechicken.wirelessredstone.core;
 import codechicken.core.ServerUtils;
 import codechicken.core.commands.CoreCommand.WCommandSender;
 
-public class ParamScan extends FreqParam
-{
+public class ParamScan extends FreqParam {
     @Override
     public void printHelp(WCommandSender listener) {
         listener.chatT("wrcbe_core.param.scan.usage");
@@ -40,13 +39,10 @@ public class ParamScan extends FreqParam
                 break;
             }
 
-            if (ranges != 0)
-                freqs.append(", ");
+            if (ranges != 0) freqs.append(", ");
 
-            if (startfreq == endfreq)
-                freqs.append(startfreq);
-            else
-                freqs.append(startfreq).append("-").append(endfreq);
+            if (startfreq == endfreq) freqs.append(startfreq);
+            else freqs.append(startfreq).append("-").append(endfreq);
 
             ranges++;
 
@@ -55,10 +51,7 @@ public class ParamScan extends FreqParam
             }
         }
 
-        if (ranges == 0)
-            listener.chatT("wrcbe_core.param.scan.onlypublic", scanPlayer);
-        else
-            listener.chatT("wrcbe_core.param.scan.list", scanPlayer, freqs);
+        if (ranges == 0) listener.chatT("wrcbe_core.param.scan.onlypublic", scanPlayer);
+        else listener.chatT("wrcbe_core.param.scan.list", scanPlayer, freqs);
     }
-
 }

@@ -1,19 +1,21 @@
 package codechicken.wirelessredstone.core;
 
 import codechicken.core.launch.CodeChickenCorePlugin;
-import net.minecraft.command.CommandHandler;
-import net.minecraft.util.DamageSource;
-import net.minecraft.item.Item;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import net.minecraft.command.CommandHandler;
+import net.minecraft.item.Item;
+import net.minecraft.util.DamageSource;
 
-@Mod(modid = "WR-CBE|Core",
+@Mod(
+        modid = "WR-CBE|Core",
         version = WirelessRedstoneCore.version,
-        dependencies = "required-after:CodeChickenCore@[" + CodeChickenCorePlugin.version + ",);required-after:ForgeMultipart",
+        dependencies =
+                "required-after:CodeChickenCore@[" + CodeChickenCorePlugin.version + ",);required-after:ForgeMultipart",
         acceptedMinecraftVersions = "[1.7.10]",
         name = "WR-CBE Core")
 public class WirelessRedstoneCore {
@@ -30,7 +32,8 @@ public class WirelessRedstoneCore {
     public static final String channel = "WRCBE";
     public static final String version = "GRADLETOKEN_VERSION";
 
-    @SidedProxy(clientSide = "codechicken.wirelessredstone.core.WRCoreClientProxy",
+    @SidedProxy(
+            clientSide = "codechicken.wirelessredstone.core.WRCoreClientProxy",
             serverSide = "codechicken.wirelessredstone.core.WRCoreProxy")
     public static WRCoreProxy proxy;
 

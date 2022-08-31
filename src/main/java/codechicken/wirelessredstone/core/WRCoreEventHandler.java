@@ -1,7 +1,6 @@
 package codechicken.wirelessredstone.core;
 
 import codechicken.core.ServerUtils;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -19,14 +18,11 @@ import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
-public class WRCoreEventHandler
-{
+public class WRCoreEventHandler {
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event) {
-        if (event.world.isRemote)
-            RedstoneEther.loadClientEther(event.world);
-        else
-            RedstoneEther.loadServerWorld(event.world);
+        if (event.world.isRemote) RedstoneEther.loadClientEther(event.world);
+        else RedstoneEther.loadServerWorld(event.world);
     }
 
     @SubscribeEvent
@@ -36,32 +32,29 @@ public class WRCoreEventHandler
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
-        if (event.world.isRemote)
-            return;
+        if (event.world.isRemote) return;
 
         RedstoneEther.unloadServerWorld(event.world);
 
-        if (!ServerUtils.mc().isServerRunning())
-            RedstoneEther.unloadServer();
+        if (!ServerUtils.mc().isServerRunning()) RedstoneEther.unloadServer();
     }
 
     @SubscribeEvent
     public void onWorldSave(WorldEvent.Save event) {
-        if (event.world.isRemote || RedstoneEther.server() == null)
-            return;
+        if (event.world.isRemote || RedstoneEther.server() == null) return;
 
         RedstoneEther.server().saveEther(event.world);
     }
 
     @SubscribeEvent
     public void onChunkLoad(ChunkEvent.Load event) {
-        if (event.world.isRemote)
-            return;
+        if (event.world.isRemote) return;
 
-        if (RedstoneEther.server() != null)//new world
+        if (RedstoneEther.server() != null) // new world
         {
             RedstoneEther.loadServerWorld(event.world);
-            RedstoneEther.server().verifyChunkTransmitters(event.world, event.getChunk().xPosition, event.getChunk().zPosition);
+            RedstoneEther.server()
+                    .verifyChunkTransmitters(event.world, event.getChunk().xPosition, event.getChunk().zPosition);
         }
     }
 
@@ -93,19 +86,17 @@ public class WRCoreEventHandler
 
     @SubscribeEvent
     public void clientTick(ClientTickEvent event) {
-        if(event.phase == Phase.START)
-            WirelessBolt.update(WirelessBolt.clientboltlist);
+        if (event.phase == Phase.START) WirelessBolt.update(WirelessBolt.clientboltlist);
     }
 
     @SubscribeEvent
     public void serverTick(ServerTickEvent event) {
-        if(event.phase == Phase.START)
-            WirelessBolt.update(WirelessBolt.serverboltlist);
+        if (event.phase == Phase.START) WirelessBolt.update(WirelessBolt.serverboltlist);
     }
 
     @SubscribeEvent
     public void serverTick(WorldTickEvent event) {
-        if(event.phase == Phase.END && !event.world.isRemote)
+        if (event.phase == Phase.END && !event.world.isRemote)
             RedstoneEther.server().tick(event.world);
     }
 }

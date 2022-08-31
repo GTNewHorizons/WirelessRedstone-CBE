@@ -13,19 +13,32 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
-public class ItemWirelessRemote extends ItemWirelessFreq
-{
+public class ItemWirelessRemote extends ItemWirelessFreq {
     public ItemWirelessRemote() {
         setMaxStackSize(1);
     }
 
     @Override
-    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        if (!player.isSneaking() && stack.getItemDamage() <= 5000 && stack.getItemDamage() > 0)//not sneaking, off and valid freq
+    public boolean onItemUseFirst(
+            ItemStack stack,
+            EntityPlayer player,
+            World world,
+            int x,
+            int y,
+            int z,
+            int side,
+            float hitX,
+            float hitY,
+            float hitZ) {
+        if (!player.isSneaking()
+                && stack.getItemDamage() <= 5000
+                && stack.getItemDamage() > 0) // not sneaking, off and valid freq
         {
             TileEntity tile = world.getTileEntity(x, y, z);
             int freq = stack.getItemDamage();
-            if (tile != null && tile instanceof ITileWireless && RedstoneEther.get(world.isRemote).canBroadcastOnFrequency(player, freq)) {
+            if (tile != null
+                    && tile instanceof ITileWireless
+                    && RedstoneEther.get(world.isRemote).canBroadcastOnFrequency(player, freq)) {
                 RedstoneEther.get(world.isRemote).setFreq((ITileWireless) tile, freq);
                 return true;
             }
@@ -48,15 +61,14 @@ public class ItemWirelessRemote extends ItemWirelessFreq
 
     @Override
     public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean held) {
-        if (!(entity instanceof EntityPlayer))
-            return;
+        if (!(entity instanceof EntityPlayer)) return;
 
         int freq = getItemFreq(stack);
         EntityPlayer player = (EntityPlayer) entity;
 
-        if (getTransmitting(stack) && (!held || !RedstoneEtherAddons.get(world.isRemote).isRemoteOn(player, freq)) &&
-                !RedstoneEtherAddons.get(world.isRemote).deactivateRemote(world, player))
-            stack.setItemDamage(freq);
+        if (getTransmitting(stack)
+                && (!held || !RedstoneEtherAddons.get(world.isRemote).isRemoteOn(player, freq))
+                && !RedstoneEtherAddons.get(world.isRemote).deactivateRemote(world, player)) stack.setItemDamage(freq);
     }
 
     @Override
@@ -75,7 +87,7 @@ public class ItemWirelessRemote extends ItemWirelessFreq
     }
 
     public static void setOn(ItemStack stack, boolean on) {
-        if(!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
+        if (!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
         stack.getTagCompound().setBoolean("on", on);
     }
 
@@ -90,8 +102,7 @@ public class ItemWirelessRemote extends ItemWirelessFreq
     public IIcon getIconIndex(ItemStack stack) {
         int freq = stack.getItemDamage();
 
-        if (freq <= 0 || freq > RedstoneEther.numfreqs)
-            return RemoteTexManager.getIcon(-1, false);
+        if (freq <= 0 || freq > RedstoneEther.numfreqs) return RemoteTexManager.getIcon(-1, false);
 
         return RemoteTexManager.getIcon(RedstoneEther.get(true).getFreqColourId(freq), getTransmitting(stack));
     }
@@ -100,14 +111,12 @@ public class ItemWirelessRemote extends ItemWirelessFreq
     @SideOnly(Side.CLIENT)
     public String getItemStackDisplayName(ItemStack itemstack) {
         return RedstoneEtherAddons.localizeWirelessItem(
-                StatCollector.translateToLocal("wrcbe_addons.remote.short"),
-                itemstack.getItemDamage());
+                StatCollector.translateToLocal("wrcbe_addons.remote.short"), itemstack.getItemDamage());
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister par1IconRegister) {
-    }
+    public void registerIcons(IIconRegister par1IconRegister) {}
 
     public String getGuiName() {
         return StatCollector.translateToLocal("item.wrcbe_addons:remote.name");

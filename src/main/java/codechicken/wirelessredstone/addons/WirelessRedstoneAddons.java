@@ -1,22 +1,22 @@
 package codechicken.wirelessredstone.addons;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemMap;
 import codechicken.wirelessredstone.core.WirelessRedstoneCore;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemMap;
 
-@Mod(modid = "WR-CBE|Addons",
+@Mod(
+        modid = "WR-CBE|Addons",
         dependencies = "required-after:WR-CBE|Core",
         acceptedMinecraftVersions = "[1.7.10]",
         name = "WR-CBE Addons",
         version = WirelessRedstoneCore.version)
-public class WirelessRedstoneAddons
-{
+public class WirelessRedstoneAddons {
     public static ItemWirelessTriangulator triangulator;
     public static ItemWirelessRemote remote;
     public static ItemWirelessSniffer sniffer;
@@ -25,23 +25,22 @@ public class WirelessRedstoneAddons
     public static ItemWirelessTracker tracker;
     public static ItemREP rep;
     public static ItemPrivateSniffer psniffer;
-    
-    @SidedProxy(clientSide="codechicken.wirelessredstone.addons.WRAddonClientProxy", 
-            serverSide="codechicken.wirelessredstone.addons.WRAddonProxy")
+
+    @SidedProxy(
+            clientSide = "codechicken.wirelessredstone.addons.WRAddonClientProxy",
+            serverSide = "codechicken.wirelessredstone.addons.WRAddonProxy")
     public static WRAddonProxy proxy;
-    
+
     @Instance("WR-CBE|Addons")
     public static WirelessRedstoneAddons instance;
-    
+
     @EventHandler
-    public void preInit(FMLPreInitializationEvent event)
-    {
+    public void preInit(FMLPreInitializationEvent event) {
         proxy.preInit();
     }
-    
+
     @EventHandler
-    public void init(FMLInitializationEvent event)
-    {
+    public void init(FMLInitializationEvent event) {
         proxy.init();
     }
 }

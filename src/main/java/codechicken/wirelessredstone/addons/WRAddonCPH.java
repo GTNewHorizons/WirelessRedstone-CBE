@@ -13,8 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.world.World;
 
-public class WRAddonCPH implements IClientPacketHandler
-{
+public class WRAddonCPH implements IClientPacketHandler {
     @Override
     public void handlePacket(PacketCustom packet, Minecraft mc, INetHandlerPlayClient handler) {
         handlePacket(mc.theWorld, mc.thePlayer, packet);
@@ -38,10 +37,8 @@ public class WRAddonCPH implements IClientPacketHandler
                 processMapUpdate(world, player, packet);
                 break;
             case 59:
-                if (packet.readBoolean())
-                    throwREP(packet.readInt(), packet.readInt(), world, player);
-                else
-                    world.removeEntityFromWorld(packet.readInt());
+                if (packet.readBoolean()) throwREP(packet.readInt(), packet.readInt(), world, player);
+                else world.removeEntityFromWorld(packet.readInt());
                 break;
             case 60:
                 processTrackerUpdate(packet, world, player);
@@ -49,16 +46,14 @@ public class WRAddonCPH implements IClientPacketHandler
             case 61:
                 if (packet.readBoolean())
                     throwTracker(world, player, packet.readInt(), packet.readInt(), packet.readUShort());
-                else
-                    world.removeEntityFromWorld(packet.readInt());
+                else world.removeEntityFromWorld(packet.readInt());
                 break;
         }
     }
 
     private void throwTracker(WorldClient world, EntityPlayer player, int entityID, int throwerID, int freq) {
         Entity thrower = world.getEntityByID(throwerID);
-        if (throwerID == player.getEntityId())
-            thrower = player;
+        if (throwerID == player.getEntityId()) thrower = player;
 
         if (thrower != null && thrower instanceof EntityLiving) {
             EntityWirelessTracker tracker = new EntityWirelessTracker(world, 0, (EntityLiving) thrower);
@@ -74,12 +69,10 @@ public class WRAddonCPH implements IClientPacketHandler
         boolean attached = packet.readBoolean();
 
         Entity e = world.getEntityByID(entityID);
-        if (e != null && e.isDead)
-            e = null;
+        if (e != null && e.isDead) e = null;
 
         if (!(e instanceof EntityWirelessTracker)) {
-            if (e != null)
-                throw new IllegalStateException("EntityID mapped to non tracker");
+            if (e != null) throw new IllegalStateException("EntityID mapped to non tracker");
 
             e = new EntityWirelessTracker(world, freq);
             e.setEntityId(entityID);
@@ -91,10 +84,8 @@ public class WRAddonCPH implements IClientPacketHandler
             int attachedEntityID = packet.readInt();
 
             Entity attachedEntity;
-            if (attachedEntityID == player.getEntityId())
-                attachedEntity = player;
-            else
-                attachedEntity = world.getEntityByID(attachedEntityID);
+            if (attachedEntityID == player.getEntityId()) attachedEntity = player;
+            else attachedEntity = world.getEntityByID(attachedEntityID);
 
             if (attachedEntity == null) {
                 return;
@@ -127,8 +118,7 @@ public class WRAddonCPH implements IClientPacketHandler
 
     private void throwREP(int entityID, int throwerID, WorldClient world, EntityPlayer player) {
         Entity thrower = world.getEntityByID(throwerID);
-        if (throwerID == player.getEntityId())
-            thrower = player;
+        if (throwerID == player.getEntityId()) thrower = player;
 
         if (thrower != null && thrower instanceof EntityLivingBase) {
             EntityREP rep = new EntityREP(world, (EntityLivingBase) thrower);
@@ -139,8 +129,7 @@ public class WRAddonCPH implements IClientPacketHandler
 
     private static void processSnifferFreqUpdate(PacketCustom packet) {
         GuiScreen currentscreen = Minecraft.getMinecraft().currentScreen;
-        if (currentscreen == null || !(currentscreen instanceof GuiWirelessSniffer))
-            return;
+        if (currentscreen == null || !(currentscreen instanceof GuiWirelessSniffer)) return;
 
         GuiWirelessSniffer sniffergui = ((GuiWirelessSniffer) currentscreen);
         sniffergui.setEtherFreq(packet.readUShort(), packet.readBoolean());
@@ -148,8 +137,7 @@ public class WRAddonCPH implements IClientPacketHandler
 
     private static void processSnifferEtherCopy(PacketCustom packet) {
         GuiScreen currentscreen = Minecraft.getMinecraft().currentScreen;
-        if (currentscreen == null || !(currentscreen instanceof GuiWirelessSniffer))
-            return;
+        if (currentscreen == null || !(currentscreen instanceof GuiWirelessSniffer)) return;
 
         GuiWirelessSniffer sniffergui = ((GuiWirelessSniffer) currentscreen);
         sniffergui.setEtherCopy(packet.readByteArray(packet.readUShort()));

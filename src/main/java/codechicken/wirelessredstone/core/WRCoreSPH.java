@@ -1,12 +1,11 @@
 package codechicken.wirelessredstone.core;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import codechicken.lib.packet.PacketCustom;
 import codechicken.lib.packet.PacketCustom.IServerPacketHandler;
 import codechicken.lib.vec.BlockCoord;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -15,15 +14,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-public class WRCoreSPH implements IServerPacketHandler
-{
+public class WRCoreSPH implements IServerPacketHandler {
     public static List<IServerPacketHandler> delegates = new LinkedList<IServerPacketHandler>();
 
     @Override
     public void handlePacket(PacketCustom packet, EntityPlayerMP sender, INetHandlerPlayServer handler) {
         handlePacket((WorldServer) sender.worldObj, sender, packet);
-        for(IServerPacketHandler delegate : delegates)
-            delegate.handlePacket(packet, sender, handler);
+        for (IServerPacketHandler delegate : delegates) delegate.handlePacket(packet, sender, handler);
     }
 
     private void handlePacket(WorldServer world, EntityPlayerMP player, PacketCustom packet) {
@@ -54,7 +51,8 @@ public class WRCoreSPH implements IServerPacketHandler
             if (item.stackSize == 0) {
                 player.inventory.mainInventory[slot] = null;
             }
-        } catch (ArrayIndexOutOfBoundsException e) {}
+        } catch (ArrayIndexOutOfBoundsException e) {
+        }
     }
 
     private void setItemFreq(EntityPlayerMP sender, int slot, int freq) {
@@ -69,8 +67,7 @@ public class WRCoreSPH implements IServerPacketHandler
     private void setTileFreq(EntityPlayer sender, World world, BlockCoord pos, int freq) {
         if (RedstoneEther.get(false).canBroadcastOnFrequency(sender, freq)) {
             TileEntity tile = RedstoneEther.getTile(world, pos);
-            if (tile instanceof ITileWireless)
-                RedstoneEther.get(false).setFreq((ITileWireless) tile, freq);
+            if (tile instanceof ITileWireless) RedstoneEther.get(false).setFreq((ITileWireless) tile, freq);
         }
     }
 
@@ -139,12 +136,10 @@ public class WRCoreSPH implements IServerPacketHandler
         packet.sendToChunk(bolt.world, (int) bolt.start.x >> 4, (int) bolt.start.z >> 4);
     }
 
-    public static void sendSetSlot(int slot, ItemStack stack) {
-    }
+    public static void sendSetSlot(int slot, ItemStack stack) {}
 
     public static void sendFreqInfoTo(EntityPlayer player, ArrayList<Integer> freqsWithInfo) {
-        if (freqsWithInfo.size() == 0)
-            return;
+        if (freqsWithInfo.size() == 0) return;
 
         PacketCustom packet = new PacketCustom(WirelessRedstoneCore.channel, 1);
         packet.writeShort(freqsWithInfo.size());
@@ -157,8 +152,7 @@ public class WRCoreSPH implements IServerPacketHandler
     }
 
     public static void sendFreqOwnerTo(EntityPlayer player, ArrayList<Integer> freqsWithOwners) {
-        if (freqsWithOwners.size() == 0)
-            return;
+        if (freqsWithOwners.size() == 0) return;
 
         PacketCustom packet = new PacketCustom(WirelessRedstoneCore.channel, 10);
         packet.writeShort(freqsWithOwners.size());

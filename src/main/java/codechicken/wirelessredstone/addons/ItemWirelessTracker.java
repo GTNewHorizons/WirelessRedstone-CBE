@@ -9,8 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
-public class ItemWirelessTracker extends ItemWirelessFreq
-{
+public class ItemWirelessTracker extends ItemWirelessFreq {
     public ItemWirelessTracker() {
         setMaxStackSize(1);
     }
@@ -21,8 +20,7 @@ public class ItemWirelessTracker extends ItemWirelessFreq
             return super.onItemRightClick(itemstack, world, player);
         }
 
-        if (getItemFreq(itemstack) == 0)
-            return itemstack;
+        if (getItemFreq(itemstack) == 0) return itemstack;
 
         if (!player.capabilities.isCreativeMode) {
             itemstack.stackSize--;
@@ -36,7 +34,6 @@ public class ItemWirelessTracker extends ItemWirelessFreq
         return itemstack;
     }
 
-
     @Override
     public int getItemFreq(ItemStack itemstack) {
         return itemstack.getItemDamage();
@@ -46,8 +43,7 @@ public class ItemWirelessTracker extends ItemWirelessFreq
     @Override
     public String getItemStackDisplayName(ItemStack itemstack) {
         return RedstoneEtherAddons.localizeWirelessItem(
-                StatCollector.translateToLocal("wrcbe_addons.tracker.short"),
-                itemstack.getItemDamage());
+                StatCollector.translateToLocal("wrcbe_addons.tracker.short"), itemstack.getItemDamage());
     }
 
     @Override
@@ -57,6 +53,5 @@ public class ItemWirelessTracker extends ItemWirelessFreq
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister par1IconRegister) {
-    }
+    public void registerIcons(IIconRegister par1IconRegister) {}
 }

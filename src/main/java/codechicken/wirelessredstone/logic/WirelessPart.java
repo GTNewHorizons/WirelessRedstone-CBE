@@ -1,6 +1,7 @@
 package codechicken.wirelessredstone.logic;
 
-import java.util.Arrays;
+import static codechicken.lib.vec.Rotation.*;
+import static codechicken.lib.vec.Vector3.*;
 
 import codechicken.core.ClientUtils;
 import codechicken.lib.data.MCDataInput;
@@ -30,6 +31,7 @@ import codechicken.multipart.TileMultipart;
 import codechicken.wirelessredstone.core.RedstoneEther;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import java.util.Arrays;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -38,23 +40,24 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import static codechicken.lib.vec.Rotation.*;
-import static codechicken.lib.vec.Vector3.*;
-
-public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIconHitEffects, IFaceRedstonePart, JNormalOcclusion, JPartialOcclusion, JMicroShrinkRender
-{
+public abstract class WirelessPart extends JCuboidPart
+        implements TFacePart,
+                JIconHitEffects,
+                IFaceRedstonePart,
+                JNormalOcclusion,
+                JPartialOcclusion,
+                JMicroShrinkRender {
     private static Cuboid6[] nBoxes = new Cuboid6[6];
 
     static {
         Cuboid6 base = new Cuboid6(1 / 8D, 0, 1 / 8D, 7 / 8D, 1 / 8D, 7 / 8D);
-        for (int s = 0; s < 6; s++)
-            nBoxes[s] = base.copy().apply(sideRotations[s].at(center));
+        for (int s = 0; s < 6; s++) nBoxes[s] = base.copy().apply(sideRotations[s].at(center));
     }
 
     public byte state;
     public String owner;
 
-    //rendering
+    // rendering
     public Cuboid6 baseRenderBounds;
     public int baseRenderMask;
     protected int spinoffset;
@@ -88,8 +91,7 @@ public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIc
 
     public void setActive(boolean active) {
         state &= 0xDF;
-        if (active)
-            state |= 0x20;
+        if (active) state |= 0x20;
     }
 
     public boolean disabled() {
@@ -98,15 +100,13 @@ public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIc
 
     public void setDisabled(boolean disabled) {
         state &= 0xBF;
-        if (disabled)
-            state |= 0x40;
+        if (disabled) state |= 0x40;
     }
 
     public int getPoweringLevel() {
         int s = RedstoneInteractions.getPowerTo(this, Rotation.rotateSide(side(), rotation()));
         int i = getInternalPower();
-        if (i > s)
-            s = i;
+        if (i > s) s = i;
 
         return s;
     }
@@ -128,15 +128,13 @@ public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIc
     @Override
     public void load(NBTTagCompound tag) {
         state = tag.getByte("state");
-        if (tag.hasKey("owner"))
-            owner = tag.getString("owner");
+        if (tag.hasKey("owner")) owner = tag.getString("owner");
     }
 
     @Override
     public void save(NBTTagCompound tag) {
         tag.setByte("state", state);
-        if (owner != null)
-            tag.setString("owner", owner);
+        if (owner != null) tag.setString("owner", owner);
     }
 
     @Override
@@ -157,14 +155,12 @@ public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIc
 
     @Override
     public void onWorldJoin() {
-        if (!world().isRemote)
-            addToEther();
+        if (!world().isRemote) addToEther();
     }
 
     @Override
     public void onWorldSeparate() {
-        if (!world().isRemote)
-            removeFromEther();
+        if (!world().isRemote) removeFromEther();
     }
 
     @Override
@@ -308,8 +304,7 @@ public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIc
 
     @Override
     public void renderDynamic(Vector3 pos, float frame, int pass) {
-        if (pass == 0)
-            RenderWireless.renderPearl(pos, this);
+        if (pass == 0) RenderWireless.renderPearl(pos, this);
     }
 
     @Override
@@ -324,8 +319,7 @@ public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIc
     @Override
     public void onAdded() {
         super.onAdded();
-        if (world().isRemote)
-            recalcBounds();
+        if (world().isRemote) recalcBounds();
     }
 
     public void recalcBounds() {

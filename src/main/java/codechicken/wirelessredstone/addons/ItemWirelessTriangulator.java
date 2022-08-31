@@ -1,22 +1,20 @@
 package codechicken.wirelessredstone.addons;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import codechicken.wirelessredstone.core.*;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 
-public class ItemWirelessTriangulator extends ItemWirelessFreq
-{
+public class ItemWirelessTriangulator extends ItemWirelessFreq {
     public ItemWirelessTriangulator() {
         setMaxStackSize(1);
     }
 
     public IIcon getIconFromDamage(int damage) {
-        if (damage < 0 || damage > RedstoneEther.numfreqs)
-            damage = 0;
+        if (damage < 0 || damage > RedstoneEther.numfreqs) damage = 0;
 
         return TriangTexManager.getIconFromDamage(damage);
     }
@@ -29,8 +27,7 @@ public class ItemWirelessTriangulator extends ItemWirelessFreq
     @Override
     public String getItemStackDisplayName(ItemStack itemstack) {
         return RedstoneEtherAddons.localizeWirelessItem(
-                StatCollector.translateToLocal("wrcbe_addons.triangulator.short"),
-                itemstack.getItemDamage());
+                StatCollector.translateToLocal("wrcbe_addons.triangulator.short"), itemstack.getItemDamage());
     }
 
     public String getGuiName() {
@@ -39,6 +36,5 @@ public class ItemWirelessTriangulator extends ItemWirelessFreq
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IIconRegister par1IconRegister) {
-    }
+    public void registerIcons(IIconRegister par1IconRegister) {}
 }

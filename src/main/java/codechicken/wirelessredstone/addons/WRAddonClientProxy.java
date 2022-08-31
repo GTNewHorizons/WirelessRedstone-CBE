@@ -1,5 +1,7 @@
 package codechicken.wirelessredstone.addons;
 
+import static codechicken.wirelessredstone.addons.WirelessRedstoneAddons.*;
+
 import codechicken.core.ClientUtils;
 import codechicken.wirelessredstone.core.SaveManager;
 import codechicken.wirelessredstone.core.WRCoreCPH;
@@ -9,10 +11,7 @@ import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.MinecraftForgeClient;
 
-import static codechicken.wirelessredstone.addons.WirelessRedstoneAddons.*;
-
-public class WRAddonClientProxy extends WRAddonProxy
-{
+public class WRAddonClientProxy extends WRAddonProxy {
     @Override
     public void init() {
         super.init();

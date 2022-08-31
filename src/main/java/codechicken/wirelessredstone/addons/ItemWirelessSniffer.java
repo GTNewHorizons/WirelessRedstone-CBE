@@ -5,8 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ItemWirelessSniffer extends Item
-{
+public class ItemWirelessSniffer extends Item {
     public ItemWirelessSniffer() {
         setMaxStackSize(1);
     }
