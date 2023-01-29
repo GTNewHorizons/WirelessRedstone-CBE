@@ -1,9 +1,11 @@
 package codechicken.wirelessredstone.core;
 
-import codechicken.core.commands.CoreCommand;
 import java.util.LinkedList;
 
+import codechicken.core.commands.CoreCommand;
+
 public class CommandFreq extends CoreCommand {
+
     public static LinkedList<FreqParam> paramHandlers = new LinkedList<FreqParam>();
 
     static {

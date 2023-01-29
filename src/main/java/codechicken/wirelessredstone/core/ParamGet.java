@@ -3,6 +3,7 @@ package codechicken.wirelessredstone.core;
 import codechicken.core.commands.CoreCommand.WCommandSender;
 
 public class ParamGet extends FreqParam {
+
     @Override
     public void printHelp(WCommandSender listener) {
         listener.chatT("wrcbe_core.param.get.usage");
@@ -26,14 +27,12 @@ public class ParamGet extends FreqParam {
         }
 
         if (subArray[1].equals("public")) listener.chatT("wrcbe_core.param.get.public", ether.getLastPublicFrequency());
-        else if (subArray[1].equals("shared"))
-            if (ether.getLastPublicFrequency() >= ether.getLastSharedFrequency())
-                listener.chatT("wrcbe_core.param.get.shared0");
-            else
-                listener.chatT(
-                        "wrcbe_core.param.get.shared",
-                        ether.getLastPublicFrequency() + 1,
-                        ether.getLastSharedFrequency());
+        else if (subArray[1].equals("shared")) if (ether.getLastPublicFrequency() >= ether.getLastSharedFrequency())
+            listener.chatT("wrcbe_core.param.get.shared0");
+        else listener.chatT(
+                "wrcbe_core.param.get.shared",
+                ether.getLastPublicFrequency() + 1,
+                ether.getLastSharedFrequency());
         else if (subArray[1].equals("private"))
             listener.chatT("wrcbe_core.param.get.private", ether.getNumPrivateFreqs());
         else listener.chatT("wrcbe_core.param.invalid");

@@ -1,9 +1,5 @@
 package codechicken.wirelessredstone.core;
 
-import codechicken.core.CommonUtils;
-import codechicken.core.ServerUtils;
-import codechicken.lib.vec.BlockCoord;
-import codechicken.lib.vec.Vector3;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +18,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 
+import codechicken.core.CommonUtils;
+import codechicken.core.ServerUtils;
+import codechicken.lib.vec.BlockCoord;
+import codechicken.lib.vec.Vector3;
+
 public class RedstoneEtherServer extends RedstoneEther {
+
     public RedstoneEtherServer() {
         super(false);
     }
@@ -83,8 +86,16 @@ public class RedstoneEtherServer extends RedstoneEther {
                 int freq = ether.transmittingblocks.get(node).freq;
                 if (tile == null || !(tile instanceof ITileWireless) || ((ITileWireless) tile).getFreq() != freq) {
                     remTransmitter(world, node.x, node.y, node.z, freq);
-                    System.out.println("Removed Badly Synced node at:" + node.x + "," + node.y + "," + node.z + " on "
-                            + freq + " in dim" + dimension);
+                    System.out.println(
+                            "Removed Badly Synced node at:" + node.x
+                                    + ","
+                                    + node.y
+                                    + ","
+                                    + node.z
+                                    + " on "
+                                    + freq
+                                    + " in dim"
+                                    + dimension);
                 }
             }
         }
@@ -157,13 +168,12 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     public boolean isNodeJammed(World world, int x, int y, int z) {
-        Integer timeout =
-                ethers.get(CommonUtils.getDimension(world)).jammednodes.get(new BlockCoord(x, y, z));
+        Integer timeout = ethers.get(CommonUtils.getDimension(world)).jammednodes.get(new BlockCoord(x, y, z));
         return timeout != null && timeout > 0;
     }
 
     public boolean isNodeInAOEofJammer(BlockCoord node, int dimension) {
-        for (Iterator<BlockCoord> iterator = ethers.get(dimension).jammerset.iterator(); iterator.hasNext(); ) {
+        for (Iterator<BlockCoord> iterator = ethers.get(dimension).jammerset.iterator(); iterator.hasNext();) {
             BlockCoord jammer = iterator.next();
             if (pythagorasPow2(jammer, node) < jammerrangePow2) {
                 return true;
@@ -173,7 +183,7 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     public boolean isPointInAOEofJammer(Vector3 point, int dimension) {
-        for (Iterator<BlockCoord> iterator = ethers.get(dimension).jammerset.iterator(); iterator.hasNext(); ) {
+        for (Iterator<BlockCoord> iterator = ethers.get(dimension).jammerset.iterator(); iterator.hasNext();) {
             BlockCoord jammer = iterator.next();
             if (pythagorasPow2(jammer, point) < jammerrangePow2) {
                 return true;
@@ -185,7 +195,7 @@ public class RedstoneEtherServer extends RedstoneEther {
     public BlockCoord getClosestJammer(BlockCoord node, int dimension) {
         BlockCoord closestjammer = null;
         double closestdist = jammerrangePow2;
-        for (Iterator<BlockCoord> iterator = ethers.get(dimension).jammerset.iterator(); iterator.hasNext(); ) {
+        for (Iterator<BlockCoord> iterator = ethers.get(dimension).jammerset.iterator(); iterator.hasNext();) {
             BlockCoord jammer = iterator.next();
             double distance = pythagorasPow2(jammer, node);
             if (distance < closestdist) {
@@ -199,7 +209,7 @@ public class RedstoneEtherServer extends RedstoneEther {
     public BlockCoord getClosestJammer(Vector3 point, int dimension) {
         BlockCoord closestjammer = null;
         double closestdist = jammerrangePow2;
-        for (Iterator<BlockCoord> iterator = ethers.get(dimension).jammerset.iterator(); iterator.hasNext(); ) {
+        for (Iterator<BlockCoord> iterator = ethers.get(dimension).jammerset.iterator(); iterator.hasNext();) {
             BlockCoord jammer = iterator.next();
             double distance = pythagorasPow2(jammer, point);
             if (distance < closestdist) {
@@ -245,7 +255,7 @@ public class RedstoneEtherServer extends RedstoneEther {
     public void jamNodesInAOEOfJammer(World world, BlockCoord jammer, int dimension) {
         for (int freq = 1; freq <= numfreqs; freq++) {
             TreeMap<BlockCoord, Boolean> transmittermap = freqarray[freq].getTransmitters(dimension);
-            for (Iterator<BlockCoord> iterator = transmittermap.keySet().iterator(); iterator.hasNext(); ) {
+            for (Iterator<BlockCoord> iterator = transmittermap.keySet().iterator(); iterator.hasNext();) {
                 BlockCoord node = iterator.next();
                 if (pythagorasPow2(node, jammer) < jammerrangePow2) {
                     jamNodeSometime(world, node, dimension, freq);
@@ -253,7 +263,7 @@ public class RedstoneEtherServer extends RedstoneEther {
             }
 
             TreeSet<BlockCoord> receiverset = freqarray[freq].getReceivers(dimension);
-            for (Iterator<BlockCoord> iterator = receiverset.iterator(); iterator.hasNext(); ) {
+            for (Iterator<BlockCoord> iterator = receiverset.iterator(); iterator.hasNext();) {
                 BlockCoord node = iterator.next();
                 if (pythagorasPow2(node, jammer) < jammerrangePow2) {
                     jamNodeSometime(world, node, dimension, freq);
@@ -409,13 +419,13 @@ public class RedstoneEtherServer extends RedstoneEther {
         return ethers.get(dimension).jammednodes;
     }
 
-    public TreeSet<BlockCoord> getNodesInRangeofPoint(
-            int dimension, Vector3 point, float range, boolean includejammed) {
+    public TreeSet<BlockCoord> getNodesInRangeofPoint(int dimension, Vector3 point, float range,
+            boolean includejammed) {
         TreeSet<BlockCoord> nodes = new TreeSet<BlockCoord>();
         float rangePow2 = range * range;
         for (int freq = 1; freq <= numfreqs; freq++) {
             TreeMap<BlockCoord, Boolean> transmittermap = freqarray[freq].getTransmitters(dimension);
-            for (Iterator<BlockCoord> iterator = transmittermap.keySet().iterator(); iterator.hasNext(); ) {
+            for (Iterator<BlockCoord> iterator = transmittermap.keySet().iterator(); iterator.hasNext();) {
                 BlockCoord node = iterator.next();
                 if (pythagorasPow2(node, point) < rangePow2) {
                     nodes.add(node);
@@ -423,7 +433,7 @@ public class RedstoneEtherServer extends RedstoneEther {
             }
 
             TreeSet<BlockCoord> receiverset = freqarray[freq].getReceivers(dimension);
-            for (Iterator<BlockCoord> iterator = receiverset.iterator(); iterator.hasNext(); ) {
+            for (Iterator<BlockCoord> iterator = receiverset.iterator(); iterator.hasNext();) {
                 BlockCoord node = iterator.next();
                 if (pythagorasPow2(node, point) < rangePow2) {
                     nodes.add(node);
@@ -432,9 +442,8 @@ public class RedstoneEtherServer extends RedstoneEther {
         }
 
         if (includejammed) {
-            for (Iterator<BlockCoord> iterator =
-                            ethers.get(dimension).jammednodes.keySet().iterator();
-                    iterator.hasNext(); ) {
+            for (Iterator<BlockCoord> iterator = ethers.get(dimension).jammednodes.keySet().iterator(); iterator
+                    .hasNext();) {
                 BlockCoord node = iterator.next();
                 if (pythagorasPow2(node, point) < rangePow2) {
                     nodes.add(node);
@@ -445,13 +454,13 @@ public class RedstoneEtherServer extends RedstoneEther {
         return nodes;
     }
 
-    public TreeSet<BlockCoord> getNodesInRangeofNode(
-            int dimension, BlockCoord block, float range, boolean includejammed) {
+    public TreeSet<BlockCoord> getNodesInRangeofNode(int dimension, BlockCoord block, float range,
+            boolean includejammed) {
         TreeSet<BlockCoord> nodes = new TreeSet<BlockCoord>();
         float rangePow2 = range * range;
         for (int freq = 1; freq <= numfreqs; freq++) {
             TreeMap<BlockCoord, Boolean> transmittermap = freqarray[freq].getTransmitters(dimension);
-            for (Iterator<BlockCoord> iterator = transmittermap.keySet().iterator(); iterator.hasNext(); ) {
+            for (Iterator<BlockCoord> iterator = transmittermap.keySet().iterator(); iterator.hasNext();) {
                 BlockCoord node = iterator.next();
                 if (pythagorasPow2(node, block) < rangePow2) {
                     nodes.add(node);
@@ -459,7 +468,7 @@ public class RedstoneEtherServer extends RedstoneEther {
             }
 
             TreeSet<BlockCoord> receiverset = freqarray[freq].getReceivers(dimension);
-            for (Iterator<BlockCoord> iterator = receiverset.iterator(); iterator.hasNext(); ) {
+            for (Iterator<BlockCoord> iterator = receiverset.iterator(); iterator.hasNext();) {
                 BlockCoord node = iterator.next();
                 if (pythagorasPow2(node, block) < rangePow2) {
                     nodes.add(node);
@@ -468,9 +477,8 @@ public class RedstoneEtherServer extends RedstoneEther {
         }
 
         if (includejammed) {
-            for (Iterator<BlockCoord> iterator =
-                            ethers.get(dimension).jammednodes.keySet().iterator();
-                    iterator.hasNext(); ) {
+            for (Iterator<BlockCoord> iterator = ethers.get(dimension).jammednodes.keySet().iterator(); iterator
+                    .hasNext();) {
                 BlockCoord node = iterator.next();
                 if (pythagorasPow2(node, block) < rangePow2) {
                     nodes.add(node);
@@ -482,7 +490,7 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     public void updateReceivingDevices(int freq, boolean on) {
-        for (Iterator<WirelessReceivingDevice> iterator = receivingdevices.iterator(); iterator.hasNext(); ) {
+        for (Iterator<WirelessReceivingDevice> iterator = receivingdevices.iterator(); iterator.hasNext();) {
             iterator.next().updateDevice(freq, on);
         }
     }
@@ -526,7 +534,7 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     private void unloadJammedMap() {
-        for (Iterator<String> iterator = playerJammedMap.keySet().iterator(); iterator.hasNext(); ) {
+        for (Iterator<String> iterator = playerJammedMap.keySet().iterator(); iterator.hasNext();) {
             String username = iterator.next();
             if (ServerUtils.getPlayer(username) == null) {
                 saveJammedFrequencies(username);
@@ -538,9 +546,8 @@ public class RedstoneEtherServer extends RedstoneEther {
     private void updateJammedNodes(World world) {
         int dimension = CommonUtils.getDimension(world);
         if (ethers.get(dimension) == null || ethers.get(dimension).jammednodes == null) return;
-        for (Iterator<BlockCoord> iterator =
-                        ethers.get(dimension).jammednodes.keySet().iterator();
-                iterator.hasNext(); ) {
+        for (Iterator<BlockCoord> iterator = ethers.get(dimension).jammednodes.keySet().iterator(); iterator
+                .hasNext();) {
             BlockCoord node = iterator.next();
             int inactivetime = ethers.get(dimension).jammednodes.get(node);
             inactivetime--;
@@ -563,7 +570,7 @@ public class RedstoneEtherServer extends RedstoneEther {
             }
 
             if (inactivetime == 0) // so the node doesn't think it's unjammed
-            inactivetime = jammertimeout;
+                inactivetime = jammertimeout;
 
             ethers.get(dimension).jammednodes.put(node, inactivetime);
         }
@@ -571,17 +578,16 @@ public class RedstoneEtherServer extends RedstoneEther {
 
     private void randomJamTest(World world) {
         if (world.getTotalWorldTime() % 600 != 0) // 30 seconds
-        return;
+            return;
 
-        for (Entry<Integer, DimensionalEtherHash> entry : ethers.entrySet())
-            if (entry.getValue().jammerset != null)
-                for (Iterator<BlockCoord> iterator = entry.getValue().jammerset.iterator(); iterator.hasNext(); )
-                    jamNodesInAOEOfJammer(world, iterator.next(), entry.getKey());
+        for (Entry<Integer, DimensionalEtherHash> entry : ethers.entrySet()) if (entry.getValue().jammerset != null)
+            for (Iterator<BlockCoord> iterator = entry.getValue().jammerset.iterator(); iterator.hasNext();)
+                jamNodesInAOEOfJammer(world, iterator.next(), entry.getKey());
     }
 
     private void updateJammedEntities(World world) {
         int dimension = CommonUtils.getDimension(world);
-        for (Iterator<EntityLivingBase> iterator = jammedentities.keySet().iterator(); iterator.hasNext(); ) {
+        for (Iterator<EntityLivingBase> iterator = jammedentities.keySet().iterator(); iterator.hasNext();) {
             EntityLivingBase entity = iterator.next();
             int inactivetime = jammedentities.get(entity);
             inactivetime--;
@@ -594,8 +600,8 @@ public class RedstoneEtherServer extends RedstoneEther {
 
             if (inactivetime == 0 // time for unjam or rejam
                     || (inactivetime < 0 && inactivetime % jammerentitywait == 0) // time to jam from the sometime
-                    || (inactivetime > 0
-                            && inactivetime % jammerentityretry == 0)) // send another bolt after the retry time
+                    || (inactivetime > 0 && inactivetime % jammerentityretry == 0)) // send another bolt after the retry
+                                                                                    // time
             {
                 BlockCoord jammer = getClosestJammer(Vector3.fromEntity(entity), dimension);
                 ITileJammer jammertile = jammer == null ? null : (ITileJammer) getTile(world, jammer);
@@ -625,7 +631,7 @@ public class RedstoneEtherServer extends RedstoneEther {
 
         int dimension = CommonUtils.getDimension(world);
         if (ethers.get(dimension) == null || ethers.get(dimension).jammerset == null) return;
-        for (Iterator<BlockCoord> iterator = ethers.get(dimension).jammerset.iterator(); iterator.hasNext(); ) {
+        for (Iterator<BlockCoord> iterator = ethers.get(dimension).jammerset.iterator(); iterator.hasNext();) {
             BlockCoord jammer = iterator.next();
             List<Entity> entitiesinrange = world.getEntitiesWithinAABBExcludingEntity(
                     null,
@@ -636,7 +642,7 @@ public class RedstoneEtherServer extends RedstoneEther {
                             jammer.x + 10.5,
                             jammer.y + 10.5,
                             jammer.z + 10.5));
-            for (Iterator<Entity> iterator2 = entitiesinrange.iterator(); iterator2.hasNext(); ) {
+            for (Iterator<Entity> iterator2 = entitiesinrange.iterator(); iterator2.hasNext();) {
                 Entity entity = iterator2.next();
                 if (!(entity instanceof EntityLivingBase)) continue;
 

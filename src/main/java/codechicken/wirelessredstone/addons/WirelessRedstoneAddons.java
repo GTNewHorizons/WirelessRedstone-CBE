@@ -1,5 +1,8 @@
 package codechicken.wirelessredstone.addons;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemMap;
+
 import codechicken.wirelessredstone.core.WirelessRedstoneCore;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -7,8 +10,6 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemMap;
 
 @Mod(
         modid = "WR-CBE|Addons",
@@ -17,6 +18,7 @@ import net.minecraft.item.ItemMap;
         name = "WR-CBE Addons",
         version = WirelessRedstoneCore.version)
 public class WirelessRedstoneAddons {
+
     public static ItemWirelessTriangulator triangulator;
     public static ItemWirelessRemote remote;
     public static ItemWirelessSniffer sniffer;

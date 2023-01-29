@@ -1,10 +1,7 @@
 package codechicken.wirelessredstone.addons;
 
-import codechicken.wirelessredstone.core.IGuiRemoteUseable;
-import codechicken.wirelessredstone.core.ItemWirelessFreq;
-import codechicken.wirelessredstone.core.RedstoneEther;
-import codechicken.wirelessredstone.core.WirelessRedstoneCore;
 import java.util.HashMap;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,9 +9,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
+
 import org.lwjgl.input.Mouse;
 
+import codechicken.wirelessredstone.core.IGuiRemoteUseable;
+import codechicken.wirelessredstone.core.ItemWirelessFreq;
+import codechicken.wirelessredstone.core.RedstoneEther;
+import codechicken.wirelessredstone.core.WirelessRedstoneCore;
+
 public class RedstoneEtherClientAddons extends RedstoneEtherAddons {
+
     private boolean mousedown;
     private boolean wasmousedown;
     private Remote remote;
@@ -70,8 +74,7 @@ public class RedstoneEtherClientAddons extends RedstoneEtherAddons {
 
     public void openItemGui(EntityPlayer player) {
         ItemStack helditem = player.inventory.getCurrentItem();
-        if (helditem != null
-                && helditem.getItem() instanceof ItemWirelessFreq
+        if (helditem != null && helditem.getItem() instanceof ItemWirelessFreq
                 && mousedown
                 && !wasmousedown
                 && player.isSneaking()) {
@@ -82,19 +85,16 @@ public class RedstoneEtherClientAddons extends RedstoneEtherAddons {
     public void processRemote(World world, EntityPlayer player, GuiScreen currentscreen, MovingObjectPosition mop) {
         boolean jammed = RedstoneEther.client().isPlayerJammed(player);
 
-        if (remote != null
-                && // remote is on
+        if (remote != null && // remote is on
                 (mousedown == false // mouse released
-                        || (currentscreen != null
-                                && !(currentscreen instanceof IGuiRemoteUseable)) // unsupporting gui open
+                        || (currentscreen != null && !(currentscreen instanceof IGuiRemoteUseable)) // unsupporting gui
+                                                                                                    // open
                         || jammed)) // jammed
         {
             deactivateRemote(world, player);
         }
 
-        if (mouseClicked()
-                && remote == null
-                && // not already using a remote
+        if (mouseClicked() && remote == null && // not already using a remote
                 player.inventory.getCurrentItem() != null
                 && player.inventory.getCurrentItem().getItem() == WirelessRedstoneAddons.remote
                 && // holding a remote

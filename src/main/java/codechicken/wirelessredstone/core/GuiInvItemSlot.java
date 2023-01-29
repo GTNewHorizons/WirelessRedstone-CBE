@@ -1,12 +1,15 @@
 package codechicken.wirelessredstone.core;
 
-import codechicken.core.gui.GuiWidget;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+
 import org.lwjgl.input.Keyboard;
 
+import codechicken.core.gui.GuiWidget;
+
 public class GuiInvItemSlot extends GuiWidget {
+
     private static RenderItem itemRenderer = new RenderItem();
 
     protected ItemStack[] invitems;

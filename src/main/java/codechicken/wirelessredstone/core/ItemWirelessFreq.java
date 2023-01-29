@@ -6,18 +6,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public abstract class ItemWirelessFreq extends Item {
+
     @Override
-    public boolean onItemUseFirst(
-            ItemStack stack,
-            EntityPlayer player,
-            World world,
-            int x,
-            int y,
-            int z,
-            int side,
-            float hitX,
-            float hitY,
-            float hitZ) {
+    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side,
+            float hitX, float hitY, float hitZ) {
         if (!player.isSneaking()) return false;
 
         WirelessRedstoneCore.proxy.openItemWirelessGui(player);

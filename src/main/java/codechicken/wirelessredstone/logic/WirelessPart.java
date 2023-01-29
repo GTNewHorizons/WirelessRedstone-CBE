@@ -3,6 +3,16 @@ package codechicken.wirelessredstone.logic;
 import static codechicken.lib.vec.Rotation.*;
 import static codechicken.lib.vec.Vector3.*;
 
+import java.util.Arrays;
+
+import net.minecraft.client.particle.EffectRenderer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import codechicken.core.ClientUtils;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
@@ -31,22 +41,10 @@ import codechicken.multipart.TileMultipart;
 import codechicken.wirelessredstone.core.RedstoneEther;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import java.util.Arrays;
-import net.minecraft.client.particle.EffectRenderer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraftforge.common.util.ForgeDirection;
 
-public abstract class WirelessPart extends JCuboidPart
-        implements TFacePart,
-                JIconHitEffects,
-                IFaceRedstonePart,
-                JNormalOcclusion,
-                JPartialOcclusion,
-                JMicroShrinkRender {
+public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIconHitEffects, IFaceRedstonePart,
+        JNormalOcclusion, JPartialOcclusion, JMicroShrinkRender {
+
     private static Cuboid6[] nBoxes = new Cuboid6[6];
 
     static {

@@ -1,12 +1,13 @@
 package codechicken.wirelessredstone.logic;
 
+import net.minecraft.item.Item;
+
 import codechicken.wirelessredstone.core.WirelessRedstoneCore;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import net.minecraft.item.Item;
 
 @Mod(
         modid = "WR-CBE|Logic",
@@ -15,6 +16,7 @@ import net.minecraft.item.Item;
         name = "WR-CBE Logic",
         version = WirelessRedstoneCore.version)
 public class WirelessRedstoneLogic {
+
     public static Item itemwireless;
 
     @SidedProxy(

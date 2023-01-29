@@ -1,14 +1,18 @@
 package codechicken.wirelessredstone.core;
 
-import codechicken.core.CommonUtils;
-import codechicken.lib.vec.BlockCoord;
 import java.util.*;
 import java.util.Map.Entry;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import codechicken.core.CommonUtils;
+import codechicken.lib.vec.BlockCoord;
+
 public class RedstoneEtherFrequency {
+
     public static class DelayedModification {
+
         public DelayedModification(BlockCoord node, int i) {
             coord = node;
             function = i;
@@ -19,6 +23,7 @@ public class RedstoneEtherFrequency {
     }
 
     public class DimensionalNodeTracker {
+
         public DimensionalNodeTracker(World world2) {
             world = world2;
             dimension = CommonUtils.getDimension(world2);
@@ -224,8 +229,7 @@ public class RedstoneEtherFrequency {
     public int nodeCount() {
         int count = 0;
         for (Entry<Integer, DimensionalNodeTracker> entry : nodetrackers.entrySet()) {
-            count += entry.getValue().transmittermap.size()
-                    + entry.getValue().receiverset.size();
+            count += entry.getValue().transmittermap.size() + entry.getValue().receiverset.size();
         }
         return count;
     }
@@ -256,16 +260,16 @@ public class RedstoneEtherFrequency {
 
     public void putActiveTransmittersInList(int dimension, ArrayList<FreqCoord> txnodes) {
         DimensionalNodeTracker nodetracker = nodetrackers.get(dimension);
-        for (Iterator<BlockCoord> iterator = nodetracker.transmittermap.keySet().iterator(); iterator.hasNext(); ) {
+        for (Iterator<BlockCoord> iterator = nodetracker.transmittermap.keySet().iterator(); iterator.hasNext();) {
             BlockCoord node = iterator.next();
             if (nodetracker.transmittermap.get(node)) txnodes.add(new FreqCoord(node, freq));
         }
     }
 
-    /*public void putTransmittingDevicesInList(ArrayList<WirelessTransmittingDevice> txnodes)
-    {
-        txnodes.addAll(transmittingdevices);
-    }*/
+    /*
+     * public void putTransmittingDevicesInList(ArrayList<WirelessTransmittingDevice> txnodes) {
+     * txnodes.addAll(transmittingdevices); }
+     */
 
     public int getActiveTransmitters() {
         int num = 0;

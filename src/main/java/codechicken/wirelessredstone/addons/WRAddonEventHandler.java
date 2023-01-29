@@ -1,5 +1,10 @@
 package codechicken.wirelessredstone.addons;
 
+import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.event.world.ChunkEvent.Unload;
+import net.minecraftforge.event.world.WorldEvent.Load;
+
 import codechicken.core.ClientUtils;
 import codechicken.core.ServerUtils;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -13,12 +18,9 @@ import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.event.world.ChunkEvent.Unload;
-import net.minecraftforge.event.world.WorldEvent.Load;
 
 public class WRAddonEventHandler {
+
     @SubscribeEvent
     public void playerLogin(PlayerLoggedInEvent event) {
         RedstoneEtherAddons.server().onLogin(event.player);

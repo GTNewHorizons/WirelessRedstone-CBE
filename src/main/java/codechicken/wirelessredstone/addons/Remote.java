@@ -1,12 +1,14 @@
 package codechicken.wirelessredstone.addons;
 
-import codechicken.lib.vec.Vector3;
-import codechicken.wirelessredstone.core.*;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
+import codechicken.lib.vec.Vector3;
+import codechicken.wirelessredstone.core.*;
+
 public class Remote implements WirelessTransmittingDevice {
+
     public Remote(EntityPlayer owner) {
         this.owner = owner;
         freq = owner.inventory.getCurrentItem().getItemDamage() & 0x1FFF;
@@ -35,12 +37,9 @@ public class Remote implements WirelessTransmittingDevice {
 
     public boolean isBeingHeld() {
         ItemStack held = owner.inventory.getCurrentItem();
-        return owner.inventory.currentItem == slot
-                && // same slot
-                held != null
-                && // not holding nothing
-                held.getItem() == WirelessRedstoneAddons.remote
-                && // same item type
+        return owner.inventory.currentItem == slot && // same slot
+                held != null && // not holding nothing
+                held.getItem() == WirelessRedstoneAddons.remote && // same item type
                 held.getItemDamage() == freq; // same freq
     }
 

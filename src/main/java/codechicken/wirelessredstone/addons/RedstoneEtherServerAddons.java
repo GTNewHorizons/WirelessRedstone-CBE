@@ -1,5 +1,21 @@
 package codechicken.wirelessredstone.addons;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeSet;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.World;
+import net.minecraft.world.storage.MapData;
+
 import codechicken.core.CommonUtils;
 import codechicken.core.ServerUtils;
 import codechicken.lib.math.MathHelper;
@@ -9,28 +25,14 @@ import codechicken.wirelessredstone.core.FreqCoord;
 import codechicken.wirelessredstone.core.RedstoneEther;
 import codechicken.wirelessredstone.core.RedstoneEther.TXNodeInfo;
 import codechicken.wirelessredstone.core.WirelessTransmittingDevice;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeSet;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.MapData;
 
 public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
+
     private HashMap<String, AddonPlayerInfo> playerInfos = new HashMap<String, AddonPlayerInfo>();
     /**
      * A list of trackers and the players who are 'tracking' them on their clients.
      */
-    private HashMap<EntityWirelessTracker, HashSet<EntityPlayerMP>> trackerPlayerMap =
-            new HashMap<EntityWirelessTracker, HashSet<EntityPlayerMP>>();
+    private HashMap<EntityWirelessTracker, HashSet<EntityPlayerMP>> trackerPlayerMap = new HashMap<EntityWirelessTracker, HashSet<EntityPlayerMP>>();
     /**
      * Trackers that are attached to players.
      */
@@ -124,8 +126,7 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
         for (EntityPlayer player : players) {
             ItemStack helditem = player.getCurrentEquippedItem();
 
-            if (helditem == null
-                    || helditem.getItem() != WirelessRedstoneAddons.wirelessMap
+            if (helditem == null || helditem.getItem() != WirelessRedstoneAddons.wirelessMap
                     || RedstoneEther.server().isPlayerJammed(player)) {
                 continue;
             }
@@ -147,7 +148,7 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
             TreeSet<FreqCoord> removednodes = new TreeSet<FreqCoord>();
 
             if (oldnodes.size() != 0) {
-                for (Iterator<FreqCoord> nodeiterator = oldnodes.iterator(); nodeiterator.hasNext(); ) {
+                for (Iterator<FreqCoord> nodeiterator = oldnodes.iterator(); nodeiterator.hasNext();) {
                     FreqCoord node = nodeiterator.next();
                     if (!addednodes.remove(node)) // remove returns false if the item was not in the set
                     {
@@ -158,17 +159,18 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
 
             if (addednodes.size() != 0 || removednodes.size() != 0 || devices.size() != 0 || lastdevices > 0) {
                 WRAddonSPH.sendMapUpdatePacketTo(
-                        player, helditem.getItemDamage(), mapdata, addednodes, removednodes, mapnodes.devices);
+                        player,
+                        helditem.getItemDamage(),
+                        mapdata,
+                        addednodes,
+                        removednodes,
+                        mapnodes.devices);
             }
         }
     }
 
-    private void updatePlayerMapData(
-            EntityPlayer player,
-            World world,
-            MapData mapdata,
-            Map<BlockCoord, TXNodeInfo> txnodes,
-            Set<WirelessTransmittingDevice> devices) {
+    private void updatePlayerMapData(EntityPlayer player, World world, MapData mapdata,
+            Map<BlockCoord, TXNodeInfo> txnodes, Set<WirelessTransmittingDevice> devices) {
         TreeSet<FreqCoord> mnodes = new TreeSet<FreqCoord>();
         TreeSet<FreqCoord> mdevices = new TreeSet<FreqCoord>();
 
@@ -181,8 +183,7 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
         for (Entry<BlockCoord, TXNodeInfo> entry : txnodes.entrySet()) {
             BlockCoord node = entry.getKey();
             TXNodeInfo info = entry.getValue();
-            if (info.on
-                    && node.x > minx
+            if (info.on && node.x > minx
                     && node.x < maxx
                     && node.z > minz
                     && node.z < maxz
@@ -191,11 +192,10 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
             }
         }
 
-        for (Iterator<WirelessTransmittingDevice> iterator = devices.iterator(); iterator.hasNext(); ) {
+        for (Iterator<WirelessTransmittingDevice> iterator = devices.iterator(); iterator.hasNext();) {
             WirelessTransmittingDevice device = iterator.next();
             Vector3 pos = device.getPosition();
-            if (pos.x > minx
-                    && pos.x < maxx
+            if (pos.x > minx && pos.x < maxx
                     && pos.z > minz
                     && pos.z < maxz
                     && RedstoneEther.server().canBroadcastOnFrequency(player, device.getFreq())) {
@@ -223,7 +223,7 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
 
         playerInfos.put(player.getCommandSenderName(), new AddonPlayerInfo());
 
-        for (Iterator<EntityWirelessTracker> iterator = playerTrackers.iterator(); iterator.hasNext(); ) {
+        for (Iterator<EntityWirelessTracker> iterator = playerTrackers.iterator(); iterator.hasNext();) {
             EntityWirelessTracker tracker = iterator.next();
             if (tracker.attachedPlayerName.equals(player.getCommandSenderName())) {
                 tracker.copyToDimension(player.dimension);
@@ -278,10 +278,8 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
         Vector3 vecAmplitude = new Vector3(0, 0, 0);
         Vector3 vecPlayer = new Vector3(player.posX, 0, player.posZ);
 
-        for (Iterator<FreqCoord> iterator = RedstoneEther.server()
-                        .getActiveTransmittersOnFreq(freq, player.dimension)
-                        .iterator();
-                iterator.hasNext(); ) {
+        for (Iterator<FreqCoord> iterator = RedstoneEther.server().getActiveTransmittersOnFreq(freq, player.dimension)
+                .iterator(); iterator.hasNext();) {
             FreqCoord node = iterator.next();
 
             Vector3 vecTransmitter = new Vector3(node.x + 0.5, 0, node.z + 0.5);
@@ -289,10 +287,8 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
             vecAmplitude.add(vecTransmitter.multiply(1 / distancePow2));
         }
 
-        for (Iterator<WirelessTransmittingDevice> iterator = RedstoneEther.server()
-                        .getTransmittingDevicesOnFreq(freq)
-                        .iterator();
-                iterator.hasNext(); ) {
+        for (Iterator<WirelessTransmittingDevice> iterator = RedstoneEther.server().getTransmittingDevicesOnFreq(freq)
+                .iterator(); iterator.hasNext();) {
             WirelessTransmittingDevice device = iterator.next();
 
             if (device.getAttachedEntity() == player) return null;
@@ -352,9 +348,8 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
         boolean updateFree = trackerTicks % 5 == 0;
         boolean updateAttached = trackerTicks % 100 == 0;
 
-        for (Iterator<Entry<EntityWirelessTracker, HashSet<EntityPlayerMP>>> iterator =
-                        trackerPlayerMap.entrySet().iterator();
-                iterator.hasNext(); ) {
+        for (Iterator<Entry<EntityWirelessTracker, HashSet<EntityPlayerMP>>> iterator = trackerPlayerMap.entrySet()
+                .iterator(); iterator.hasNext();) {
             Entry<EntityWirelessTracker, HashSet<EntityPlayerMP>> entry = iterator.next();
 
             HashSet<EntityPlayerMP> trackedPlayers = entry.getValue();
@@ -367,13 +362,11 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
                 EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
                 if (tracker.isDead) {
                     WRAddonSPH.sendRemoveTrackerTo(player, tracker);
-                } else if (tracker.getDimension() == player.dimension
-                        && !player.loadedChunks.contains(chunk)
+                } else if (tracker.getDimension() == player.dimension && !player.loadedChunks.contains(chunk)
                         && !tracker.attachedToLogout()) // perform update, add to list
                 {
                     playersToTrack.add(player);
-                    if (!trackedPlayers.contains(player)
-                            || (tracker.isAttachedToEntity() && updateAttached)
+                    if (!trackedPlayers.contains(player) || (tracker.isAttachedToEntity() && updateAttached)
                             || (!tracker.isAttachedToEntity() && updateFree)) {
                         WRAddonSPH.sendTrackerUpdatePacketTo(player, tracker);
                     }

@@ -1,25 +1,21 @@
 package codechicken.wirelessredstone.addons;
 
-import codechicken.core.ClientUtils;
-import codechicken.wirelessredstone.core.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.storage.MapData;
 import net.minecraftforge.client.IItemRenderer;
+
 import org.lwjgl.opengl.GL11;
 
+import codechicken.core.ClientUtils;
+import codechicken.wirelessredstone.core.*;
+
 public class WirelessMapRenderer implements IItemRenderer {
-    private void renderPass(
-            int xCenter,
-            int zCenter,
-            int scale,
-            WirelessMapNodeStorage mapstorage,
-            long worldTime,
-            float size,
-            float alpha,
-            float light) {
+
+    private void renderPass(int xCenter, int zCenter, int scale, WirelessMapNodeStorage mapstorage, long worldTime,
+            float size, float alpha, float light) {
         Tessellator tessellator = Tessellator.instance;
         float blockscale = 1 << scale;
 

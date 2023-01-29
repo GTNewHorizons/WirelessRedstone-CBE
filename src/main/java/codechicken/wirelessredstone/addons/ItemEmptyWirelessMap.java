@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
 
 public class ItemEmptyWirelessMap extends ItemMapBase {
+
     /**
      * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
      */

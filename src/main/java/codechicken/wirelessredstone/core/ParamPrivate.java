@@ -3,6 +3,7 @@ package codechicken.wirelessredstone.core;
 import codechicken.core.commands.CoreCommand.WCommandSender;
 
 public class ParamPrivate extends FreqParam {
+
     @Override
     public void printHelp(WCommandSender listener) {
         listener.chatT("wrcbe_core.param.private.usage");
@@ -50,8 +51,7 @@ public class ParamPrivate extends FreqParam {
             int freq = -1;
             try {
                 freq = Integer.parseInt(subArray[2]);
-            } catch (NumberFormatException ne) {
-            }
+            } catch (NumberFormatException ne) {}
 
             if (freq != -1) {
                 if (freq < 1 || freq > RedstoneEther.numfreqs) {
@@ -98,8 +98,7 @@ public class ParamPrivate extends FreqParam {
         int freq = -1;
         try {
             freq = Integer.parseInt(subArray[1]);
-        } catch (NumberFormatException ne) {
-        }
+        } catch (NumberFormatException ne) {}
 
         if (freq != -1) {
             if (freq < 1 || freq > RedstoneEther.numfreqs) {

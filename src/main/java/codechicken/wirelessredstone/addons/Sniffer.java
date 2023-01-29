@@ -1,10 +1,12 @@
 package codechicken.wirelessredstone.addons;
 
-import codechicken.wirelessredstone.core.RedstoneEther;
-import codechicken.wirelessredstone.core.WirelessReceivingDevice;
 import net.minecraft.entity.player.EntityPlayer;
 
+import codechicken.wirelessredstone.core.RedstoneEther;
+import codechicken.wirelessredstone.core.WirelessReceivingDevice;
+
 public class Sniffer implements WirelessReceivingDevice {
+
     public Sniffer(EntityPlayer player) {
         owner = player;
     }

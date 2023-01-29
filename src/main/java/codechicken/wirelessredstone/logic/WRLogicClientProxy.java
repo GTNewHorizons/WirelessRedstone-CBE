@@ -2,10 +2,12 @@ package codechicken.wirelessredstone.logic;
 
 import static codechicken.wirelessredstone.logic.WirelessRedstoneLogic.*;
 
-import codechicken.core.ClientUtils;
 import net.minecraftforge.client.MinecraftForgeClient;
 
+import codechicken.core.ClientUtils;
+
 public class WRLogicClientProxy extends WRLogicProxy {
+
     @Override
     public void init() {
         super.init();

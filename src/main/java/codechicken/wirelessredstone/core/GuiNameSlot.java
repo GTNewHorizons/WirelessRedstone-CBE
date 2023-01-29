@@ -1,13 +1,17 @@
 package codechicken.wirelessredstone.core;
 
-import codechicken.core.gui.GuiScrollSlot;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
 import net.minecraft.entity.player.EntityPlayer;
 
+import codechicken.core.gui.GuiScrollSlot;
+
 public class GuiNameSlot extends GuiScrollSlot {
+
     public class NameSlotComparator implements Comparator<String> {
+
         public int compare(String s1, String s2) {
             boolean match1 = doesNameMatch(s1, match);
             boolean match2 = doesNameMatch(s2, match);
@@ -102,8 +106,7 @@ public class GuiNameSlot extends GuiScrollSlot {
     }
 
     public static boolean doesNameMatch(String name, String match) {
-        return name.length() >= match.length()
-                && name.substring(0, match.length()).equalsIgnoreCase(match);
+        return name.length() >= match.length() && name.substring(0, match.length()).equalsIgnoreCase(match);
     }
 
     public String getSelectedName() {

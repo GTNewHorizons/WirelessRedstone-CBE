@@ -1,15 +1,17 @@
 package codechicken.wirelessredstone.addons;
 
-import codechicken.wirelessredstone.core.ItemWirelessFreq;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
+import codechicken.wirelessredstone.core.ItemWirelessFreq;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class ItemWirelessTracker extends ItemWirelessFreq {
+
     public ItemWirelessTracker() {
         setMaxStackSize(1);
     }
@@ -43,7 +45,8 @@ public class ItemWirelessTracker extends ItemWirelessFreq {
     @Override
     public String getItemStackDisplayName(ItemStack itemstack) {
         return RedstoneEtherAddons.localizeWirelessItem(
-                StatCollector.translateToLocal("wrcbe_addons.tracker.short"), itemstack.getItemDamage());
+                StatCollector.translateToLocal("wrcbe_addons.tracker.short"),
+                itemstack.getItemDamage());
     }
 
     @Override

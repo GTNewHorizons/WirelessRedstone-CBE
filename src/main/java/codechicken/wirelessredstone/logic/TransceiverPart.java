@@ -1,5 +1,10 @@
 package codechicken.wirelessredstone.logic;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MovingObjectPosition;
+
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.Vector3;
@@ -8,12 +13,9 @@ import codechicken.wirelessredstone.core.RedstoneEther;
 import codechicken.wirelessredstone.core.WirelessRedstoneCore;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MovingObjectPosition;
 
 public abstract class TransceiverPart extends WirelessPart implements ITileWireless {
+
     public byte deadmap;
     public int currentfreq;
 
@@ -101,48 +103,18 @@ public abstract class TransceiverPart extends WirelessPart implements ITileWirel
         if (pass == 0) RenderWireless.renderFreq(pos, this);
     }
 
-    /*@Override
-    public void attach(IComputerAccess computer)
-    {
-    }
-
-    @Override
-    public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws Exception
-    {
-        switch(method)
-        {
-            case 0:
-                if(arguments.length < 1)
-                    throw new Exception("Not Enough Arguments");
-                if(!(arguments[0] instanceof Double) || Math.floor((Double) arguments[0]) != (Double)arguments[0])
-                    throw new Exception("Argument 0 is not a number");
-                int freq = ((Double)arguments[0]).intValue();
-                if(freq < 0 || freq > RedstoneEther.numfreqs)
-                    throw new Exception("Invalid Frequency: "+freq);
-                if(!RedstoneEther.server().canBroadcastOnFrequency(owner, freq))
-                    throw new Exception("Frequency: "+freq+" is private");
-                setFreq(freq);
-                return null;
-            case 1:
-                return new Object[]{getFreq()};
-        }
-        throw new Exception("derp?");
-    }
-
-    @Override
-    public boolean canAttachToSide(int side)
-    {
-        return (side&6) != (side()&6);
-    }
-
-    @Override
-    public void detach(IComputerAccess computer)
-    {
-    }
-
-    @Override
-    public String[] getMethodNames()
-    {
-        return new String[]{"setFreq", "getFreq"};
-    }*/
+    /*
+     * @Override public void attach(IComputerAccess computer) { }
+     * @Override public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[]
+     * arguments) throws Exception { switch(method) { case 0: if(arguments.length < 1) throw new
+     * Exception("Not Enough Arguments"); if(!(arguments[0] instanceof Double) || Math.floor((Double) arguments[0]) !=
+     * (Double)arguments[0]) throw new Exception("Argument 0 is not a number"); int freq =
+     * ((Double)arguments[0]).intValue(); if(freq < 0 || freq > RedstoneEther.numfreqs) throw new
+     * Exception("Invalid Frequency: "+freq); if(!RedstoneEther.server().canBroadcastOnFrequency(owner, freq)) throw new
+     * Exception("Frequency: "+freq+" is private"); setFreq(freq); return null; case 1: return new Object[]{getFreq()};
+     * } throw new Exception("derp?"); }
+     * @Override public boolean canAttachToSide(int side) { return (side&6) != (side()&6); }
+     * @Override public void detach(IComputerAccess computer) { }
+     * @Override public String[] getMethodNames() { return new String[]{"setFreq", "getFreq"}; }
+     */
 }

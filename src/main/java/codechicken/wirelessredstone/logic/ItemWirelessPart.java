@@ -1,12 +1,7 @@
 package codechicken.wirelessredstone.logic;
 
-import codechicken.lib.vec.BlockCoord;
-import codechicken.lib.vec.Vector3;
-import codechicken.multipart.JItemMultiPart;
-import codechicken.multipart.TMultiPart;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,15 +10,23 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import codechicken.lib.vec.BlockCoord;
+import codechicken.lib.vec.Vector3;
+import codechicken.multipart.JItemMultiPart;
+import codechicken.multipart.TMultiPart;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class ItemWirelessPart extends JItemMultiPart {
+
     public ItemWirelessPart() {
         setHasSubtypes(true);
         setUnlocalizedName("wrcbe_logic:wirelesspart");
     }
 
     @Override
-    public TMultiPart newPart(
-            ItemStack item, EntityPlayer player, World world, BlockCoord pos, int side, Vector3 vhit) {
+    public TMultiPart newPart(ItemStack item, EntityPlayer player, World world, BlockCoord pos, int side,
+            Vector3 vhit) {
         BlockCoord onPos = pos.copy().offset(side ^ 1);
         if (!world.isSideSolid(onPos.x, onPos.y, onPos.z, ForgeDirection.getOrientation(side))) return null;
 

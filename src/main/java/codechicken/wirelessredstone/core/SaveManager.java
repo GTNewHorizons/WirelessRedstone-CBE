@@ -1,9 +1,5 @@
 package codechicken.wirelessredstone.core;
 
-import codechicken.core.CommonUtils;
-import codechicken.lib.config.ConfigFile;
-import codechicken.lib.config.SimpleProperties;
-import codechicken.lib.vec.BlockCoord;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -19,9 +15,16 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+
 import net.minecraft.world.World;
 
+import codechicken.core.CommonUtils;
+import codechicken.lib.config.ConfigFile;
+import codechicken.lib.config.SimpleProperties;
+import codechicken.lib.vec.BlockCoord;
+
 public class SaveManager {
+
     private RandomAccessFile freqMapFile;
     private RandomAccessFile smallSectorFile;
     private RandomAccessFile largeSectorFile;
@@ -323,10 +326,7 @@ public class SaveManager {
         }
     }
 
-    public void saveFreq(
-            int freq,
-            int activetransmitters,
-            TreeMap<BlockCoord, Boolean> transmittermap,
+    public void saveFreq(int freq, int activetransmitters, TreeMap<BlockCoord, Boolean> transmittermap,
             Map<Integer, Integer> dimensionHash) {
         try {
             freqDimensionHashes[freq] = new ArrayList<Entry<Integer, Integer>>(dimensionHash.entrySet());
@@ -335,8 +335,8 @@ public class SaveManager {
             int numnodes = 0;
             ArrayList<BlockCoord> nodes = new ArrayList<BlockCoord>(activetransmitters);
 
-            for (Iterator<BlockCoord> iterator = transmittermap.keySet().iterator();
-                    iterator.hasNext() && numnodes < activetransmitters; ) {
+            for (Iterator<BlockCoord> iterator = transmittermap.keySet().iterator(); iterator.hasNext()
+                    && numnodes < activetransmitters;) {
                 BlockCoord node = iterator.next();
                 if (transmittermap.get(node)) {
                     nodes.add(node);
@@ -434,8 +434,8 @@ public class SaveManager {
 
     public void removeTrailingSectors() {
         try {
-            if (lastcleanuptime != 0
-                    && System.currentTimeMillis() - lastcleanuptime < cleanuptimeneeded) // 0 means loading
+            if (lastcleanuptime != 0 && System.currentTimeMillis() - lastcleanuptime < cleanuptimeneeded) // 0 means
+                                                                                                          // loading
             {
                 return;
             }
@@ -481,16 +481,14 @@ public class SaveManager {
     public static void loadFreqInfo() {
         freqProp.load();
         loadinginfo = true;
-        for (Iterator<Entry<String, String>> iterator =
-                        freqProp.propertyMap.entrySet().iterator();
-                iterator.hasNext(); ) {
+        for (Iterator<Entry<String, String>> iterator = freqProp.propertyMap.entrySet().iterator(); iterator
+                .hasNext();) {
             Entry<String, String> entry = iterator.next();
             boolean success = false;
             try {
                 int freq;
                 {
-                    Integer val = Integer.parseInt(
-                            entry.getKey().substring(0, entry.getKey().indexOf('.')));
+                    Integer val = Integer.parseInt(entry.getKey().substring(0, entry.getKey().indexOf('.')));
                     if (val == null) continue;
                     freq = val;
                 }
@@ -512,8 +510,7 @@ public class SaveManager {
                     RedstoneEther.server().setFreqOwner(freq, entry.getValue());
                     success = true;
                 }
-            } catch (Exception e) {
-            } finally {
+            } catch (Exception e) {} finally {
                 if (!success) iterator.remove();
             }
         }
@@ -531,8 +528,7 @@ public class SaveManager {
             try {
                 while (true)
                     RedstoneEther.server().setDimensionTransmitterCount(din.readShort(), din.readInt(), din.readInt());
-            } catch (EOFException eof) {
-            } finally {
+            } catch (EOFException eof) {} finally {
                 din.close();
             }
         } catch (IOException e) {

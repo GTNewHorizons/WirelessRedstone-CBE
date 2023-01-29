@@ -2,16 +2,18 @@ package codechicken.wirelessredstone.addons;
 
 import static codechicken.wirelessredstone.addons.WirelessRedstoneAddons.*;
 
-import codechicken.core.ClientUtils;
-import codechicken.wirelessredstone.core.SaveManager;
-import codechicken.wirelessredstone.core.WRCoreCPH;
-import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.MinecraftForgeClient;
 
+import codechicken.core.ClientUtils;
+import codechicken.wirelessredstone.core.SaveManager;
+import codechicken.wirelessredstone.core.WRCoreCPH;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+
 public class WRAddonClientProxy extends WRAddonProxy {
+
     @Override
     public void init() {
         super.init();

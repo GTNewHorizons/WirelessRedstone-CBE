@@ -1,16 +1,18 @@
 package codechicken.wirelessredstone.addons;
 
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
+
 import codechicken.lib.colour.Colour;
 import codechicken.lib.colour.ColourARGB;
 import codechicken.lib.render.TextureDataHolder;
 import codechicken.lib.render.TextureSpecial;
 import codechicken.lib.render.TextureUtils;
 import codechicken.wirelessredstone.core.*;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.ResourceLocation;
 
 public class RemoteTexManager {
+
     private static Colour texGrad[];
     private static Colour texOff[];
     private static Colour texOn[];
@@ -23,8 +25,8 @@ public class RemoteTexManager {
 
         texOn = TextureUtils.loadTextureColours(new ResourceLocation("wrcbe_addons", "textures/items/remoteOn.png"));
         texOff = TextureUtils.loadTextureColours(new ResourceLocation("wrcbe_addons", "textures/items/remoteOff.png"));
-        texGrad =
-                TextureUtils.loadTextureColours(new ResourceLocation("wrcbe_addons", "textures/items/remoteGrad.png"));
+        texGrad = TextureUtils
+                .loadTextureColours(new ResourceLocation("wrcbe_addons", "textures/items/remoteGrad.png"));
 
         for (int i = 0; i < RedstoneEther.numcolours; i++) {
             processTexture(RedstoneEther.colours[i], false, getIconIndex(i, false));

@@ -1,3 +1,4 @@
 package codechicken.wirelessredstone.core;
 
-public interface IGuiRemoteUseable {}
+public interface IGuiRemoteUseable {
+}

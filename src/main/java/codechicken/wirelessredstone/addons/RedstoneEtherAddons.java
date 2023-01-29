@@ -1,14 +1,18 @@
 package codechicken.wirelessredstone.addons;
 
-import codechicken.wirelessredstone.core.RedstoneEther;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.HashSet;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
+import codechicken.wirelessredstone.core.RedstoneEther;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public abstract class RedstoneEtherAddons {
+
     static class AddonPlayerInfo {
+
         Remote remote;
         Sniffer sniffer;
         EntityREP activeREP;

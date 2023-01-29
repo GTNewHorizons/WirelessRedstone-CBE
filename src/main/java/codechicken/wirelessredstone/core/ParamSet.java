@@ -3,6 +3,7 @@ package codechicken.wirelessredstone.core;
 import codechicken.core.commands.CoreCommand.WCommandSender;
 
 public class ParamSet extends FreqParam {
+
     @Override
     public void printHelp(WCommandSender listener) {
         listener.chatT("wrcbe_core.param.set.usage");
@@ -44,9 +45,8 @@ public class ParamSet extends FreqParam {
 
             if (freq >= ether.getLastSharedFrequency())
                 listener.chatOpsT("wrcbe_core.param.set.sharedpublic", playername);
-            else
-                listener.chatOpsT(
-                        "wrcbe_core.param.set.nowshared", playername, (freq + 1), ether.getLastSharedFrequency());
+            else listener
+                    .chatOpsT("wrcbe_core.param.set.nowshared", playername, (freq + 1), ether.getLastSharedFrequency());
         } else if (subArray[1].equals("shared")) {
             if (freq < 1 || freq > RedstoneEther.numfreqs) {
                 listener.chatT("wrcbe_core.param.invalidfreq");
@@ -59,9 +59,8 @@ public class ParamSet extends FreqParam {
 
             if (ether.getLastSharedFrequency() >= freq)
                 if (!wasPublic) listener.chatOpsT("wrcbe_core.param.set.sharedremoved", playername);
-                else
-                    listener.chatOpsT(
-                            "wrcbe_core.param.set.nowshared", playername, (ether.getLastPublicFrequency() + 1), freq);
+            else listener
+                    .chatOpsT("wrcbe_core.param.set.nowshared", playername, (ether.getLastPublicFrequency() + 1), freq);
         } else if (subArray[1].equals("private")) {
             if (freq < 0 || freq > RedstoneEther.numfreqs) {
                 listener.chatT("Invalid Quantity.");

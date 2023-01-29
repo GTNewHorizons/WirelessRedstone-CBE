@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
 
 public class RedstoneEtherClient extends RedstoneEther {
+
     public RedstoneEtherClient() {
         super(true);
     }

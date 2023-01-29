@@ -1,16 +1,19 @@
 package codechicken.wirelessredstone.core;
 
-import codechicken.lib.packet.PacketCustom;
-import codechicken.lib.packet.PacketCustom.IClientPacketHandler;
-import codechicken.lib.vec.Vector3;
 import java.util.LinkedList;
 import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.INetHandlerPlayClient;
 
+import codechicken.lib.packet.PacketCustom;
+import codechicken.lib.packet.PacketCustom.IClientPacketHandler;
+import codechicken.lib.vec.Vector3;
+
 public class WRCoreCPH implements IClientPacketHandler {
+
     public static List<IClientPacketHandler> delegates = new LinkedList<IClientPacketHandler>();
 
     @Override
@@ -28,12 +31,11 @@ public class WRCoreCPH implements IClientPacketHandler {
                 handleLastFreqInfo(packet.readUShort(), packet.readUByte());
                 break;
             case 3:
-                RedstoneEther.get(true)
-                        .setFrequencyRange(
-                                player.getCommandSenderName(),
-                                packet.readUShort(),
-                                packet.readUShort(),
-                                packet.readBoolean());
+                RedstoneEther.get(true).setFrequencyRange(
+                        player.getCommandSenderName(),
+                        packet.readUShort(),
+                        packet.readUShort(),
+                        packet.readBoolean());
                 break;
             case 4:
                 handleFreqInfo(packet);

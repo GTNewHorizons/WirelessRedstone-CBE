@@ -1,9 +1,11 @@
 package codechicken.wirelessredstone.core;
 
-import codechicken.lib.vec.BlockCoord;
 import net.minecraft.tileentity.TileEntity;
 
+import codechicken.lib.vec.BlockCoord;
+
 public class FreqCoord implements Comparable<FreqCoord> {
+
     public FreqCoord(int x, int y, int z, int freq) {
         this.x = x;
         this.y = y;

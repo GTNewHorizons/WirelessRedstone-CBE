@@ -1,5 +1,11 @@
 package codechicken.wirelessredstone.core;
 
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.world.ChunkDataEvent;
+import net.minecraftforge.event.world.ChunkEvent;
+import net.minecraftforge.event.world.WorldEvent;
+
 import codechicken.core.ServerUtils;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
@@ -12,13 +18,9 @@ import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.event.world.ChunkDataEvent;
-import net.minecraftforge.event.world.ChunkEvent;
-import net.minecraftforge.event.world.WorldEvent;
 
 public class WRCoreEventHandler {
+
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event) {
         if (event.world.isRemote) RedstoneEther.loadClientEther(event.world);
@@ -96,7 +98,6 @@ public class WRCoreEventHandler {
 
     @SubscribeEvent
     public void serverTick(WorldTickEvent event) {
-        if (event.phase == Phase.END && !event.world.isRemote)
-            RedstoneEther.server().tick(event.world);
+        if (event.phase == Phase.END && !event.world.isRemote) RedstoneEther.server().tick(event.world);
     }
 }

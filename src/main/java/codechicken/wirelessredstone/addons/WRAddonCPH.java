@@ -1,8 +1,5 @@
 package codechicken.wirelessredstone.addons;
 
-import codechicken.lib.packet.PacketCustom;
-import codechicken.lib.packet.PacketCustom.IClientPacketHandler;
-import codechicken.wirelessredstone.core.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -13,7 +10,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.world.World;
 
+import codechicken.lib.packet.PacketCustom;
+import codechicken.lib.packet.PacketCustom.IClientPacketHandler;
+import codechicken.wirelessredstone.core.*;
+
 public class WRAddonCPH implements IClientPacketHandler {
+
     @Override
     public void handlePacket(PacketCustom packet, Minecraft mc, INetHandlerPlayClient handler) {
         handlePacket(mc.theWorld, mc.thePlayer, packet);

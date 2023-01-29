@@ -2,6 +2,16 @@ package codechicken.wirelessredstone.addons;
 
 import static codechicken.lib.math.MathHelper.*;
 
+import net.minecraft.client.renderer.entity.RenderEntity;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
+
+import org.lwjgl.opengl.GL11;
+
 import codechicken.core.ClientUtils;
 import codechicken.lib.render.CCModel;
 import codechicken.lib.render.CCModelLibrary;
@@ -14,16 +24,9 @@ import codechicken.lib.vec.SwapYZ;
 import codechicken.lib.vec.Translation;
 import codechicken.lib.vec.Vector3;
 import codechicken.wirelessredstone.core.RedstoneEther;
-import net.minecraft.client.renderer.entity.RenderEntity;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer;
-import org.lwjgl.opengl.GL11;
 
 public class RenderTracker extends RenderEntity implements IItemRenderer {
+
     private static CCModel model;
 
     static {

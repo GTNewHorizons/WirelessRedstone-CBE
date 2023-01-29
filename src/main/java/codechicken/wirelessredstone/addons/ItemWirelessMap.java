@@ -1,7 +1,5 @@
 package codechicken.wirelessredstone.addons;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMap;
@@ -9,7 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.world.World;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class ItemWirelessMap extends ItemMap {
+
     @Override
     @SideOnly(Side.CLIENT)
     public void onUpdate(ItemStack itemstack, World world, Entity entity, int slotno, boolean held) {

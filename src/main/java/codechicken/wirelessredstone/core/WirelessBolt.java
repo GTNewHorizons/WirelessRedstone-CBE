@@ -1,9 +1,5 @@
 package codechicken.wirelessredstone.core;
 
-import codechicken.core.CommonUtils;
-import codechicken.lib.config.ConfigTag;
-import codechicken.lib.vec.BlockCoord;
-import codechicken.lib.vec.Vector3;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,8 +19,15 @@ import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
+import codechicken.core.CommonUtils;
+import codechicken.lib.config.ConfigTag;
+import codechicken.lib.vec.BlockCoord;
+import codechicken.lib.vec.Vector3;
+
 public class WirelessBolt {
+
     public class BoltPoint {
+
         public BoltPoint(Vector3 basepoint, Vector3 offsetvec) {
             this.point = basepoint.copy().add(offsetvec);
             this.basepoint = basepoint;
@@ -36,6 +40,7 @@ public class WirelessBolt {
     }
 
     public class SegmentSorter implements Comparator<Segment> {
+
         public int compare(Segment o1, Segment o2) {
             if (o1.splitno != o2.splitno) return o1.splitno < o2.splitno ? -1 : 1;
             if (o1.segmentno != o2.segmentno) return o1.segmentno < o2.segmentno ? -1 : 1;
@@ -44,12 +49,14 @@ public class WirelessBolt {
     }
 
     public class SegmentLightSorter implements Comparator<Segment> {
+
         public int compare(Segment o1, Segment o2) {
             return o1.light != o2.light ? o1.light < o2.light ? -1 : 1 : 0;
         }
     }
 
     public class Segment {
+
         public Segment(BoltPoint start, BoltPoint end, float light, int segmentnumber, int splitnumber) {
             this.startpoint = start;
             this.endpoint = end;
@@ -163,14 +170,14 @@ public class WirelessBolt {
         particleAge = -(int) (length * speed);
 
         boundingBox = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
-        boundingBox.setBB(AxisAlignedBB.getBoundingBox(
+        boundingBox.setBB(
+                AxisAlignedBB.getBoundingBox(
                         Math.min(start.x, end.x),
                         Math.min(start.y, end.y),
                         Math.min(start.z, end.z),
                         Math.max(start.x, end.x),
                         Math.max(start.y, end.y),
-                        Math.max(start.z, end.z))
-                .expand(length / 2, length / 2, length / 2));
+                        Math.max(start.z, end.z)).expand(length / 2, length / 2, length / 2));
 
         segments.add(new Segment(start, end));
     }
@@ -202,7 +209,7 @@ public class WirelessBolt {
 
         Segment prev = null;
 
-        for (Iterator<Segment> iterator = oldsegments.iterator(); iterator.hasNext(); ) {
+        for (Iterator<Segment> iterator = oldsegments.iterator(); iterator.hasNext();) {
             Segment segment = iterator.next();
             prev = segment.prev;
 
@@ -215,8 +222,8 @@ public class WirelessBolt {
             newpoints[splits] = segment.endpoint;
 
             for (int i = 1; i < splits; i++) {
-                Vector3 randoff =
-                        segment.diff.copy().perpendicular().normalize().rotate(rand.nextFloat() * 360, segment.diff);
+                Vector3 randoff = segment.diff.copy().perpendicular().normalize()
+                        .rotate(rand.nextFloat() * 360, segment.diff);
                 randoff.multiply((rand.nextFloat() - 0.5F) * amount * 2);
 
                 Vector3 basepoint = startpoint.copy().add(subsegment.copy().multiply(i));
@@ -225,7 +232,11 @@ public class WirelessBolt {
             }
             for (int i = 0; i < splits; i++) {
                 Segment next = new Segment(
-                        newpoints[i], newpoints[i + 1], segment.light, segment.segmentno * splits + i, segment.splitno);
+                        newpoints[i],
+                        newpoints[i + 1],
+                        segment.light,
+                        segment.segmentno * splits + i,
+                        segment.splitno);
                 next.prev = prev;
                 if (prev != null) {
                     prev.next = next;
@@ -233,9 +244,7 @@ public class WirelessBolt {
 
                 if (i != 0 && rand.nextFloat() < splitchance) {
                     Vector3 splitrot = next.diff.copy().xCrossProduct().rotate(rand.nextFloat() * 360, next.diff);
-                    Vector3 diff = next.diff
-                            .copy()
-                            .rotate((rand.nextFloat() * 0.66F + 0.33F) * splitangle, splitrot)
+                    Vector3 diff = next.diff.copy().rotate((rand.nextFloat() * 0.66F + 0.33F) * splitangle, splitrot)
                             .multiply(splitlength);
 
                     numsplits++;
@@ -243,9 +252,7 @@ public class WirelessBolt {
 
                     Segment split = new Segment(
                             newpoints[i],
-                            new BoltPoint(
-                                    newpoints[i + 1].basepoint,
-                                    newpoints[i + 1].offsetvec.copy().add(diff)),
+                            new BoltPoint(newpoints[i + 1].basepoint, newpoints[i + 1].offsetvec.copy().add(diff)),
                             segment.light / 2F,
                             next.segmentno,
                             numsplits);
@@ -284,14 +291,12 @@ public class WirelessBolt {
             Block block = world.getBlock(mop.blockX, mop.blockY, mop.blockZ);
             if (block.isAir(world, mop.blockX, mop.blockY, mop.blockZ)) return prevresistance;
 
-            /*if(Block.blocksList[blockID] instanceof ISpecialResistance)
-            {
-                ISpecialResistance isr = (ISpecialResistance) Block.blocksList[blockID];
-                 return prevresistance + (isr.getSpecialExplosionResistance(world, mop.blockX, mop.blockY, mop.blockZ,
-                         start.x, start.y, start.z, wrapper) + 0.3F);
-            }
-            else
-            {*/
+            /*
+             * if(Block.blocksList[blockID] instanceof ISpecialResistance) { ISpecialResistance isr =
+             * (ISpecialResistance) Block.blocksList[blockID]; return prevresistance +
+             * (isr.getSpecialExplosionResistance(world, mop.blockX, mop.blockY, mop.blockZ, start.x, start.y, start.z,
+             * wrapper) + 0.3F); } else {
+             */
             return prevresistance + block.getExplosionResistance(wrapper) + 0.3F;
             // }
         }
@@ -302,7 +307,7 @@ public class WirelessBolt {
         Vec3 start3D = start.toVec3D();
         Vec3 end3D = end.toVec3D();
 
-        for (Iterator<Entity> iterator = entitylist.iterator(); iterator.hasNext(); ) {
+        for (Iterator<Entity> iterator = entitylist.iterator(); iterator.hasNext();) {
             Entity entity = iterator.next();
             if (entity instanceof EntityLivingBase
                     && (entity.boundingBox.isVecInside(start3D) || entity.boundingBox.isVecInside(end3D))) {
@@ -318,13 +323,13 @@ public class WirelessBolt {
     private void bbTestEntityDamage() {
         if (world.isRemote) return;
 
-        int newestsegment =
-                (int) ((particleAge + (int) (length * speed)) / (float) (int) (length * speed) * numsegments0);
+        int newestsegment = (int) ((particleAge + (int) (length * speed)) / (float) (int) (length * speed)
+                * numsegments0);
 
         List<Entity> nearentities = world.getEntitiesWithinAABBExcludingEntity(wrapper, boundingBox);
         if (nearentities.size() == 0) return;
 
-        for (Iterator<Segment> iterator = segments.iterator(); iterator.hasNext(); ) {
+        for (Iterator<Segment> iterator = segments.iterator(); iterator.hasNext();) {
             Segment segment = iterator.next();
 
             if (segment.segmentno > newestsegment) {
@@ -344,8 +349,8 @@ public class WirelessBolt {
         int lastactiveseg = 0; // unterminated
         float splitresistance = 0;
 
-        for (Iterator<Segment> iterator = segments.iterator();
-                iterator.hasNext(); ) // iterate each branch and do tests for the last active split
+        for (Iterator<Segment> iterator = segments.iterator(); iterator.hasNext();) // iterate each branch and do tests
+                                                                                    // for the last active split
         {
             Segment segment = iterator.next();
             if (segment.splitno > lastsplitcalc) // next split trace
@@ -354,9 +359,9 @@ public class WirelessBolt {
                 // reset
                 lastsplitcalc = segment.splitno;
                 lastactiveseg = lastactivesegment.get(splitparents.get(segment.splitno)); // last active is parent
-                splitresistance = lastactiveseg < segment.segmentno
-                        ? 50
-                        : 0; // already teminated if the last parent segment was before the start of this one
+                splitresistance = lastactiveseg < segment.segmentno ? 50 : 0; // already teminated if the last parent
+                                                                              // segment was before the start of this
+                                                                              // one
             }
             if (splitresistance >= 40 * segment.light) {
                 continue;
@@ -368,8 +373,8 @@ public class WirelessBolt {
 
         lastsplitcalc = 0;
         lastactiveseg = lastactivesegment.get(0);
-        for (Iterator<Segment> iterator = segments.iterator();
-                iterator.hasNext(); ) // iterate each segment and kill off largeones
+        for (Iterator<Segment> iterator = segments.iterator(); iterator.hasNext();) // iterate each segment and kill off
+                                                                                    // largeones
         {
             Segment segment = iterator.next();
             if (lastsplitcalc != segment.splitno) {
@@ -443,16 +448,14 @@ public class WirelessBolt {
 
     public static void init(ConfigTag rpconfig) {
         ConfigTag boltconfig = rpconfig.getTag("boltEffect").useBraces();
-        ConfigTag damageconfig = boltconfig
-                .getTag("damage")
-                .setComment(
-                        "Damages are in half hearts:If an entity gets knocked into another bolt it may suffer multiple hits");
+        ConfigTag damageconfig = boltconfig.getTag("damage").setComment(
+                "Damages are in half hearts:If an entity gets knocked into another bolt it may suffer multiple hits");
         entitydamage = damageconfig.getTag("entity").setComment("").getIntValue(5);
         playerdamage = damageconfig.getTag("player").setComment("").getIntValue(3);
     }
 
     public static void update(List<WirelessBolt> boltlist) {
-        for (Iterator<WirelessBolt> iterator = boltlist.iterator(); iterator.hasNext(); ) {
+        for (Iterator<WirelessBolt> iterator = boltlist.iterator(); iterator.hasNext();) {
             WirelessBolt bolt = iterator.next();
             bolt.onUpdate();
             if (bolt.isDead) {

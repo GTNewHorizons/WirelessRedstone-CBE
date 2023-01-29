@@ -3,23 +3,23 @@ package codechicken.wirelessredstone.logic;
 import static codechicken.lib.vec.Rotation.*;
 import static codechicken.lib.vec.Vector3.*;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
+
 import codechicken.core.ClientUtils;
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
 import codechicken.wirelessredstone.core.*;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
 
 public class TransmitterPart extends TransceiverPart {
+
     public static Cuboid6[] extensionBB = new Cuboid6[24];
 
     static {
         Cuboid6 base = new Cuboid6(7 / 16D, 1 / 8D, 2 / 8D, 9 / 16D, 7 / 8D, 3 / 8D);
         for (int s = 0; s < 6; s++)
-            for (int r = 0; r < 4; r++)
-                extensionBB[s << 2 | r] =
-                        base.copy().apply(sideOrientation(s, r).at(center));
+            for (int r = 0; r < 4; r++) extensionBB[s << 2 | r] = base.copy().apply(sideOrientation(s, r).at(center));
     }
 
     @Override

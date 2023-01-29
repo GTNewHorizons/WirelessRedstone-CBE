@@ -1,9 +1,11 @@
 package codechicken.wirelessredstone.addons;
 
-import codechicken.wirelessredstone.core.FreqCoord;
 import java.util.TreeSet;
 
+import codechicken.wirelessredstone.core.FreqCoord;
+
 public class WirelessMapNodeStorage {
+
     public void clear() {
         nodes.clear();
         devices.clear();

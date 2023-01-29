@@ -3,6 +3,7 @@ package codechicken.wirelessredstone.addons;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class TriangFreqManager {
+
     public TriangFreqManager(int freq) {
         this.freq = freq;
     }
@@ -19,8 +20,9 @@ public class TriangFreqManager {
         double spinto; // the angle the triang should finally point
         if (!isTriangOn() || player == null) {
             spinto = triangangle; // leave it where it is
-        } else if (RedstoneEtherAddons.client().isRemoteOn(player, freq)
-                || triangsmpspinto == -2) // holding remote active or in another dimension
+        } else if (RedstoneEtherAddons.client().isRemoteOn(player, freq) || triangsmpspinto == -2) // holding remote
+                                                                                                   // active or in
+                                                                                                   // another dimension
         {
             spinto = Math.random() * 6.2831853071795862D; // spin to a random place
         } else {
@@ -28,9 +30,14 @@ public class TriangFreqManager {
         }
 
         double spindiff; // distance to spin
-        for (spindiff = spinto - triangangle;
-                spindiff < -3.1415926535897931D;
-                spindiff += 6.2831853071795862D) {} // make sure angle is between PI and -PI
+        for (spindiff = spinto - triangangle; spindiff < -3.1415926535897931D; spindiff += 6.2831853071795862D) {} // make
+                                                                                                                   // sure
+                                                                                                                   // angle
+                                                                                                                   // is
+                                                                                                                   // between
+                                                                                                                   // PI
+                                                                                                                   // and
+                                                                                                                   // -PI
         for (; spindiff >= 3.1415926535897931D; spindiff -= 6.2831853071795862D) {}
         if (spindiff < -1D) // bound spin to 1radian per tick
         {

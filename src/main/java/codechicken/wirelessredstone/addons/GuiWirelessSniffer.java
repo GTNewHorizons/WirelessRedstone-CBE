@@ -1,17 +1,20 @@
 package codechicken.wirelessredstone.addons;
 
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.RenderHelper;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
 import codechicken.lib.colour.Colour;
 import codechicken.lib.colour.ColourARGB;
 import codechicken.lib.config.ConfigTag;
 import codechicken.lib.render.CCRenderState;
 import codechicken.wirelessredstone.core.*;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.RenderHelper;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 public class GuiWirelessSniffer extends GuiScreen {
+
     public GuiWirelessSniffer() {
         page = 0;
         ethercopy = new byte[RedstoneEther.numfreqs >> 3];
@@ -79,8 +82,8 @@ public class GuiWirelessSniffer extends GuiScreen {
         drawFrequencies(8, 24, startfreq);
 
         String rangestring = "" + startfreq + " - " + endfreq;
-        fontRendererObj.drawString(
-                rangestring, xSize / 2 - fontRendererObj.getStringWidth(rangestring) / 2, 181, 0x404040);
+        fontRendererObj
+                .drawString(rangestring, xSize / 2 - fontRendererObj.getStringWidth(rangestring) / 2, 181, 0x404040);
         GL11.glPopMatrix();
 
         int freq = getFreqMouseOver(mousex, mousey);
@@ -104,7 +107,8 @@ public class GuiWirelessSniffer extends GuiScreen {
 
     public Colour getColour(int freq) {
         if (RedstoneEther.get(true).isPlayerJammed(mc.thePlayer)
-                || !RedstoneEther.get(true).canBroadcastOnFrequency(mc.thePlayer, freq)) return colourJammed;
+                || !RedstoneEther.get(true).canBroadcastOnFrequency(mc.thePlayer, freq))
+            return colourJammed;
 
         return colourOff.copy().interpolate(colourOn, brightness[freq - 1] / 64F);
     }
@@ -135,12 +139,7 @@ public class GuiWirelessSniffer extends GuiScreen {
                 int x = xstart + (blocksize + 1) * xfreq;
                 int y = ystart + (blocksize + 1) * yfreq;
                 drawRect(x, y, x + blocksize, y + blocksize, getBorder(freq).argb());
-                drawRect(
-                        x + 1,
-                        y + 1,
-                        x + blocksize - 1,
-                        y + blocksize - 1,
-                        getColour(freq).argb());
+                drawRect(x + 1, y + 1, x + blocksize - 1, y + blocksize - 1, getColour(freq).argb());
 
                 freq++;
             }
@@ -184,32 +183,23 @@ public class GuiWirelessSniffer extends GuiScreen {
 
     public static void loadColours(ConfigTag addonconfig) {
         ConfigTag snifferconifg = addonconfig.getTag("sniffer.gui").useBraces();
-        ConfigTag colourconfig = snifferconifg
-                .getTag("colour")
-                .setPosition(0)
+        ConfigTag colourconfig = snifferconifg.getTag("colour").setPosition(0)
                 .setComment("Colours are in 0xAARRGGBB format:Alpha should be FF");
         ConfigTag borderconfig = snifferconifg.getTag("border").setPosition(1).setNewLine(true);
 
-        colourOn = new ColourARGB(
-                colourconfig.getTag("on").setPosition(0).setComment("").getHexValue(0xffFF0000));
+        colourOn = new ColourARGB(colourconfig.getTag("on").setPosition(0).setComment("").getHexValue(0xffFF0000));
         colourOff = new ColourARGB(colourconfig.getTag("off").setPosition(1).getHexValue(0xff700000));
-        colourJammed =
-                new ColourARGB(colourconfig.getTag("jammed").setPosition(2).getHexValue(0xff707070));
+        colourJammed = new ColourARGB(colourconfig.getTag("jammed").setPosition(2).getHexValue(0xff707070));
 
-        colourPOn =
-                new ColourARGB(colourconfig.getTag("private.on").setPosition(0).getHexValue(0xff40F000));
-        colourPOff =
-                new ColourARGB(colourconfig.getTag("private.off").setPosition(1).getHexValue(0xff40A000));
+        colourPOn = new ColourARGB(colourconfig.getTag("private.on").setPosition(0).getHexValue(0xff40F000));
+        colourPOff = new ColourARGB(colourconfig.getTag("private.off").setPosition(1).getHexValue(0xff40A000));
 
         borderOn = new ColourARGB(borderconfig.getTag("on").setPosition(0).getHexValue(0xffEE0000));
         borderOff = new ColourARGB(borderconfig.getTag("off").setPosition(1).getHexValue(0xff500000));
-        borderJammed =
-                new ColourARGB(borderconfig.getTag("jammed").setPosition(2).getHexValue(0xff505050));
+        borderJammed = new ColourARGB(borderconfig.getTag("jammed").setPosition(2).getHexValue(0xff505050));
 
-        borderPOn =
-                new ColourARGB(borderconfig.getTag("private.on").setPosition(0).getHexValue(0xff20E000));
-        borderPOff =
-                new ColourARGB(borderconfig.getTag("private.off").setPosition(1).getHexValue(0xff209000));
+        borderPOn = new ColourARGB(borderconfig.getTag("private.on").setPosition(0).getHexValue(0xff20E000));
+        borderPOff = new ColourARGB(borderconfig.getTag("private.off").setPosition(1).getHexValue(0xff209000));
     }
 
     public String title;

@@ -1,16 +1,19 @@
 package codechicken.wirelessredstone.addons;
 
-import codechicken.lib.packet.PacketCustom;
-import codechicken.lib.packet.PacketCustom.IServerPacketHandler;
-import codechicken.wirelessredstone.core.*;
 import java.util.TreeSet;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.INetHandlerPlayServer;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.MapData;
 
+import codechicken.lib.packet.PacketCustom;
+import codechicken.lib.packet.PacketCustom.IServerPacketHandler;
+import codechicken.wirelessredstone.core.*;
+
 public class WRAddonSPH implements IServerPacketHandler {
+
     @Override
     public void handlePacket(PacketCustom packet, EntityPlayerMP sender, INetHandlerPlayServer handler) {
         handlePacket((WorldServer) sender.worldObj, sender, packet);
@@ -59,13 +62,8 @@ public class WRAddonSPH implements IServerPacketHandler {
         packet.sendToPlayer(player);
     }
 
-    public static void sendMapUpdatePacketTo(
-            EntityPlayer player,
-            int mapno,
-            MapData mapdata,
-            TreeSet<FreqCoord> addednodes,
-            TreeSet<FreqCoord> removednodes,
-            TreeSet<FreqCoord> remotes) {
+    public static void sendMapUpdatePacketTo(EntityPlayer player, int mapno, MapData mapdata,
+            TreeSet<FreqCoord> addednodes, TreeSet<FreqCoord> removednodes, TreeSet<FreqCoord> remotes) {
         PacketCustom packet = new PacketCustom(WirelessRedstoneCore.channel, 57);
         packet.writeShort((short) addednodes.size());
         for (FreqCoord node : addednodes) {

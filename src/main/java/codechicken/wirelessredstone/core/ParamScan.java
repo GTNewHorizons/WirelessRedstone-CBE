@@ -4,6 +4,7 @@ import codechicken.core.ServerUtils;
 import codechicken.core.commands.CoreCommand.WCommandSender;
 
 public class ParamScan extends FreqParam {
+
     @Override
     public void printHelp(WCommandSender listener) {
         listener.chatT("wrcbe_core.param.scan.usage");

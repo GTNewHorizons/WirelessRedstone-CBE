@@ -1,14 +1,8 @@
 package codechicken.wirelessredstone.core;
 
-import codechicken.core.CommonUtils;
-import codechicken.core.ServerUtils;
-import codechicken.lib.math.MathHelper;
-import codechicken.lib.vec.BlockCoord;
-import codechicken.lib.vec.Vector3;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.*;
 import java.util.Map.Entry;
+
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -16,8 +10,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import codechicken.core.CommonUtils;
+import codechicken.core.ServerUtils;
+import codechicken.lib.math.MathHelper;
+import codechicken.lib.vec.BlockCoord;
+import codechicken.lib.vec.Vector3;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public abstract class RedstoneEther {
+
     public static class TXNodeInfo {
+
         public TXNodeInfo(int freq2, boolean b) {
             freq = freq2;
             on = b;
@@ -28,6 +32,7 @@ public abstract class RedstoneEther {
     }
 
     static class DimensionalEtherHash {
+
         TreeMap<BlockCoord, TXNodeInfo> transmittingblocks = new TreeMap<BlockCoord, RedstoneEther.TXNodeInfo>();
         TreeMap<BlockCoord, Integer> recievingblocks = new TreeMap<BlockCoord, Integer>();
         HashSet<WirelessTransmittingDevice> transmittingdevices = new HashSet<WirelessTransmittingDevice>();
@@ -55,29 +60,18 @@ public abstract class RedstoneEther {
 
     public static final int numfreqs = 5000;
 
-    public static final int jammerrange = SaveManager.config()
-            .getTag("core.jammer.range")
-            .setComment("Range In Blocks")
+    public static final int jammerrange = SaveManager.config().getTag("core.jammer.range").setComment("Range In Blocks")
             .getIntValue(10);
     public static final int jammerrangePow2 = jammerrange * jammerrange;
-    public static final int jammertimeout = SaveManager.config()
-                    .getTag("core.jammer.timeout")
-                    .setComment("Timeout In Seconds:Applies to both blocks and players")
-                    .getIntValue(60)
-            * 20;
+    public static final int jammertimeout = SaveManager.config().getTag("core.jammer.timeout")
+            .setComment("Timeout In Seconds:Applies to both blocks and players").getIntValue(60) * 20;
     public static final int jammerrandom = jammertimeout / 3;
-    public static final int jammerentitywait =
-            SaveManager.config().getTag("core.jammer.entitydelay").getIntValue(5) * 20;
-    public static final int jammerentityretry = SaveManager.config()
-                    .getTag("core.jammer.entityretry")
-                    .setComment("Jam an entity again after x seconds")
-                    .getIntValue(10)
+    public static final int jammerentitywait = SaveManager.config().getTag("core.jammer.entitydelay").getIntValue(5)
             * 20;
-    public static final int jammerblockwait = SaveManager.config()
-                    .getTag("core.jammer.blockdelay")
-                    .setComment("Delay in seconds before jamming the first time")
-                    .getIntValue(10)
-            * 20;
+    public static final int jammerentityretry = SaveManager.config().getTag("core.jammer.entityretry")
+            .setComment("Jam an entity again after x seconds").getIntValue(10) * 20;
+    public static final int jammerblockwait = SaveManager.config().getTag("core.jammer.blockdelay")
+            .setComment("Delay in seconds before jamming the first time").getIntValue(10) * 20;
 
     public static ItemStack[] coloursetters;
 
@@ -86,56 +80,14 @@ public abstract class RedstoneEther {
     public static final float maxrps = 2.98F;
     public static final double gradrps = maxrps / 5000D;
 
-    public static final String localdyenames[] = {
-        "red",
-        "green",
-        "brown",
-        "blue",
-        "purple",
-        "cyan",
-        "silver",
-        "gray",
-        "pink",
-        "lime",
-        "yellow",
-        "lightBlue",
-        "magenta",
-        "orange"
-    };
+    public static final String localdyenames[] = { "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray",
+            "pink", "lime", "yellow", "lightBlue", "magenta", "orange" };
 
-    public static final String fulldyenames[] = {
-        "Red",
-        "Green",
-        "Brown",
-        "Blue",
-        "Purple",
-        "Cyan",
-        "Light Gray",
-        "Gray",
-        "Pink",
-        "Lime",
-        "Yellow",
-        "Light Blue",
-        "Magenta",
-        "Orange"
-    };
+    public static final String fulldyenames[] = { "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "Light Gray",
+            "Gray", "Pink", "Lime", "Yellow", "Light Blue", "Magenta", "Orange" };
 
-    public static final int colours[] = {
-        0xFFB3312C,
-        0xFF336600,
-        0xFF51301A,
-        0xFF253192,
-        0xFF7B2FBE,
-        0xFF287697,
-        0xFF848484,
-        0xFF434343,
-        0xFFD88198,
-        0xFF41CD34,
-        0xFFDECF2A,
-        0xFF6689D3,
-        0xFFC354CD,
-        0xFFEB8844
-    };
+    public static final int colours[] = { 0xFFB3312C, 0xFF336600, 0xFF51301A, 0xFF253192, 0xFF7B2FBE, 0xFF287697,
+            0xFF848484, 0xFF434343, 0xFFD88198, 0xFF41CD34, 0xFFDECF2A, 0xFF6689D3, 0xFFC354CD, 0xFFEB8844 };
 
     static {
         SaveManager.config().getTag("core.jammer").useBraces();
@@ -145,14 +97,12 @@ public abstract class RedstoneEther {
     private static RedstoneEtherClient clientEther;
 
     public static int pythagorasPow2(BlockCoord node1, BlockCoord node2) {
-        return (node1.x - node2.x) * (node1.x - node2.x)
-                + (node1.y - node2.y) * (node1.y - node2.y)
+        return (node1.x - node2.x) * (node1.x - node2.x) + (node1.y - node2.y) * (node1.y - node2.y)
                 + (node1.z - node2.z) * (node1.z - node2.z);
     }
 
     public static double pythagorasPow2(BlockCoord node, Vector3 point) {
-        return (node.x - point.x) * (node.x - point.x)
-                + (node.y - point.y) * (node.y - point.y)
+        return (node.x - point.x) * (node.x - point.x) + (node.y - point.y) * (node.y - point.y)
                 + (node.z - point.z) * (node.z - point.z);
     }
 
@@ -204,23 +154,12 @@ public abstract class RedstoneEther {
 
     public static ItemStack[] getColourSetters() {
         if (coloursetters == null) {
-            coloursetters = new ItemStack[] {
-                new ItemStack(Items.dye, 1, 1),
-                new ItemStack(Items.dye, 1, 2),
-                new ItemStack(Items.dye, 1, 3),
-                new ItemStack(Items.dye, 1, 4),
-                new ItemStack(Items.dye, 1, 5),
-                new ItemStack(Items.dye, 1, 6),
-                new ItemStack(Items.dye, 1, 7),
-                new ItemStack(Items.dye, 1, 8),
-                new ItemStack(Items.dye, 1, 9),
-                new ItemStack(Items.dye, 1, 10),
-                new ItemStack(Items.dye, 1, 11),
-                new ItemStack(Items.dye, 1, 12),
-                new ItemStack(Items.dye, 1, 13),
-                new ItemStack(Items.dye, 1, 14),
-                new ItemStack(Items.redstone, 1)
-            };
+            coloursetters = new ItemStack[] { new ItemStack(Items.dye, 1, 1), new ItemStack(Items.dye, 1, 2),
+                    new ItemStack(Items.dye, 1, 3), new ItemStack(Items.dye, 1, 4), new ItemStack(Items.dye, 1, 5),
+                    new ItemStack(Items.dye, 1, 6), new ItemStack(Items.dye, 1, 7), new ItemStack(Items.dye, 1, 8),
+                    new ItemStack(Items.dye, 1, 9), new ItemStack(Items.dye, 1, 10), new ItemStack(Items.dye, 1, 11),
+                    new ItemStack(Items.dye, 1, 12), new ItemStack(Items.dye, 1, 13), new ItemStack(Items.dye, 1, 14),
+                    new ItemStack(Items.redstone, 1) };
         }
         return coloursetters;
     }
@@ -233,19 +172,19 @@ public abstract class RedstoneEther {
         String splitstring[] = freqstring.split("-");
         if (splitstring.length == 1) {
             try {
-                return (new int[] {Integer.parseInt(splitstring[0]), Integer.parseInt(splitstring[0])});
+                return (new int[] { Integer.parseInt(splitstring[0]), Integer.parseInt(splitstring[0]) });
             } catch (NumberFormatException numberformatexception) {
-                return (new int[] {-1, -1});
+                return (new int[] { -1, -1 });
             }
         }
         if (splitstring.length == 2) {
             try {
-                return (new int[] {Integer.parseInt(splitstring[0]), Integer.parseInt(splitstring[1])});
+                return (new int[] { Integer.parseInt(splitstring[0]), Integer.parseInt(splitstring[1]) });
             } catch (NumberFormatException numberformatexception1) {
-                return (new int[] {-1, -1});
+                return (new int[] { -1, -1 });
             }
         }
-        return (new int[] {-1, -1});
+        return (new int[] { -1, -1 });
     }
 
     public static int getRandomTimeout(Random rand) {
@@ -336,7 +275,7 @@ public abstract class RedstoneEther {
 
     public boolean canBroadcastOnFrequency(String username, int freq) {
         if (freq == 0) // dummy :)
-        return true;
+            return true;
 
         if (freq > numfreqs || freq <= 0) {
             return false;
@@ -379,17 +318,17 @@ public abstract class RedstoneEther {
         int startfreq = -1;
         do {
             if (currentfreq > numfreqs) {
-                if (startfreq != -1) return (new int[] {startfreq, numfreqs});
-                return (new int[] {-1, -1}); // -1, -1 is none
+                if (startfreq != -1) return (new int[] { startfreq, numfreqs });
+                return (new int[] { -1, -1 }); // -1, -1 is none
             }
             if (jammedFreqs[currentfreq - 1] == jammed) // jammed
             {
                 if (startfreq == -1) // last freq was open
-                startfreq = currentfreq;
+                    startfreq = currentfreq;
             } else // open
             {
                 if (startfreq != -1) // last freq was jammed
-                return (new int[] {startfreq, currentfreq - 1});
+                    return (new int[] { startfreq, currentfreq - 1 });
             }
             currentfreq++;
         } while (true);
@@ -410,7 +349,7 @@ public abstract class RedstoneEther {
     }
 
     private void verifyPrivateFreqs() {
-        for (Iterator<Integer> iterator = privateFreqs.keySet().iterator(); iterator.hasNext(); ) {
+        for (Iterator<Integer> iterator = privateFreqs.keySet().iterator(); iterator.hasNext();) {
             int freq = iterator.next();
 
             if (freq <= publicfrequencyend || freq > sharedfrequencyend) {
@@ -477,10 +416,9 @@ public abstract class RedstoneEther {
     }
 
     public int getFreqColourId(int freq) {
-        if (freq == 0
-                || freqarray == null
-                || freqarray[freq] == null) // sometimes render gets in before init on servers
-        return -1;
+        if (freq == 0 || freqarray == null || freqarray[freq] == null) // sometimes render gets in before init on
+                                                                       // servers
+            return -1;
 
         return freqarray[freq].getColourId();
     }
@@ -511,8 +449,7 @@ public abstract class RedstoneEther {
 
         for (int freq = 1; freq <= numfreqs; freq++) {
             String name = freqarray[freq].getName();
-            if (name == null
-                    || name.equals("")
+            if (name == null || name.equals("")
                     || !canBroadcastOnFrequency(player, freq)
                     || name.length() < match.length()
                     || !name.substring(0, match.length()).equalsIgnoreCase(match)) {

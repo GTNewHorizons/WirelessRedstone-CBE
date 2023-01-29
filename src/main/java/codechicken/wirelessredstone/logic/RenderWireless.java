@@ -3,6 +3,17 @@ package codechicken.wirelessredstone.logic;
 import static codechicken.lib.vec.Rotation.*;
 import static codechicken.lib.vec.Vector3.*;
 
+import java.util.Arrays;
+import java.util.Map;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+
 import codechicken.lib.colour.ColourRGBA;
 import codechicken.lib.lighting.LightModel;
 import codechicken.lib.lighting.LightModel.Light;
@@ -14,22 +25,14 @@ import codechicken.lib.vec.Scale;
 import codechicken.lib.vec.Transformation;
 import codechicken.lib.vec.Translation;
 import codechicken.lib.vec.Vector3;
-import java.util.Arrays;
-import java.util.Map;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 public class RenderWireless {
+
     private static MultiIconTransformation model_icont;
     private static MultiIconTransformation base_icont[] = new MultiIconTransformation[2];
     private static CCModel[][] models = new CCModel[3][24];
 
-    private static LightModel lm = new LightModel()
-            .setAmbient(new Vector3(0.7, 0.7, 0.7))
+    private static LightModel lm = new LightModel().setAmbient(new Vector3(0.7, 0.7, 0.7))
             .addLight(new Light(new Vector3(0.2, 1, -0.7)).setDiffuse(new Vector3(0.3, 0.3, 0.3)))
             .addLight(new Light(new Vector3(-0.2, 1, 0.7)).setDiffuse(new Vector3(0.3, 0.3, 0.3)))
             .addLight(new Light(new Vector3(0.7, -1, -0.2)).setDiffuse(new Vector3(0.2, 0.2, 0.2)))
@@ -37,8 +40,8 @@ public class RenderWireless {
     private static PlanarLightModel rlm = lm.reducePlanar();
 
     static {
-        Map<String, CCModel> modelMap =
-                CCModel.parseObjModels(new ResourceLocation("wrcbe_logic", "models/models.obj"), 7, null);
+        Map<String, CCModel> modelMap = CCModel
+                .parseObjModels(new ResourceLocation("wrcbe_logic", "models/models.obj"), 7, null);
         CCModel tstand = setTex(modelMap.get("TStand"), 2);
         CCModel jstand = setTex(tstand.copy(), 1);
         CCModel rstand = setTex(modelMap.get("RStand"), 2);
@@ -52,8 +55,7 @@ public class RenderWireless {
 
         for (int j = 1; j < 24; j++) {
             Transformation t = sideOrientation(j >> 2, j & 3).at(center);
-            for (int i = 0; i < models.length; i++)
-                models[i][j] = models[i][0].copy().apply(t);
+            for (int i = 0; i < models.length; i++) models[i][j] = models[i][0].copy().apply(t);
         }
 
         for (int j = 0; j < 24; j++) for (int i = 0; i < 3; i++) models[i][j].computeLighting(lm);

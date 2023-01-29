@@ -1,13 +1,15 @@
 package codechicken.wirelessredstone.logic;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
+
 import codechicken.core.ClientUtils;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
 import codechicken.wirelessredstone.core.*;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
 
 public class JammerPart extends WirelessPart implements ITileJammer {
+
     int randfreqspeed;
 
     public JammerPart() {
@@ -47,8 +49,7 @@ public class JammerPart extends WirelessPart implements ITileJammer {
 
     @Override
     public double getPearlSpin() {
-        if (world().rand.nextInt(100) == 0 || randfreqspeed == 0)
-            randfreqspeed = world().rand.nextInt(5000) + 1;
+        if (world().rand.nextInt(100) == 0 || randfreqspeed == 0) randfreqspeed = world().rand.nextInt(5000) + 1;
 
         if (!active()) return 0;
 

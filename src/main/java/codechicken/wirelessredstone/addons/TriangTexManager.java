@@ -1,5 +1,13 @@
 package codechicken.wirelessredstone.addons;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
+
 import codechicken.lib.colour.Colour;
 import codechicken.lib.colour.ColourARGB;
 import codechicken.lib.colour.ColourRGBA;
@@ -7,14 +15,9 @@ import codechicken.lib.math.MathHelper;
 import codechicken.lib.render.ManagedTextureFX;
 import codechicken.lib.render.TextureUtils;
 import codechicken.wirelessredstone.core.RedstoneEther;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.ResourceLocation;
 
 public class TriangTexManager {
+
     private static Colour[] texRing = new Colour[256];
     private static Colour[] texGrad = new Colour[256];
     private static int[] imageData = new int[256];
@@ -30,10 +33,10 @@ public class TriangTexManager {
     private static HashSet<Integer> activetextures = new HashSet<Integer>(256);
     private static HashSet<Integer> visibletextures = new HashSet<Integer>(256);
 
-    private static ColourRGBA[] pointercolours =
-            new ColourRGBA[] {pb, pr, pr, pr, pr, pr, pr, pr, pb, pr, pr, pr, pb, pb};
-    private static ColourRGBA[] pointersidecolours =
-            new ColourRGBA[] {pg, pg, pg, pg, pg, pg, pd, pg, pd, pd, pd, pd, pg, pg};
+    private static ColourRGBA[] pointercolours = new ColourRGBA[] { pb, pr, pr, pr, pr, pr, pr, pr, pb, pr, pr, pr, pb,
+            pb };
+    private static ColourRGBA[] pointersidecolours = new ColourRGBA[] { pg, pg, pg, pg, pg, pg, pd, pg, pd, pd, pd, pd,
+            pg, pg };
 
     static {
         for (int i = 1; i < textures.length; i++) freeslots.add(i);
@@ -45,10 +48,10 @@ public class TriangTexManager {
     }
 
     public static void loadTextures() {
-        texRing =
-                TextureUtils.loadTextureColours(new ResourceLocation("wrcbe_addons", "textures/items/triangRing.png"));
-        texGrad =
-                TextureUtils.loadTextureColours(new ResourceLocation("wrcbe_addons", "textures/items/triangGrad.png"));
+        texRing = TextureUtils
+                .loadTextureColours(new ResourceLocation("wrcbe_addons", "textures/items/triangRing.png"));
+        texGrad = TextureUtils
+                .loadTextureColours(new ResourceLocation("wrcbe_addons", "textures/items/triangGrad.png"));
         processTexture(-1, 0);
     }
 
@@ -96,7 +99,8 @@ public class TriangTexManager {
 
     private static void writePointer(int freq) {
         if (RedstoneEther.get(true).isPlayerJammed(Minecraft.getMinecraft().thePlayer)
-                || !RedstoneEtherAddons.client().isTriangOn(freq)) return;
+                || !RedstoneEtherAddons.client().isTriangOn(freq))
+            return;
 
         int id = RedstoneEther.get(true).getFreqColourId(freq);
         ColourRGBA pcolour = id < 0 ? pr : pointercolours[id];

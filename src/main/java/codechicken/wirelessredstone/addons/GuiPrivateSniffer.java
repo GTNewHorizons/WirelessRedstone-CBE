@@ -6,6 +6,7 @@ import codechicken.wirelessredstone.core.RedstoneEther;
 import codechicken.wirelessredstone.core.WRCoreCPH;
 
 public class GuiPrivateSniffer extends GuiWirelessSniffer {
+
     public GuiPrivateSniffer() {
         super();
         title = "Private Sniffer";
@@ -32,9 +33,8 @@ public class GuiPrivateSniffer extends GuiWirelessSniffer {
 
         if (RedstoneEther.get(true).isFreqPrivate(freq))
             return (RedstoneEther.get(true).getFreqOwner(freq).equalsIgnoreCase(mc.thePlayer.getCommandSenderName())
-                            ? "Owned "
-                            : "Private ")
-                    + freq;
+                    ? "Owned "
+                    : "Private ") + freq;
 
         if (!RedstoneEther.get(true).canBroadcastOnFrequency(mc.thePlayer, freq)) return "Jammed " + freq;
 
@@ -48,7 +48,8 @@ public class GuiPrivateSniffer extends GuiWirelessSniffer {
     @Override
     public Colour getColour(int freq) {
         if (RedstoneEther.get(true).isPlayerJammed(mc.thePlayer)
-                || !RedstoneEther.get(true).canBroadcastOnFrequency(mc.thePlayer, freq)) return colourJammed;
+                || !RedstoneEther.get(true).canBroadcastOnFrequency(mc.thePlayer, freq))
+            return colourJammed;
 
         if (RedstoneEther.get(true).isFreqPrivate(freq)
                 && RedstoneEther.get(true).getFreqOwner(freq).equalsIgnoreCase(mc.thePlayer.getCommandSenderName()))
@@ -63,7 +64,8 @@ public class GuiPrivateSniffer extends GuiWirelessSniffer {
     @Override
     public Colour getBorder(int freq) {
         if (RedstoneEther.get(true).isPlayerJammed(mc.thePlayer)
-                || !RedstoneEther.get(true).canBroadcastOnFrequency(mc.thePlayer, freq)) return borderJammed;
+                || !RedstoneEther.get(true).canBroadcastOnFrequency(mc.thePlayer, freq))
+            return borderJammed;
 
         if (RedstoneEther.get(true).isFreqPrivate(freq)
                 && RedstoneEther.get(true).getFreqOwner(freq).equalsIgnoreCase(mc.thePlayer.getCommandSenderName()))

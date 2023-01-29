@@ -1,14 +1,16 @@
 package codechicken.wirelessredstone.addons;
 
-import codechicken.wirelessredstone.core.*;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 
+import codechicken.wirelessredstone.core.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class ItemWirelessTriangulator extends ItemWirelessFreq {
+
     public ItemWirelessTriangulator() {
         setMaxStackSize(1);
     }
@@ -27,7 +29,8 @@ public class ItemWirelessTriangulator extends ItemWirelessFreq {
     @Override
     public String getItemStackDisplayName(ItemStack itemstack) {
         return RedstoneEtherAddons.localizeWirelessItem(
-                StatCollector.translateToLocal("wrcbe_addons.triangulator.short"), itemstack.getItemDamage());
+                StatCollector.translateToLocal("wrcbe_addons.triangulator.short"),
+                itemstack.getItemDamage());
     }
 
     public String getGuiName() {

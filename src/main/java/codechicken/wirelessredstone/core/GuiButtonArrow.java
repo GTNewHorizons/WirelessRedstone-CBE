@@ -1,11 +1,13 @@
 package codechicken.wirelessredstone.core;
 
+import net.minecraft.client.renderer.Tessellator;
+
 import codechicken.core.gui.GuiCCButton;
 import codechicken.lib.colour.ColourARGB;
 import codechicken.lib.render.CCRenderState;
-import net.minecraft.client.renderer.Tessellator;
 
 public class GuiButtonArrow extends GuiCCButton {
+
     public GuiButtonArrow(int x, int y, int w, int h, int arrow) {
         super(x, y, w, h, "");
         setArrowDirection(arrow);

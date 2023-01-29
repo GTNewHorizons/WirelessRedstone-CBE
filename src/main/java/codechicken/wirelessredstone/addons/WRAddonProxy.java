@@ -2,11 +2,6 @@ package codechicken.wirelessredstone.addons;
 
 import static codechicken.wirelessredstone.addons.WirelessRedstoneAddons.*;
 
-import codechicken.core.CommonUtils;
-import codechicken.wirelessredstone.core.WRCoreSPH;
-import codechicken.wirelessredstone.core.WirelessRedstoneCore;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -16,7 +11,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 
+import codechicken.core.CommonUtils;
+import codechicken.wirelessredstone.core.WRCoreSPH;
+import codechicken.wirelessredstone.core.WirelessRedstoneCore;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
+
 public class WRAddonProxy {
+
     public void preInit() {
         MinecraftForge.EVENT_BUS.register(new WRAddonEventHandler());
     }

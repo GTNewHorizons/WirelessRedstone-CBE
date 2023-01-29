@@ -1,11 +1,9 @@
 package codechicken.wirelessredstone.core;
 
-import codechicken.lib.packet.PacketCustom;
-import codechicken.lib.packet.PacketCustom.IServerPacketHandler;
-import codechicken.lib.vec.BlockCoord;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -14,7 +12,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
+import codechicken.lib.packet.PacketCustom;
+import codechicken.lib.packet.PacketCustom.IServerPacketHandler;
+import codechicken.lib.vec.BlockCoord;
+
 public class WRCoreSPH implements IServerPacketHandler {
+
     public static List<IServerPacketHandler> delegates = new LinkedList<IServerPacketHandler>();
 
     @Override
@@ -51,8 +54,7 @@ public class WRCoreSPH implements IServerPacketHandler {
             if (item.stackSize == 0) {
                 player.inventory.mainInventory[slot] = null;
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
-        }
+        } catch (ArrayIndexOutOfBoundsException e) {}
     }
 
     private void setItemFreq(EntityPlayerMP sender, int slot, int freq) {

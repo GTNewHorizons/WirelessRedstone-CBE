@@ -2,9 +2,11 @@ package codechicken.wirelessredstone.logic;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
+
 import org.lwjgl.opengl.GL11;
 
 public class ItemWirelessRenderer implements IItemRenderer {
+
     private WirelessPart[] renderParts = new WirelessPart[3];
 
     public ItemWirelessRenderer() {

@@ -2,10 +2,6 @@ package codechicken.wirelessredstone.core;
 
 import static codechicken.wirelessredstone.core.WirelessRedstoneCore.*;
 
-import codechicken.lib.config.ConfigTag;
-import codechicken.lib.packet.PacketCustom;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -17,7 +13,13 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
+import codechicken.lib.config.ConfigTag;
+import codechicken.lib.packet.PacketCustom;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
+
 public class WRCoreProxy {
+
     public void preInit() {
         MinecraftForge.EVENT_BUS.register(new WRCoreEventHandler());
         FMLCommonHandler.instance().bus().register(new WRCoreEventHandler());
@@ -42,9 +44,7 @@ public class WRCoreProxy {
     }
 
     private Item createItem(String name) {
-        Item item = new Item()
-                .setUnlocalizedName("wrcbe_core:" + name)
-                .setTextureName("wrcbe_core:" + name)
+        Item item = new Item().setUnlocalizedName("wrcbe_core:" + name).setTextureName("wrcbe_core:" + name)
                 .setCreativeTab(CreativeTabs.tabMaterials);
         GameRegistry.registerItem(item, name);
         return item;
@@ -56,8 +56,15 @@ public class WRCoreProxy {
         OreDictionary.registerOre("obsidianRod", new ItemStack(obsidianStick));
         OreDictionary.registerOre("stoneBowl", new ItemStack(stoneBowl));
 
-        GameRegistry.addRecipe(new ShapedOreRecipe(
-                new ItemStack(wirelessTransceiver), "r", "o", 'r', retherPearl, 'o', "obsidianRod"));
+        GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                        new ItemStack(wirelessTransceiver),
+                        "r",
+                        "o",
+                        'r',
+                        retherPearl,
+                        'o',
+                        "obsidianRod"));
 
         GameRegistry.addRecipe(new ItemStack(stoneBowl), "S S", " S ", 'S', Blocks.stone);
         GameRegistry.addRecipe(
@@ -85,8 +92,15 @@ public class WRCoreProxy {
         GameRegistry.addRecipe(new ItemStack(blazeTransceiver), "r", "b", 'r', retherPearl, 'b', Items.blaze_rod);
         GameRegistry.addRecipe(
                 new ShapedOreRecipe(new ItemStack(recieverDish), "t", "b", 't', wirelessTransceiver, 'b', "stoneBowl"));
-        GameRegistry.addRecipe(new ShapedOreRecipe(
-                new ItemStack(blazeRecieverDish), "t", "b", 't', blazeTransceiver, 'b', "stoneBowl"));
+        GameRegistry.addRecipe(
+                new ShapedOreRecipe(
+                        new ItemStack(blazeRecieverDish),
+                        "t",
+                        "b",
+                        't',
+                        blazeTransceiver,
+                        'b',
+                        "stoneBowl"));
     }
 
     public void openItemWirelessGui(EntityPlayer entityplayer) {}
