@@ -1,7 +1,8 @@
 package codechicken.wirelessredstone.logic;
 
-import static codechicken.lib.vec.Rotation.*;
-import static codechicken.lib.vec.Vector3.*;
+import static codechicken.lib.vec.Rotation.sideOrientation;
+import static codechicken.lib.vec.Vector3.center;
+import static codechicken.lib.vec.Vector3.zero;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -19,7 +20,11 @@ import codechicken.lib.lighting.LightModel;
 import codechicken.lib.lighting.LightModel.Light;
 import codechicken.lib.lighting.PlanarLightModel;
 import codechicken.lib.math.MathHelper;
-import codechicken.lib.render.*;
+import codechicken.lib.render.BlockRenderer;
+import codechicken.lib.render.CCModel;
+import codechicken.lib.render.CCModelLibrary;
+import codechicken.lib.render.CCRenderState;
+import codechicken.lib.render.Vertex5;
 import codechicken.lib.render.uv.MultiIconTransformation;
 import codechicken.lib.vec.Scale;
 import codechicken.lib.vec.Transformation;
@@ -80,23 +85,25 @@ public class RenderWireless {
     }
 
     public static void renderInv(WirelessPart p) {
-        CCRenderState.reset();
-        CCRenderState.useNormals = true;
-        CCRenderState.pullLightmap();
-        CCRenderState.startDrawing(7);
-        CCRenderState.setPipeline(base_icont[0]);
+        final CCRenderState state = CCRenderState.instance();
+        state.reset();
+        state.useNormals = true;
+        state.pullLightmap();
+        state.startDrawing(7);
+        state.setPipeline(base_icont[0]);
         BlockRenderer.renderCuboid(WirelessPart.baseBounds(0), 0);
         models[p.modelId()][0].render(model_icont);
-        CCRenderState.draw();
+        state.draw();
 
         renderPearl(zero, p);
     }
 
     public static void renderWorld(WirelessPart p) {
-        CCRenderState.setBrightness(p.world(), p.x(), p.y(), p.z());
+        final CCRenderState state = CCRenderState.instance();
+        state.setBrightness(p.world(), p.x(), p.y(), p.z());
 
         Transformation t = new Translation(p.x(), p.y(), p.z());
-        CCRenderState.setPipeline(p.rotationT().at(center).with(t), base_icont[p.textureSet()], rlm);
+        state.setPipeline(p.rotationT().at(center).with(t), base_icont[p.textureSet()], rlm);
         BlockRenderer.renderCuboid(p.baseRenderBounds, p.baseRenderMask);
         models[p.modelId()][p.side() << 2 | p.rotation()].render(t, model_icont);
     }
@@ -147,13 +154,14 @@ public class RenderWireless {
         }
 
         GL11.glDisable(GL11.GL_LIGHTING);
-        CCRenderState.reset();
-        CCRenderState.changeTexture("wrcbe_core:textures/hedronmap.png");
-        CCRenderState.pullLightmap();
-        CCRenderState.setColour(new ColourRGBA(light, light, light, 1).rgba());
-        CCRenderState.startDrawing(4);
+        final CCRenderState state = CCRenderState.instance();
+        state.reset();
+        state.changeTexture("wrcbe_core:textures/hedronmap.png");
+        state.pullLightmap();
+        state.setColour(new ColourRGBA(light, light, light, 1).rgba());
+        state.startDrawing(4);
         CCModelLibrary.icosahedron4.render();
-        CCRenderState.draw();
+        state.draw();
         GL11.glEnable(GL11.GL_LIGHTING);
 
         GL11.glPopMatrix();

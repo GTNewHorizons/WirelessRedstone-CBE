@@ -1,7 +1,13 @@
 package codechicken.wirelessredstone.core;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.Random;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

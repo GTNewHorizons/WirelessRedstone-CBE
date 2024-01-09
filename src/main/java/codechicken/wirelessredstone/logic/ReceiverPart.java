@@ -1,7 +1,7 @@
 package codechicken.wirelessredstone.logic;
 
-import static codechicken.lib.vec.Rotation.*;
-import static codechicken.lib.vec.Vector3.*;
+import static codechicken.lib.vec.Rotation.sideOrientation;
+import static codechicken.lib.vec.Vector3.center;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
@@ -12,7 +12,8 @@ import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Transformation;
 import codechicken.lib.vec.Vector3;
-import codechicken.wirelessredstone.core.*;
+import codechicken.wirelessredstone.core.ITileReceiver;
+import codechicken.wirelessredstone.core.RedstoneEther;
 
 public class ReceiverPart extends TransceiverPart implements ITileReceiver {
 

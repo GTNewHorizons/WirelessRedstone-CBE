@@ -1,7 +1,7 @@
 WirelessRedstone
 ==============
 
-THIS PROJECT IS RETIRED: See [here] for the current repo.
+THIS PROJECT IS RETIRED: See [here] for the current repo. This branch is still maintained by GTNH.
 
 In its simplest this is a mod that allows you to transmit your redstone state wirelessly. Even if you dont use redstone this mod could still be for you. Found an awesome landscape you'd like to mark, a cool cave to explore, or keep losing your way from base to base? Ever wished that compass pointed somewhere else or there was a way to mark things on a map. Well now there is. With the wireless addons component of this mod you can use wireless signals for navigation.
 

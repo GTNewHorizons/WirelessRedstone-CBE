@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import codechicken.lib.vec.Vector3;
-import codechicken.wirelessredstone.core.*;
+import codechicken.wirelessredstone.core.WirelessTransmittingDevice;
 
 public class Remote implements WirelessTransmittingDevice {
 

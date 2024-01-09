@@ -10,7 +10,8 @@ import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 import codechicken.core.ClientUtils;
-import codechicken.wirelessredstone.core.*;
+import codechicken.wirelessredstone.core.FreqCoord;
+import codechicken.wirelessredstone.core.RedstoneEther;
 
 public class WirelessMapRenderer implements IItemRenderer {
 

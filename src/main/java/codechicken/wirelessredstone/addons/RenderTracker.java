@@ -1,6 +1,7 @@
 package codechicken.wirelessredstone.addons;
 
-import static codechicken.lib.math.MathHelper.*;
+import static codechicken.lib.math.MathHelper.sin;
+import static codechicken.lib.math.MathHelper.todeg;
 
 import net.minecraft.client.renderer.entity.RenderEntity;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -44,22 +45,23 @@ public class RenderTracker extends RenderEntity implements IItemRenderer {
         GL11.glDisable(GL11.GL_LIGHTING);
 
         TextureUtils.bindAtlas(0);
-        CCRenderState.reset();
-        CCRenderState.startDrawing(7);
-        CCRenderState.setColour(0xFFFFFFFF);
+        final CCRenderState state = CCRenderState.instance();
+        state.reset();
+        state.startDrawing(7);
+        state.setColour(0xFFFFFFFF);
         model.render(new IconTransformation(Blocks.obsidian.getIcon(0, 0)));
-        CCRenderState.draw();
+        state.draw();
 
         Matrix4 pearlMat = CCModelLibrary.getRenderMatrix(
                 new Vector3(0, 0.44 + RedstoneEther.getSineWave(ClientUtils.getRenderTime(), 7) * 0.02, 0),
                 new Rotation(RedstoneEther.getRotation(ClientUtils.getRenderTime(), freq), new Vector3(0, 1, 0)),
                 0.04);
 
-        CCRenderState.changeTexture("wrcbe_core:textures/hedronmap.png");
-        CCRenderState.startDrawing(4);
-        CCRenderState.setColour(freq == 0 ? 0xC0C0C0FF : 0xFFFFFFFF);
+        state.changeTexture("wrcbe_core:textures/hedronmap.png");
+        state.startDrawing(4);
+        state.setColour(freq == 0 ? 0xC0C0C0FF : 0xFFFFFFFF);
         CCModelLibrary.icosahedron4.render(pearlMat);
-        CCRenderState.draw();
+        state.draw();
 
         GL11.glEnable(GL11.GL_LIGHTING);
     }

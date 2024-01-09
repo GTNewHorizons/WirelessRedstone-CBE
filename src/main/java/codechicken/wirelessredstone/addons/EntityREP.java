@@ -18,7 +18,9 @@ import net.minecraft.world.World;
 import codechicken.core.CommonUtils;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
-import codechicken.wirelessredstone.core.*;
+import codechicken.wirelessredstone.core.ITileWireless;
+import codechicken.wirelessredstone.core.RedstoneEther;
+import codechicken.wirelessredstone.core.WirelessBolt;
 
 public class EntityREP extends Entity {
 

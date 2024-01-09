@@ -1,7 +1,9 @@
 package codechicken.wirelessredstone.logic;
 
-import static codechicken.lib.vec.Rotation.*;
-import static codechicken.lib.vec.Vector3.*;
+import static codechicken.lib.vec.Rotation.rotateSide;
+import static codechicken.lib.vec.Rotation.sideOrientation;
+import static codechicken.lib.vec.Rotation.sideRotations;
+import static codechicken.lib.vec.Vector3.center;
 
 import java.util.Arrays;
 

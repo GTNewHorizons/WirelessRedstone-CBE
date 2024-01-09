@@ -1,6 +1,13 @@
 package codechicken.wirelessredstone.addons;
 
-import static codechicken.wirelessredstone.addons.WirelessRedstoneAddons.*;
+import static codechicken.wirelessredstone.addons.WirelessRedstoneAddons.emptyWirelessMap;
+import static codechicken.wirelessredstone.addons.WirelessRedstoneAddons.psniffer;
+import static codechicken.wirelessredstone.addons.WirelessRedstoneAddons.remote;
+import static codechicken.wirelessredstone.addons.WirelessRedstoneAddons.rep;
+import static codechicken.wirelessredstone.addons.WirelessRedstoneAddons.sniffer;
+import static codechicken.wirelessredstone.addons.WirelessRedstoneAddons.tracker;
+import static codechicken.wirelessredstone.addons.WirelessRedstoneAddons.triangulator;
+import static codechicken.wirelessredstone.addons.WirelessRedstoneAddons.wirelessMap;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;

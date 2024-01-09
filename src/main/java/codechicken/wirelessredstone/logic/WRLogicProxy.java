@@ -1,6 +1,6 @@
 package codechicken.wirelessredstone.logic;
 
-import static codechicken.wirelessredstone.logic.WirelessRedstoneLogic.*;
+import static codechicken.wirelessredstone.logic.WirelessRedstoneLogic.itemwireless;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;

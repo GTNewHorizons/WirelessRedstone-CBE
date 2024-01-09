@@ -11,7 +11,7 @@ import codechicken.lib.colour.Colour;
 import codechicken.lib.colour.ColourARGB;
 import codechicken.lib.config.ConfigTag;
 import codechicken.lib.render.CCRenderState;
-import codechicken.wirelessredstone.core.*;
+import codechicken.wirelessredstone.core.RedstoneEther;
 
 public class GuiWirelessSniffer extends GuiScreen {
 

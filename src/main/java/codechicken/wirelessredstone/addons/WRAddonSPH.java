@@ -10,7 +10,8 @@ import net.minecraft.world.storage.MapData;
 
 import codechicken.lib.packet.PacketCustom;
 import codechicken.lib.packet.PacketCustom.IServerPacketHandler;
-import codechicken.wirelessredstone.core.*;
+import codechicken.wirelessredstone.core.FreqCoord;
+import codechicken.wirelessredstone.core.WirelessRedstoneCore;
 
 public class WRAddonSPH implements IServerPacketHandler {
 
