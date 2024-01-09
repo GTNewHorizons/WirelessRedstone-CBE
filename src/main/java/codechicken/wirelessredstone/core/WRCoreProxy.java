@@ -1,6 +1,14 @@
 package codechicken.wirelessredstone.core;
 
-import static codechicken.wirelessredstone.core.WirelessRedstoneCore.*;
+import static codechicken.wirelessredstone.core.WirelessRedstoneCore.blazeRecieverDish;
+import static codechicken.wirelessredstone.core.WirelessRedstoneCore.blazeTransceiver;
+import static codechicken.wirelessredstone.core.WirelessRedstoneCore.channel;
+import static codechicken.wirelessredstone.core.WirelessRedstoneCore.damagebolt;
+import static codechicken.wirelessredstone.core.WirelessRedstoneCore.obsidianStick;
+import static codechicken.wirelessredstone.core.WirelessRedstoneCore.recieverDish;
+import static codechicken.wirelessredstone.core.WirelessRedstoneCore.retherPearl;
+import static codechicken.wirelessredstone.core.WirelessRedstoneCore.stoneBowl;
+import static codechicken.wirelessredstone.core.WirelessRedstoneCore.wirelessTransceiver;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;

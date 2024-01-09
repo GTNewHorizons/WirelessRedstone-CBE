@@ -5,7 +5,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 
-import codechicken.wirelessredstone.core.*;
+import codechicken.wirelessredstone.core.ItemWirelessFreq;
+import codechicken.wirelessredstone.core.RedstoneEther;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

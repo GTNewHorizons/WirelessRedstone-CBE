@@ -32,10 +32,11 @@ public class RenderWirelessBolt {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        CCRenderState.reset();
-        CCRenderState.setBrightness(0xF000F0);
-        CCRenderState.changeTexture("wrcbe_core:textures/lightning_glowstone.png");
-        CCRenderState.startDrawing(7);
+        final CCRenderState state = CCRenderState.instance();
+        state.reset();
+        state.setBrightness(0xF000F0);
+        state.changeTexture("wrcbe_core:textures/lightning_glowstone.png");
+        state.startDrawing(7);
         for (WirelessBolt bolt : WirelessBolt.clientboltlist) renderBolt(
                 bolt,
                 frame,
@@ -44,10 +45,10 @@ public class RenderWirelessBolt {
                 ActiveRenderInfo.rotationZ,
                 ActiveRenderInfo.rotationXY,
                 0);
-        CCRenderState.draw();
+        state.draw();
 
-        CCRenderState.changeTexture("wrcbe_core:textures/lightning_redstone.png");
-        CCRenderState.startDrawing(7);
+        state.changeTexture("wrcbe_core:textures/lightning_redstone.png");
+        state.startDrawing(7);
         for (WirelessBolt bolt : WirelessBolt.clientboltlist) renderBolt(
                 bolt,
                 frame,
@@ -56,7 +57,7 @@ public class RenderWirelessBolt {
                 ActiveRenderInfo.rotationZ,
                 ActiveRenderInfo.rotationXY,
                 1);
-        CCRenderState.draw();
+        state.draw();
 
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glDepthMask(true);

@@ -1,6 +1,6 @@
 package codechicken.wirelessredstone.core;
 
-import static codechicken.wirelessredstone.core.WirelessRedstoneCore.*;
+import static codechicken.wirelessredstone.core.WirelessRedstoneCore.channel;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

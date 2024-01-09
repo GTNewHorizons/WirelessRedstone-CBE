@@ -6,7 +6,10 @@ import net.minecraft.item.ItemStack;
 import codechicken.core.ClientUtils;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
-import codechicken.wirelessredstone.core.*;
+import codechicken.wirelessredstone.core.ITileJammer;
+import codechicken.wirelessredstone.core.ITileWireless;
+import codechicken.wirelessredstone.core.RedstoneEther;
+import codechicken.wirelessredstone.core.WirelessBolt;
 
 public class JammerPart extends WirelessPart implements ITileJammer {
 

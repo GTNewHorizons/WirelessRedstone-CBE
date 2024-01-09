@@ -1,6 +1,8 @@
 package codechicken.wirelessredstone.addons;
 
-import static codechicken.wirelessredstone.addons.WirelessRedstoneAddons.*;
+import static codechicken.wirelessredstone.addons.WirelessRedstoneAddons.rep;
+import static codechicken.wirelessredstone.addons.WirelessRedstoneAddons.tracker;
+import static codechicken.wirelessredstone.addons.WirelessRedstoneAddons.wirelessMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderSnowball;

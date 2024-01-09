@@ -9,7 +9,7 @@ import codechicken.lib.colour.ColourARGB;
 import codechicken.lib.render.TextureDataHolder;
 import codechicken.lib.render.TextureSpecial;
 import codechicken.lib.render.TextureUtils;
-import codechicken.wirelessredstone.core.*;
+import codechicken.wirelessredstone.core.RedstoneEther;
 
 public class RemoteTexManager {
 

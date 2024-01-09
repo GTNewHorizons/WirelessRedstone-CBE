@@ -12,7 +12,8 @@ import net.minecraft.world.World;
 
 import codechicken.lib.packet.PacketCustom;
 import codechicken.lib.packet.PacketCustom.IClientPacketHandler;
-import codechicken.wirelessredstone.core.*;
+import codechicken.wirelessredstone.core.FreqCoord;
+import codechicken.wirelessredstone.core.WirelessRedstoneCore;
 
 public class WRAddonCPH implements IClientPacketHandler {
 
