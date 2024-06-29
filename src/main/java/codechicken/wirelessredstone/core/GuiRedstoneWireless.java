@@ -302,9 +302,8 @@ public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUs
             if (itile == null)
                 item.setFreq(inventory.player, inventory.currentItem, inventory.getCurrentItem(), selectedfreq);
             else RedstoneEther.get(true).setFreq(itile, selectedfreq);
+            if (largeGui) reloadNameText();
         }
-
-        if (largeGui) reloadNameText();
     }
 
     private String getSetObjectName() {
