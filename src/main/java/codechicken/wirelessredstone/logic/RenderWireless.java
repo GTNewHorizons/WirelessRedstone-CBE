@@ -88,7 +88,7 @@ public class RenderWireless {
         final CCRenderState state = CCRenderState.instance();
         state.reset();
         state.useNormals = true;
-        state.pullLightmap();
+        state.pushLightmap();
         state.startDrawing(7);
         state.setPipeline(base_icont[0]);
         BlockRenderer.renderCuboid(WirelessPart.baseBounds(0), 0);
@@ -157,7 +157,7 @@ public class RenderWireless {
         final CCRenderState state = CCRenderState.instance();
         state.reset();
         state.changeTexture("wrcbe_core:textures/hedronmap.png");
-        state.pullLightmap();
+        state.pushLightmap();
         state.setColour(new ColourRGBA(light, light, light, 1).rgba());
         state.startDrawing(4);
         CCModelLibrary.icosahedron4.render();
