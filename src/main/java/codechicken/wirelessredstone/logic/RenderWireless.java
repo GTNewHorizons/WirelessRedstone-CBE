@@ -86,24 +86,24 @@ public class RenderWireless {
 
     public static void renderInv(WirelessPart p) {
         final CCRenderState state = CCRenderState.instance();
-        state.reset();
+        state.resetInstance();
         state.useNormals = true;
-        state.pushLightmap();
-        state.startDrawing(7);
-        state.setPipeline(base_icont[0]);
+        state.pushLightmapInstance();
+        state.startDrawingInstance(7);
+        state.setPipelineInstance(base_icont[0]);
         BlockRenderer.renderCuboid(WirelessPart.baseBounds(0), 0);
         models[p.modelId()][0].render(model_icont);
-        state.draw();
+        state.drawInstance();
 
         renderPearl(zero, p);
     }
 
     public static void renderWorld(WirelessPart p) {
         final CCRenderState state = CCRenderState.instance();
-        state.setBrightness(p.world(), p.x(), p.y(), p.z());
+        state.setBrightnessInstance(p.world(), p.x(), p.y(), p.z());
 
         Transformation t = new Translation(p.x(), p.y(), p.z());
-        state.setPipeline(p.rotationT().at(center).with(t), base_icont[p.textureSet()], rlm);
+        state.setPipelineInstance(p.rotationT().at(center).with(t), base_icont[p.textureSet()], rlm);
         BlockRenderer.renderCuboid(p.baseRenderBounds, p.baseRenderMask);
         models[p.modelId()][p.side() << 2 | p.rotation()].render(t, model_icont);
     }
@@ -155,13 +155,13 @@ public class RenderWireless {
 
         GL11.glDisable(GL11.GL_LIGHTING);
         final CCRenderState state = CCRenderState.instance();
-        state.reset();
-        state.changeTexture("wrcbe_core:textures/hedronmap.png");
-        state.pushLightmap();
-        state.setColour(new ColourRGBA(light, light, light, 1).rgba());
-        state.startDrawing(4);
+        state.resetInstance();
+        CCRenderState.changeTexture("wrcbe_core:textures/hedronmap.png");
+        state.pushLightmapInstance();
+        state.setColourInstance(new ColourRGBA(light, light, light, 1).rgba());
+        state.startDrawingInstance(4);
         CCModelLibrary.icosahedron4.render();
-        state.draw();
+        state.drawInstance();
         GL11.glEnable(GL11.GL_LIGHTING);
 
         GL11.glPopMatrix();

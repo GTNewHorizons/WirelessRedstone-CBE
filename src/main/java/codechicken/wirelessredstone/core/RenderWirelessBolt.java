@@ -1,7 +1,5 @@
 package codechicken.wirelessredstone.core;
 
-import java.util.Iterator;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.Tessellator;
@@ -33,10 +31,10 @@ public class RenderWirelessBolt {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         final CCRenderState state = CCRenderState.instance();
-        state.reset();
-        state.setBrightness(0xF000F0);
-        state.changeTexture("wrcbe_core:textures/lightning_glowstone.png");
-        state.startDrawing(7);
+        state.resetInstance();
+        state.setBrightnessInstance(0xF000F0);
+        CCRenderState.changeTexture("wrcbe_core:textures/lightning_glowstone.png");
+        state.startDrawingInstance(7);
         for (WirelessBolt bolt : WirelessBolt.clientboltlist) renderBolt(
                 bolt,
                 frame,
@@ -45,10 +43,10 @@ public class RenderWirelessBolt {
                 ActiveRenderInfo.rotationZ,
                 ActiveRenderInfo.rotationXY,
                 0);
-        state.draw();
+        state.drawInstance();
 
-        state.changeTexture("wrcbe_core:textures/lightning_redstone.png");
-        state.startDrawing(7);
+        CCRenderState.changeTexture("wrcbe_core:textures/lightning_redstone.png");
+        state.startDrawingInstance(7);
         for (WirelessBolt bolt : WirelessBolt.clientboltlist) renderBolt(
                 bolt,
                 frame,
@@ -57,7 +55,7 @@ public class RenderWirelessBolt {
                 ActiveRenderInfo.rotationZ,
                 ActiveRenderInfo.rotationXY,
                 1);
-        state.draw();
+        state.drawInstance();
 
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glDepthMask(true);
@@ -78,9 +76,7 @@ public class RenderWirelessBolt {
                 * bolt.numsegments0);
         int renderend = (int) ((bolt.particleAge + expandTime) / (float) expandTime * bolt.numsegments0);
 
-        for (Iterator<Segment> iterator = bolt.segments.iterator(); iterator.hasNext();) {
-            Segment rendersegment = iterator.next();
-
+        for (Segment rendersegment : bolt.segments) {
             if (rendersegment.segmentno < renderstart || rendersegment.segmentno > renderend) continue;
 
             Vector3 playervec = getRelativeViewVector(rendersegment.startpoint.point).negate();

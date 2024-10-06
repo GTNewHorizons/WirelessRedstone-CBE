@@ -28,7 +28,8 @@ import codechicken.wirelessredstone.core.RedstoneEther;
 
 public class RenderTracker extends RenderEntity implements IItemRenderer {
 
-    private static CCModel model;
+    private static final CCModel model;
+    private static final Vector3 Y_AXIS = new Vector3(0, 1, 0);
 
     static {
         model = CCModel.parseObjModels(new ResourceLocation("wrcbe_addons", "models/tracker.obj"), 7, new SwapYZ())
@@ -46,22 +47,24 @@ public class RenderTracker extends RenderEntity implements IItemRenderer {
 
         TextureUtils.bindAtlas(0);
         final CCRenderState state = CCRenderState.instance();
-        state.reset();
-        state.startDrawing(7);
-        state.setColour(0xFFFFFFFF);
+        state.resetInstance();
+        state.startDrawingInstance(7);
+        state.setColourInstance(0xFFFFFFFF);
         model.render(new IconTransformation(Blocks.obsidian.getIcon(0, 0)));
-        state.draw();
+        state.drawInstance();
 
         Matrix4 pearlMat = CCModelLibrary.getRenderMatrix(
-                new Vector3(0, 0.44 + RedstoneEther.getSineWave(ClientUtils.getRenderTime(), 7) * 0.02, 0),
-                new Rotation(RedstoneEther.getRotation(ClientUtils.getRenderTime(), freq), new Vector3(0, 1, 0)),
+                0,
+                0.44 + RedstoneEther.getSineWave(ClientUtils.getRenderTime(), 7) * 0.02,
+                0,
+                new Rotation(RedstoneEther.getRotation(ClientUtils.getRenderTime(), freq), Y_AXIS),
                 0.04);
 
-        state.changeTexture("wrcbe_core:textures/hedronmap.png");
-        state.startDrawing(4);
-        state.setColour(freq == 0 ? 0xC0C0C0FF : 0xFFFFFFFF);
+        CCRenderState.changeTexture("wrcbe_core:textures/hedronmap.png");
+        state.startDrawingInstance(4);
+        state.setColourInstance(freq == 0 ? 0xC0C0C0FF : 0xFFFFFFFF);
         CCModelLibrary.icosahedron4.render(pearlMat);
-        state.draw();
+        state.drawInstance();
 
         GL11.glEnable(GL11.GL_LIGHTING);
     }
