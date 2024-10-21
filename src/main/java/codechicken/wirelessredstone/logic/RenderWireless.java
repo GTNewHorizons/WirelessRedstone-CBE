@@ -15,7 +15,6 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import codechicken.lib.colour.ColourRGBA;
 import codechicken.lib.lighting.LightModel;
 import codechicken.lib.lighting.LightModel.Light;
 import codechicken.lib.lighting.PlanarLightModel;
@@ -26,7 +25,6 @@ import codechicken.lib.render.CCModelLibrary;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.Vertex5;
 import codechicken.lib.render.uv.MultiIconTransformation;
-import codechicken.lib.vec.Scale;
 import codechicken.lib.vec.Transformation;
 import codechicken.lib.vec.Translation;
 import codechicken.lib.vec.Vector3;
@@ -86,24 +84,24 @@ public class RenderWireless {
 
     public static void renderInv(WirelessPart p) {
         final CCRenderState state = CCRenderState.instance();
-        state.reset();
+        state.resetInstance();
         state.useNormals = true;
-        state.pushLightmap();
-        state.startDrawing(7);
-        state.setPipeline(base_icont[0]);
+        state.pushLightmapInstance();
+        state.startDrawingInstance(7);
+        state.setPipelineInstance(base_icont[0]);
         BlockRenderer.renderCuboid(WirelessPart.baseBounds(0), 0);
         models[p.modelId()][0].render(model_icont);
-        state.draw();
+        state.drawInstance();
 
         renderPearl(zero, p);
     }
 
     public static void renderWorld(WirelessPart p) {
         final CCRenderState state = CCRenderState.instance();
-        state.setBrightness(p.world(), p.x(), p.y(), p.z());
+        state.setBrightnessInstance(p.world(), p.x(), p.y(), p.z());
 
         Transformation t = new Translation(p.x(), p.y(), p.z());
-        state.setPipeline(p.rotationT().at(center).with(t), base_icont[p.textureSet()], rlm);
+        state.setPipelineInstance(p.rotationT().at(center).with(t), base_icont[p.textureSet()], rlm);
         BlockRenderer.renderCuboid(p.baseRenderBounds, p.baseRenderMask);
         models[p.modelId()][p.side() << 2 | p.rotation()].render(t, model_icont);
     }
@@ -111,7 +109,7 @@ public class RenderWireless {
     public static void renderFreq(Vector3 pos, TransceiverPart p) {
         GL11.glPushMatrix();
 
-        pos.copy().add(center).translation().glApply();
+        GL11.glTranslated(pos.x + center.x, pos.y + center.y, pos.z + center.z);
         p.rotationT().glApply();
 
         renderFreq(p.getFreq());
@@ -142,11 +140,13 @@ public class RenderWireless {
     public static void renderPearl(Vector3 pos, WirelessPart p) {
         GL11.glPushMatrix();
 
-        pos.translation().glApply();
+        GL11.glTranslated(pos.x, pos.y, pos.z);
         p.rotationT().at(center).glApply();
-        p.getPearlPos().translation().glApply();
+        final Vector3 pearlPos = p.getPearlPos();
+        GL11.glTranslated(pearlPos.x, pearlPos.y, pearlPos.z);
         p.getPearlRotation().glApply();
-        new Scale(p.getPearlScale()).glApply();
+        final double pearlScale = p.getPearlScale();
+        GL11.glScaled(pearlScale, pearlScale, pearlScale);
         float light = 1;
         if (p.tile() != null) {
             GL11.glRotatef((float) (p.getPearlSpin() * MathHelper.todeg), 0, 1, 0);
@@ -155,13 +155,18 @@ public class RenderWireless {
 
         GL11.glDisable(GL11.GL_LIGHTING);
         final CCRenderState state = CCRenderState.instance();
-        state.reset();
-        state.changeTexture("wrcbe_core:textures/hedronmap.png");
-        state.pushLightmap();
-        state.setColour(new ColourRGBA(light, light, light, 1).rgba());
-        state.startDrawing(4);
+        state.resetInstance();
+        CCRenderState.changeTexture("wrcbe_core:textures/hedronmap.png");
+        state.pushLightmapInstance();
+        final byte lightByte = (byte) (0xFF * light);
+        final byte alpha = (byte) 0xFF;
+        final int colorI = (lightByte & 0xFF) << 24 | (lightByte & 0xFF) << 16
+                | (lightByte & 0xFF) << 8
+                | (alpha & 0xFF);
+        state.setColourInstance(colorI);
+        state.startDrawingInstance(4);
         CCModelLibrary.icosahedron4.render();
-        state.draw();
+        state.drawInstance();
         GL11.glEnable(GL11.GL_LIGHTING);
 
         GL11.glPopMatrix();

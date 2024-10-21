@@ -28,7 +28,8 @@ import codechicken.wirelessredstone.core.RedstoneEther;
 
 public class RenderTracker extends RenderEntity implements IItemRenderer {
 
-    private static CCModel model;
+    private static final CCModel model;
+    private static final Vector3 Y_AXIS = new Vector3(0, 1, 0);
 
     static {
         model = CCModel.parseObjModels(new ResourceLocation("wrcbe_addons", "models/tracker.obj"), 7, new SwapYZ())
@@ -46,22 +47,24 @@ public class RenderTracker extends RenderEntity implements IItemRenderer {
 
         TextureUtils.bindAtlas(0);
         final CCRenderState state = CCRenderState.instance();
-        state.reset();
-        state.startDrawing(7);
-        state.setColour(0xFFFFFFFF);
+        state.resetInstance();
+        state.startDrawingInstance(7);
+        state.setColourInstance(0xFFFFFFFF);
         model.render(new IconTransformation(Blocks.obsidian.getIcon(0, 0)));
-        state.draw();
+        state.drawInstance();
 
         Matrix4 pearlMat = CCModelLibrary.getRenderMatrix(
-                new Vector3(0, 0.44 + RedstoneEther.getSineWave(ClientUtils.getRenderTime(), 7) * 0.02, 0),
-                new Rotation(RedstoneEther.getRotation(ClientUtils.getRenderTime(), freq), new Vector3(0, 1, 0)),
+                0,
+                0.44 + RedstoneEther.getSineWave(ClientUtils.getRenderTime(), 7) * 0.02,
+                0,
+                new Rotation(RedstoneEther.getRotation(ClientUtils.getRenderTime(), freq), Y_AXIS),
                 0.04);
 
-        state.changeTexture("wrcbe_core:textures/hedronmap.png");
-        state.startDrawing(4);
-        state.setColour(freq == 0 ? 0xC0C0C0FF : 0xFFFFFFFF);
+        CCRenderState.changeTexture("wrcbe_core:textures/hedronmap.png");
+        state.startDrawingInstance(4);
+        state.setColourInstance(freq == 0 ? 0xC0C0C0FF : 0xFFFFFFFF);
         CCModelLibrary.icosahedron4.render(pearlMat);
-        state.draw();
+        state.drawInstance();
 
         GL11.glEnable(GL11.GL_LIGHTING);
     }
@@ -69,35 +72,42 @@ public class RenderTracker extends RenderEntity implements IItemRenderer {
     @Override
     public void doRender(Entity entity, double x, double y, double z, float f, float f1) {
         GL11.glPushMatrix();
-        GL11.glTranslated(x, y + 0.2, z);
 
         EntityWirelessTracker tracker = (EntityWirelessTracker) entity;
         if (tracker.isAttachedToEntity()) {
+
             Vector3 relVec = tracker.getRotatedAttachment();
 
-            Vector3 yAxis = new Vector3(0, 1, 0);
-            Vector3 axis = relVec.copy().crossProduct(yAxis);
-            double angle = -(relVec.angle(yAxis) * todeg);
+            final double posX = tracker.attachedEntity.lastTickPosX
+                    + (tracker.attachedEntity.posX - tracker.attachedEntity.lastTickPosX) * f1
+                    + relVec.x
+                    - RenderManager.renderPosX;
+            final double posY = tracker.attachedEntity.lastTickPosY
+                    + (tracker.attachedEntity.posY - tracker.attachedEntity.lastTickPosY) * f1
+                    + tracker.attachedEntity.height / 2
+                    - tracker.attachedEntity.yOffset
+                    - tracker.height
+                    + relVec.y
+                    - RenderManager.renderPosY;
+            final double posZ = tracker.attachedEntity.lastTickPosZ
+                    + (tracker.attachedEntity.posZ - tracker.attachedEntity.lastTickPosZ) * f1
+                    + relVec.z
+                    - RenderManager.renderPosZ;
 
-            GL11.glTranslated(-x, -y - 0.2, -z); // undo translation
+            GL11.glTranslated(posX, posY, posZ);
 
-            Vector3 pos = new Vector3(
-                    tracker.attachedEntity.lastTickPosX
-                            + (tracker.attachedEntity.posX - tracker.attachedEntity.lastTickPosX) * f1,
-                    tracker.attachedEntity.lastTickPosY
-                            + (tracker.attachedEntity.posY - tracker.attachedEntity.lastTickPosY) * f1
-                            + tracker.attachedEntity.height / 2
-                            - tracker.attachedEntity.yOffset
-                            - tracker.height,
-                    tracker.attachedEntity.lastTickPosZ
-                            + (tracker.attachedEntity.posZ - tracker.attachedEntity.lastTickPosZ) * f1);
+            final double axisX = -relVec.z;
+            final double axisY = 0;
+            final double axisZ = relVec.x;
+            // leaving this code commented for understand,
+            // but it can be simplified to what is below for speed
+            // Vector3 yAxis = new Vector3(0, 1, 0);
+            // double angle = -(relVec.angle(yAxis) * todeg);
+            final double angle = -(Math.acos(relVec.normalize().y) * todeg);
+            GL11.glRotatef((float) angle, (float) axisX, (float) axisY, (float) axisZ);
 
-            pos.add(relVec).add(-RenderManager.renderPosX, -RenderManager.renderPosY, -RenderManager.renderPosZ);
-
-            GL11.glTranslated(pos.x, pos.y, pos.z);
-
-            GL11.glRotatef((float) angle, (float) axis.x, (float) axis.y, (float) axis.z);
         } else if (tracker.item) {
+            GL11.glTranslated(x, y + 0.2, z);
             double bob = sin(ClientUtils.getRenderTime() / 10) * 0.1;
             double rotate = ClientUtils.getRenderTime() / 20 * todeg;
 

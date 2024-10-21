@@ -1,9 +1,6 @@
 package codechicken.wirelessredstone.core;
 
-import java.util.Iterator;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 
@@ -11,18 +8,9 @@ import org.lwjgl.opengl.GL11;
 
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.RenderUtils;
-import codechicken.lib.vec.Vector3;
 import codechicken.wirelessredstone.core.WirelessBolt.Segment;
 
 public class RenderWirelessBolt {
-
-    private static Vector3 getRelativeViewVector(Vector3 pos) {
-        Entity renderentity = Minecraft.getMinecraft().renderViewEntity;
-        return new Vector3(
-                (float) renderentity.posX - pos.x,
-                (float) renderentity.posY + renderentity.getEyeHeight() - pos.y,
-                (float) renderentity.posZ - pos.z);
-    }
 
     public static void render(float frame, Entity entity) {
         GL11.glPushMatrix();
@@ -33,31 +21,17 @@ public class RenderWirelessBolt {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         final CCRenderState state = CCRenderState.instance();
-        state.reset();
-        state.setBrightness(0xF000F0);
-        state.changeTexture("wrcbe_core:textures/lightning_glowstone.png");
-        state.startDrawing(7);
-        for (WirelessBolt bolt : WirelessBolt.clientboltlist) renderBolt(
-                bolt,
-                frame,
-                ActiveRenderInfo.rotationX,
-                ActiveRenderInfo.rotationXZ,
-                ActiveRenderInfo.rotationZ,
-                ActiveRenderInfo.rotationXY,
-                0);
-        state.draw();
+        state.resetInstance();
+        state.setBrightnessInstance(0xF000F0);
+        CCRenderState.changeTexture("wrcbe_core:textures/lightning_glowstone.png");
+        state.startDrawingInstance(7);
+        for (WirelessBolt bolt : WirelessBolt.clientboltlist) renderBolt(bolt, 0);
+        state.drawInstance();
 
-        state.changeTexture("wrcbe_core:textures/lightning_redstone.png");
-        state.startDrawing(7);
-        for (WirelessBolt bolt : WirelessBolt.clientboltlist) renderBolt(
-                bolt,
-                frame,
-                ActiveRenderInfo.rotationX,
-                ActiveRenderInfo.rotationXZ,
-                ActiveRenderInfo.rotationZ,
-                ActiveRenderInfo.rotationXY,
-                1);
-        state.draw();
+        CCRenderState.changeTexture("wrcbe_core:textures/lightning_redstone.png");
+        state.startDrawingInstance(7);
+        for (WirelessBolt bolt : WirelessBolt.clientboltlist) renderBolt(bolt, 1);
+        state.drawInstance();
 
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glDepthMask(true);
@@ -65,11 +39,10 @@ public class RenderWirelessBolt {
         GL11.glPopMatrix();
     }
 
-    private static void renderBolt(WirelessBolt bolt, float partialframe, float cosyaw, float cospitch, float sinyaw,
-            float cossinpitch, int pass) {
+    private static void renderBolt(WirelessBolt bolt, int pass) {
         Tessellator t = Tessellator.instance;
         float boltage = bolt.particleAge < 0 ? 0 : (float) bolt.particleAge / (float) bolt.particleMaxAge;
-        float mainalpha = 1;
+        float mainalpha;
         if (pass == 0) mainalpha = (1 - boltage) * 0.4F;
         else mainalpha = 1 - boltage * 0.5F;
 
@@ -78,48 +51,102 @@ public class RenderWirelessBolt {
                 * bolt.numsegments0);
         int renderend = (int) ((bolt.particleAge + expandTime) / (float) expandTime * bolt.numsegments0);
 
-        for (Iterator<Segment> iterator = bolt.segments.iterator(); iterator.hasNext();) {
-            Segment rendersegment = iterator.next();
-
+        for (Segment rendersegment : bolt.segments) {
             if (rendersegment.segmentno < renderstart || rendersegment.segmentno > renderend) continue;
 
-            Vector3 playervec = getRelativeViewVector(rendersegment.startpoint.point).negate();
+            Entity viewEntity = Minecraft.getMinecraft().renderViewEntity;
+            double startX = rendersegment.startpoint.point.x;
+            double startY = rendersegment.startpoint.point.y;
+            double startZ = rendersegment.startpoint.point.z;
 
-            double width = 0.025F * (playervec.mag() / 5 + 1) * (1 + rendersegment.light) * 0.5F;
+            double playerX = viewEntity.posX - startX;
+            double playerY = viewEntity.posY + viewEntity.getEyeHeight() - startY;
+            double playerZ = viewEntity.posZ - startZ;
 
-            Vector3 diff1 = playervec.copy().crossProduct(rendersegment.prevdiff).normalize()
-                    .multiply(width / rendersegment.sinprev);
-            Vector3 diff2 = playervec.copy().crossProduct(rendersegment.nextdiff).normalize()
-                    .multiply(width / rendersegment.sinnext);
+            double playerMag = Math.sqrt(playerX * playerX + playerY * playerY + playerZ * playerZ);
+            double width = 0.025F * (playerMag / 5 + 1) * (1 + rendersegment.light) * 0.5F;
 
-            Vector3 startvec = rendersegment.startpoint.point;
-            Vector3 endvec = rendersegment.endpoint.point;
+            double prevDiffX = rendersegment.prevdiff.x;
+            double prevDiffY = rendersegment.prevdiff.y;
+            double prevDiffZ = rendersegment.prevdiff.z;
+
+            double nextDiffX = rendersegment.nextdiff.x;
+            double nextDiffY = rendersegment.nextdiff.y;
+            double nextDiffZ = rendersegment.nextdiff.z;
+
+            double crossPrevX = playerY * prevDiffZ - playerZ * prevDiffY;
+            double crossPrevY = playerZ * prevDiffX - playerX * prevDiffZ;
+            double crossPrevZ = playerX * prevDiffY - playerY * prevDiffX;
+            double crossPrevMag = Math
+                    .sqrt(crossPrevX * crossPrevX + crossPrevY * crossPrevY + crossPrevZ * crossPrevZ);
+            crossPrevX /= crossPrevMag;
+            crossPrevY /= crossPrevMag;
+            crossPrevZ /= crossPrevMag;
+
+            crossPrevX *= width / rendersegment.sinprev;
+            crossPrevY *= width / rendersegment.sinprev;
+            crossPrevZ *= width / rendersegment.sinprev;
+
+            double crossNextX = playerY * nextDiffZ - playerZ * nextDiffY;
+            double crossNextY = playerZ * nextDiffX - playerX * nextDiffZ;
+            double crossNextZ = playerX * nextDiffY - playerY * nextDiffX;
+            double crossNextMag = Math
+                    .sqrt(crossNextX * crossNextX + crossNextY * crossNextY + crossNextZ * crossNextZ);
+            crossNextX /= crossNextMag;
+            crossNextY /= crossNextMag;
+            crossNextZ /= crossNextMag;
+
+            crossNextX *= width / rendersegment.sinnext;
+            crossNextY *= width / rendersegment.sinnext;
+            crossNextZ *= width / rendersegment.sinnext;
+
+            double endX = rendersegment.endpoint.point.x;
+            double endY = rendersegment.endpoint.point.y;
+            double endZ = rendersegment.endpoint.point.z;
 
             t.setColorRGBA_F(1, 1, 1, mainalpha * rendersegment.light);
 
-            t.addVertexWithUV(endvec.x - diff2.x, endvec.y - diff2.y, endvec.z - diff2.z, 0.5, 0);
-            t.addVertexWithUV(startvec.x - diff1.x, startvec.y - diff1.y, startvec.z - diff1.z, 0.5, 0);
-            t.addVertexWithUV(startvec.x + diff1.x, startvec.y + diff1.y, startvec.z + diff1.z, 0.5, 1);
-            t.addVertexWithUV(endvec.x + diff2.x, endvec.y + diff2.y, endvec.z + diff2.z, 0.5, 1);
+            t.addVertexWithUV(endX - crossNextX, endY - crossNextY, endZ - crossNextZ, 0.5, 0);
+            t.addVertexWithUV(startX - crossPrevX, startY - crossPrevY, startZ - crossPrevZ, 0.5, 0);
+            t.addVertexWithUV(startX + crossPrevX, startY + crossPrevY, startZ + crossPrevZ, 0.5, 1);
+            t.addVertexWithUV(endX + crossNextX, endY + crossNextY, endZ + crossNextZ, 0.5, 1);
 
             if (rendersegment.next == null) {
-                Vector3 roundend = rendersegment.endpoint.point.copy()
-                        .add(rendersegment.diff.copy().normalize().multiply(width));
+                double diffX = rendersegment.diff.x;
+                double diffY = rendersegment.diff.y;
+                double diffZ = rendersegment.diff.z;
+                double diffMag = Math.sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ);
+                diffX /= diffMag;
+                diffY /= diffMag;
+                diffZ /= diffMag;
 
-                t.addVertexWithUV(roundend.x - diff2.x, roundend.y - diff2.y, roundend.z - diff2.z, 0, 0);
-                t.addVertexWithUV(endvec.x - diff2.x, endvec.y - diff2.y, endvec.z - diff2.z, 0.5, 0);
-                t.addVertexWithUV(endvec.x + diff2.x, endvec.y + diff2.y, endvec.z + diff2.z, 0.5, 1);
-                t.addVertexWithUV(roundend.x + diff2.x, roundend.y + diff2.y, roundend.z + diff2.z, 0, 1);
+                double roundEndX = endX + diffX * width;
+                double roundEndY = endY + diffY * width;
+                double roundEndZ = endZ + diffZ * width;
+
+                t.addVertexWithUV(roundEndX - crossNextX, roundEndY - crossNextY, roundEndZ - crossNextZ, 0, 0);
+                t.addVertexWithUV(endX - crossNextX, endY - crossNextY, endZ - crossNextZ, 0.5, 0);
+                t.addVertexWithUV(endX + crossNextX, endY + crossNextY, endZ + crossNextZ, 0.5, 1);
+                t.addVertexWithUV(roundEndX + crossNextX, roundEndY + crossNextY, roundEndZ + crossNextZ, 0, 1);
             }
 
             if (rendersegment.prev == null) {
-                Vector3 roundend = rendersegment.startpoint.point.copy()
-                        .subtract(rendersegment.diff.copy().normalize().multiply(width));
+                double diffX = rendersegment.diff.x;
+                double diffY = rendersegment.diff.y;
+                double diffZ = rendersegment.diff.z;
+                double diffMag = Math.sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ);
+                diffX /= diffMag;
+                diffY /= diffMag;
+                diffZ /= diffMag;
 
-                t.addVertexWithUV(startvec.x - diff1.x, startvec.y - diff1.y, startvec.z - diff1.z, 0.5, 0);
-                t.addVertexWithUV(roundend.x - diff1.x, roundend.y - diff1.y, roundend.z - diff1.z, 0, 0);
-                t.addVertexWithUV(roundend.x + diff1.x, roundend.y + diff1.y, roundend.z + diff1.z, 0, 1);
-                t.addVertexWithUV(startvec.x + diff1.x, startvec.y + diff1.y, startvec.z + diff1.z, 0.5, 1);
+                double roundEndX = startX - diffX * width;
+                double roundEndY = startY - diffY * width;
+                double roundEndZ = startZ - diffZ * width;
+
+                t.addVertexWithUV(startX - crossPrevX, startY - crossPrevY, startZ - crossPrevZ, 0.5, 0);
+                t.addVertexWithUV(roundEndX - crossPrevX, roundEndY - crossPrevY, roundEndZ - crossPrevZ, 0, 0);
+                t.addVertexWithUV(roundEndX + crossPrevX, roundEndY + crossPrevY, roundEndZ + crossPrevZ, 0, 1);
+                t.addVertexWithUV(startX + crossPrevX, startY + crossPrevY, startZ + crossPrevZ, 0.5, 1);
             }
         }
     }
