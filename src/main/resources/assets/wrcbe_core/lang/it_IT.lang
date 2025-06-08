@@ -85,7 +85,7 @@ wrcbe_core.param.jam.usage6=Es. freq %s codechicken 500
 wrcbe_core.param.jam.noplayer=Giocatore non trovato
 wrcbe_core.param.jam.errpublic=Non puoi disturbare qualcuno da frequenze pubbliche
 wrcbe_core.param.jam.jammed=Sei stato disturbato dalla frequenza %d
-wrcbe_core.param.jam.jammed2Sei stato disturbato dalle frequenze %s
+wrcbe_core.param.jam.jammed2=Sei stato disturbato dalle frequenze %s
 wrcbe_core.param.jam.opjammed=%s: %s è stato disturbato dalla frequenza %d
 wrcbe_core.param.jam.opjammed2=%s: %s è stato disturbato dalle frequenze %s
 
