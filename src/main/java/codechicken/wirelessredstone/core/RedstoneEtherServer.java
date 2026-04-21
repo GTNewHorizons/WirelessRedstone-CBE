@@ -78,7 +78,7 @@ public class RedstoneEtherServer extends RedstoneEther {
         int blockzmin = chunkz * 16;
         int blockzmax = blockzmin + 15;
 
-        ArrayList<BlockCoord> transmittingblocks = new ArrayList<BlockCoord>(ether.transmittingblocks.keySet());
+        ArrayList<BlockCoord> transmittingblocks = new ArrayList<>(ether.transmittingblocks.keySet());
 
         for (BlockCoord node : transmittingblocks) {
             if (node.x >= blockxmin && node.x <= blockxmax && node.z >= blockzmin && node.z <= blockzmax) {
@@ -361,7 +361,7 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     private void sendFreqInfoTo(EntityPlayer player) {
-        ArrayList<Integer> freqsWithInfo = new ArrayList<Integer>();
+        ArrayList<Integer> freqsWithInfo = new ArrayList<>();
         for (int freq = 1; freq <= numfreqs; freq++) {
             if (!freqarray[freq].getName().equals("") || freqarray[freq].getColourId() != -1) freqsWithInfo.add(freq);
         }
@@ -370,7 +370,7 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     private void sendPrivateFreqsTo(EntityPlayer player) {
-        ArrayList<Integer> freqsWithOwners = new ArrayList<Integer>();
+        ArrayList<Integer> freqsWithOwners = new ArrayList<>();
         for (int freq = 1; freq <= numfreqs; freq++) {
             if (isFreqPrivate(freq)) freqsWithOwners.add(freq);
         }
@@ -379,7 +379,7 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     public TreeMap<Integer, Integer> getLoadedFrequencies() {
-        TreeMap<Integer, Integer> treemap = new TreeMap<Integer, Integer>();
+        TreeMap<Integer, Integer> treemap = new TreeMap<>();
         for (int freq = 1; freq <= numfreqs; freq++) {
             if (freqarray[freq].nodeCount() != 0) {
                 treemap.put(freq, freqarray[freq].getActiveTransmitters());
@@ -406,7 +406,7 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     public ArrayList<FreqCoord> getActiveTransmittersOnFreq(int freq, int dimension) {
-        ArrayList<FreqCoord> txnodes = new ArrayList<FreqCoord>();
+        ArrayList<FreqCoord> txnodes = new ArrayList<>();
         freqarray[freq].putActiveTransmittersInList(dimension, txnodes);
         return txnodes;
     }
@@ -421,7 +421,7 @@ public class RedstoneEtherServer extends RedstoneEther {
 
     public TreeSet<BlockCoord> getNodesInRangeofPoint(int dimension, Vector3 point, float range,
             boolean includejammed) {
-        TreeSet<BlockCoord> nodes = new TreeSet<BlockCoord>();
+        TreeSet<BlockCoord> nodes = new TreeSet<>();
         float rangePow2 = range * range;
         for (int freq = 1; freq <= numfreqs; freq++) {
             TreeMap<BlockCoord, Boolean> transmittermap = freqarray[freq].getTransmitters(dimension);
@@ -456,7 +456,7 @@ public class RedstoneEtherServer extends RedstoneEther {
 
     public TreeSet<BlockCoord> getNodesInRangeofNode(int dimension, BlockCoord block, float range,
             boolean includejammed) {
-        TreeSet<BlockCoord> nodes = new TreeSet<BlockCoord>();
+        TreeSet<BlockCoord> nodes = new TreeSet<>();
         float rangePow2 = range * range;
         for (int freq = 1; freq <= numfreqs; freq++) {
             TreeMap<BlockCoord, Boolean> transmittermap = freqarray[freq].getTransmitters(dimension);

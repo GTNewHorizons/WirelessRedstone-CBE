@@ -28,10 +28,10 @@ public class TriangTexManager {
     private static ColourRGBA pg = new ColourRGBA(0x808080FF); // pointer colour grey
     private static ColourRGBA pd = new ColourRGBA(0x404040FF); // pointer colour dark grey
 
-    private static HashMap<Integer, Integer> freqslotmap = new HashMap<Integer, Integer>(256);
-    private static LinkedList<Integer> freeslots = new LinkedList<Integer>();
-    private static HashSet<Integer> activetextures = new HashSet<Integer>(256);
-    private static HashSet<Integer> visibletextures = new HashSet<Integer>(256);
+    private static HashMap<Integer, Integer> freqslotmap = new HashMap<>(256);
+    private static LinkedList<Integer> freeslots = new LinkedList<>();
+    private static HashSet<Integer> activetextures = new HashSet<>(256);
+    private static HashSet<Integer> visibletextures = new HashSet<>(256);
 
     private static ColourRGBA[] pointercolours = new ColourRGBA[] { pb, pr, pr, pr, pr, pr, pr, pr, pb, pr, pr, pr, pb,
             pb };
@@ -130,7 +130,7 @@ public class TriangTexManager {
     }
 
     public static void processAllTextures() {
-        HashSet<Integer> wasActive = new HashSet<Integer>(activetextures);
+        HashSet<Integer> wasActive = new HashSet<>(activetextures);
         for (int freq : visibletextures) {
             int slot = freqslotmap.get(freq);
             if (!wasActive.remove(freq)) {

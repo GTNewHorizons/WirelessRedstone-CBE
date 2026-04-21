@@ -39,24 +39,24 @@ public abstract class RedstoneEther {
 
     static class DimensionalEtherHash {
 
-        TreeMap<BlockCoord, TXNodeInfo> transmittingblocks = new TreeMap<BlockCoord, RedstoneEther.TXNodeInfo>();
-        TreeMap<BlockCoord, Integer> recievingblocks = new TreeMap<BlockCoord, Integer>();
-        HashSet<WirelessTransmittingDevice> transmittingdevices = new HashSet<WirelessTransmittingDevice>();
-        ArrayList<RedstoneEtherFrequency> freqsToSave = new ArrayList<RedstoneEtherFrequency>();
+        TreeMap<BlockCoord, TXNodeInfo> transmittingblocks = new TreeMap<>();
+        TreeMap<BlockCoord, Integer> recievingblocks = new TreeMap<>();
+        HashSet<WirelessTransmittingDevice> transmittingdevices = new HashSet<>();
+        ArrayList<RedstoneEtherFrequency> freqsToSave = new ArrayList<>();
 
-        TreeSet<BlockCoord> jammerset = new TreeSet<BlockCoord>();
-        TreeMap<BlockCoord, Integer> jammednodes = new TreeMap<BlockCoord, Integer>();
+        TreeSet<BlockCoord> jammerset = new TreeSet<>();
+        TreeMap<BlockCoord, Integer> jammednodes = new TreeMap<>();
     }
 
     public final boolean remote;
     protected RedstoneEtherFrequency[] freqarray;
-    protected HashMap<Integer, DimensionalEtherHash> ethers = new HashMap<Integer, DimensionalEtherHash>();
+    protected HashMap<Integer, DimensionalEtherHash> ethers = new HashMap<>();
 
     protected int publicfrequencyend;
     protected int sharedfrequencyend;
     protected int numprivatefreqs;
 
-    protected HashSet<WirelessReceivingDevice> receivingdevices = new HashSet<WirelessReceivingDevice>();
+    protected HashSet<WirelessReceivingDevice> receivingdevices = new HashSet<>();
     protected HashMap<String, boolean[]> playerJammedMap;
     protected HashMap<Integer, String> privateFreqs;
 
@@ -226,9 +226,9 @@ public abstract class RedstoneEther {
         for (int freq = 0; freq <= numfreqs; freq++) {
             freqarray[freq] = new RedstoneEtherFrequency(this, freq);
         }
-        jammedentities = new HashMap<EntityLivingBase, Integer>();
-        playerJammedMap = new HashMap<String, boolean[]>();
-        privateFreqs = new HashMap<Integer, String>();
+        jammedentities = new HashMap<>();
+        playerJammedMap = new HashMap<>();
+        privateFreqs = new HashMap<>();
     }
 
     protected void addEther(World world, int dimension) {
@@ -451,7 +451,7 @@ public abstract class RedstoneEther {
     }
 
     public ArrayList<String> getMatchingAllowedNames(EntityPlayer player, String match) {
-        ArrayList<String> allnames = new ArrayList<String>();
+        ArrayList<String> allnames = new ArrayList<>();
 
         for (int freq = 1; freq <= numfreqs; freq++) {
             String name = freqarray[freq].getName();
@@ -468,7 +468,7 @@ public abstract class RedstoneEther {
     }
 
     public ArrayList<String> getAllowedNames(EntityPlayer player) {
-        ArrayList<String> allnames = new ArrayList<String>();
+        ArrayList<String> allnames = new ArrayList<>();
 
         for (int freq = 1; freq <= numfreqs; freq++) {
             String name = freqarray[freq].getName();
@@ -482,7 +482,7 @@ public abstract class RedstoneEther {
     }
 
     public ArrayList<String> getAllNames() {
-        ArrayList<String> allnames = new ArrayList<String>();
+        ArrayList<String> allnames = new ArrayList<>();
 
         for (int freq = 1; freq <= numfreqs; freq++) {
             String name = freqarray[freq].getName();
@@ -506,7 +506,7 @@ public abstract class RedstoneEther {
     }
 
     public ArrayList<Integer> getPrivateFrequencies(String username) {
-        ArrayList<Integer> list = new ArrayList<Integer>();
+        ArrayList<Integer> list = new ArrayList<>();
         for (Entry<Integer, String> entry : privateFreqs.entrySet()) {
             if (entry.getValue().equalsIgnoreCase(username)) list.add(entry.getKey());
         }

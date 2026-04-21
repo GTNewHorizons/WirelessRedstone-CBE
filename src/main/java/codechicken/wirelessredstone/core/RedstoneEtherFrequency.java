@@ -37,9 +37,9 @@ public class RedstoneEtherFrequency {
             dimension = CommonUtils.getDimension(world2);
         }
 
-        public TreeMap<BlockCoord, Boolean> transmittermap = new TreeMap<BlockCoord, Boolean>();
-        public TreeSet<BlockCoord> receiverset = new TreeSet<BlockCoord>();
-        public LinkedList<DelayedModification> temporarySet = new LinkedList<DelayedModification>();
+        public TreeMap<BlockCoord, Boolean> transmittermap = new TreeMap<>();
+        public TreeSet<BlockCoord> receiverset = new TreeSet<>();
+        public LinkedList<DelayedModification> temporarySet = new LinkedList<>();
 
         public void setDirty() {
             if (!isdirty) ((RedstoneEtherServer) ether).addFreqToSave(RedstoneEtherFrequency.this, dimension);
@@ -55,9 +55,9 @@ public class RedstoneEtherFrequency {
     private int freq;
     private RedstoneEther ether;
 
-    private HashMap<Integer, DimensionalNodeTracker> nodetrackers = new HashMap<Integer, DimensionalNodeTracker>();
-    private HashMap<Integer, Integer> activeDimensions = new HashMap<Integer, Integer>();
-    private ArrayList<WirelessTransmittingDevice> transmittingdevices = new ArrayList<WirelessTransmittingDevice>();
+    private HashMap<Integer, DimensionalNodeTracker> nodetrackers = new HashMap<>();
+    private HashMap<Integer, Integer> activeDimensions = new HashMap<>();
+    private ArrayList<WirelessTransmittingDevice> transmittingdevices = new ArrayList<>();
 
     private boolean useTemporarySet = false;
 

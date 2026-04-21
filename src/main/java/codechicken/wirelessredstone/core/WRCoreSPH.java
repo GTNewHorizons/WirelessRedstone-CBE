@@ -18,7 +18,7 @@ import codechicken.lib.vec.BlockCoord;
 
 public class WRCoreSPH implements IServerPacketHandler {
 
-    public static List<IServerPacketHandler> delegates = new LinkedList<IServerPacketHandler>();
+    public static List<IServerPacketHandler> delegates = new LinkedList<>();
 
     @Override
     public void handlePacket(PacketCustom packet, EntityPlayerMP sender, INetHandlerPlayServer handler) {

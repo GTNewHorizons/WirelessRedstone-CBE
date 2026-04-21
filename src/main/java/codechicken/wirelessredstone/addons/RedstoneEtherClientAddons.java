@@ -23,14 +23,14 @@ public class RedstoneEtherClientAddons extends RedstoneEtherAddons {
     private boolean wasmousedown;
     private Remote remote;
     private TriangFreqManager[] triangFreqs;
-    private HashMap<Short, ClientMapInfo> clientMapInfoSet = new HashMap<Short, ClientMapInfo>();
+    private HashMap<Short, ClientMapInfo> clientMapInfoSet = new HashMap<>();
     private WirelessMapNodeStorage wirelessmapnodes;
     private EntityREP activeREP;
     private int REPThrowTimeout;
     private int ticksInGui;
 
     public RedstoneEtherClientAddons() {
-        clientMapInfoSet = new HashMap<Short, ClientMapInfo>();
+        clientMapInfoSet = new HashMap<>();
         triangFreqs = new TriangFreqManager[RedstoneEther.numfreqs + 1];
         for (int freq = 1; freq <= RedstoneEther.numfreqs; freq++) {
             triangFreqs[freq] = new TriangFreqManager(freq);
