@@ -1,6 +1,6 @@
 // Add your dependencies here
 
 dependencies {
-    api("com.github.GTNewHorizons:ForgeMultipart:1.6.4:dev")
-    api("com.github.GTNewHorizons:CodeChickenCore:1.4.3:dev")
+    api("com.github.GTNewHorizons:ForgeMultipart:1.7.10:dev")
+    api("com.github.GTNewHorizons:CodeChickenCore:1.4.12:dev")
 }
