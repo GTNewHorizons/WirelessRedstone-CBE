@@ -22,8 +22,8 @@ public class RedstoneEtherClientAddons extends RedstoneEtherAddons {
     private boolean mousedown;
     private boolean wasmousedown;
     private Remote remote;
-    private TriangFreqManager[] triangFreqs;
-    private HashMap<Short, ClientMapInfo> clientMapInfoSet = new HashMap<>();
+    private final TriangFreqManager[] triangFreqs;
+    private final HashMap<Short, ClientMapInfo> clientMapInfoSet;
     private WirelessMapNodeStorage wirelessmapnodes;
     private EntityREP activeREP;
     private int REPThrowTimeout;

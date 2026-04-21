@@ -16,8 +16,8 @@ public class RemoteTexManager {
     private static Colour[] texGrad;
     private static Colour[] texOff;
     private static Colour[] texOn;
-    private static int[] imageData = new int[256];
-    private static TextureSpecial[] icons = new TextureSpecial[(RedstoneEther.numcolours + 1) * 2];
+    private static final int[] imageData = new int[256];
+    private static final TextureSpecial[] icons = new TextureSpecial[(RedstoneEther.numcolours + 1) * 2];
 
     public static void load(TextureMap registrar) {
         for (int i = 0; i < icons.length; i++)

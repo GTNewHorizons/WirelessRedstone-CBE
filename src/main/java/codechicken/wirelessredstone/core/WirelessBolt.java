@@ -133,17 +133,17 @@ public class WirelessBolt {
     private int numsplits;
     private boolean finalized;
     private boolean canhittarget = true;
-    private Random rand;
+    private final Random rand;
     public long seed;
 
     public int particleAge;
     public int particleMaxAge;
     public boolean isDead;
-    private AxisAlignedBB boundingBox;
+    private final AxisAlignedBB boundingBox;
 
     public World world;
     private Entity wrapper;
-    private RedstoneEther ether;
+    private final RedstoneEther ether;
 
     public static ArrayList<WirelessBolt> serverboltlist = new ArrayList<>();
     public static ArrayList<WirelessBolt> clientboltlist = new ArrayList<>();

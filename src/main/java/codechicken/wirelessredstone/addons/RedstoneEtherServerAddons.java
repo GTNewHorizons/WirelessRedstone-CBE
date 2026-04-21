@@ -28,15 +28,15 @@ import codechicken.wirelessredstone.core.WirelessTransmittingDevice;
 
 public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
 
-    private HashMap<String, AddonPlayerInfo> playerInfos = new HashMap<>();
+    private final HashMap<String, AddonPlayerInfo> playerInfos = new HashMap<>();
     /**
      * A list of trackers and the players who are 'tracking' them on their clients.
      */
-    private HashMap<EntityWirelessTracker, HashSet<EntityPlayerMP>> trackerPlayerMap = new HashMap<>();
+    private final HashMap<EntityWirelessTracker, HashSet<EntityPlayerMP>> trackerPlayerMap = new HashMap<>();
     /**
      * Trackers that are attached to players.
      */
-    private HashSet<EntityWirelessTracker> playerTrackers = new HashSet<>();
+    private final HashSet<EntityWirelessTracker> playerTrackers = new HashSet<>();
 
     public void setTriangRequired(EntityPlayer player, int freq, boolean required) {
         AddonPlayerInfo info = getPlayerInfo(player);

@@ -20,23 +20,23 @@ public class TriangTexManager {
 
     private static Colour[] texRing = new Colour[256];
     private static Colour[] texGrad = new Colour[256];
-    private static int[] imageData = new int[256];
-    private static ManagedTextureFX[] textures = new ManagedTextureFX[256];
+    private static final int[] imageData = new int[256];
+    private static final ManagedTextureFX[] textures = new ManagedTextureFX[256];
 
-    private static ColourRGBA pr = new ColourRGBA(0xFF0000FF); // pointer colour redstone
-    private static ColourRGBA pb = new ColourRGBA(0x0000FFFF); // pointer colour blue
-    private static ColourRGBA pg = new ColourRGBA(0x808080FF); // pointer colour grey
-    private static ColourRGBA pd = new ColourRGBA(0x404040FF); // pointer colour dark grey
+    private static final ColourRGBA pr = new ColourRGBA(0xFF0000FF); // pointer colour redstone
+    private static final ColourRGBA pb = new ColourRGBA(0x0000FFFF); // pointer colour blue
+    private static final ColourRGBA pg = new ColourRGBA(0x808080FF); // pointer colour grey
+    private static final ColourRGBA pd = new ColourRGBA(0x404040FF); // pointer colour dark grey
 
-    private static HashMap<Integer, Integer> freqslotmap = new HashMap<>(256);
-    private static LinkedList<Integer> freeslots = new LinkedList<>();
-    private static HashSet<Integer> activetextures = new HashSet<>(256);
-    private static HashSet<Integer> visibletextures = new HashSet<>(256);
+    private static final HashMap<Integer, Integer> freqslotmap = new HashMap<>(256);
+    private static final LinkedList<Integer> freeslots = new LinkedList<>();
+    private static final HashSet<Integer> activetextures = new HashSet<>(256);
+    private static final HashSet<Integer> visibletextures = new HashSet<>(256);
 
-    private static ColourRGBA[] pointercolours = new ColourRGBA[] { pb, pr, pr, pr, pr, pr, pr, pr, pb, pr, pr, pr, pb,
-            pb };
-    private static ColourRGBA[] pointersidecolours = new ColourRGBA[] { pg, pg, pg, pg, pg, pg, pd, pg, pd, pd, pd, pd,
-            pg, pg };
+    private static final ColourRGBA[] pointercolours = new ColourRGBA[] { pb, pr, pr, pr, pr, pr, pr, pr, pb, pr, pr,
+            pr, pb, pb };
+    private static final ColourRGBA[] pointersidecolours = new ColourRGBA[] { pg, pg, pg, pg, pg, pg, pd, pg, pd, pd,
+            pd, pd, pg, pg };
 
     static {
         for (int i = 1; i < textures.length; i++) freeslots.add(i);

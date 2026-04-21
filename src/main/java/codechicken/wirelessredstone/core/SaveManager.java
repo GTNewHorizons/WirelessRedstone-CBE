@@ -25,14 +25,14 @@ import codechicken.lib.vec.BlockCoord;
 
 public class SaveManager {
 
-    private RandomAccessFile freqMapFile;
-    private RandomAccessFile smallSectorFile;
-    private RandomAccessFile largeSectorFile;
+    private final RandomAccessFile freqMapFile;
+    private final RandomAccessFile smallSectorFile;
+    private final RandomAccessFile largeSectorFile;
     private RandomAccessFile rwfile;
 
     protected static SimpleProperties freqProp;
     protected static SimpleProperties generalProp;
-    private static ConfigFile globalconfig;
+    private static final ConfigFile globalconfig;
 
     private static File activeMapFile;
 
@@ -42,14 +42,15 @@ public class SaveManager {
 
     private long lastcleanuptime;
 
-    private int dimension;
+    private final int dimension;
 
-    private static ArrayList<Entry<Integer, Integer>>[] freqDimensionHashes = new ArrayList[RedstoneEther.numfreqs + 1];
+    private static final ArrayList<Entry<Integer, Integer>>[] freqDimensionHashes = new ArrayList[RedstoneEther.numfreqs
+            + 1];
     private static boolean hashChanged = false;
 
     private static boolean loadinginfo;
 
-    private static HashMap<Integer, SaveManager> managers = new HashMap<>();
+    private static final HashMap<Integer, SaveManager> managers = new HashMap<>();
 
     private final int largesectorsize = 256;
     private final int largesectornodes = largesectorsize / 12;

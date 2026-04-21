@@ -28,24 +28,24 @@ public abstract class RedstoneEther {
 
     public static class TXNodeInfo {
 
+        public final int freq;
+        public boolean on;
+
         public TXNodeInfo(int freq2, boolean b) {
             freq = freq2;
             on = b;
         }
-
-        public int freq;
-        public boolean on;
     }
 
-    static class DimensionalEtherHash {
+    public static class DimensionalEtherHash {
 
-        TreeMap<BlockCoord, TXNodeInfo> transmittingblocks = new TreeMap<>();
-        TreeMap<BlockCoord, Integer> recievingblocks = new TreeMap<>();
-        HashSet<WirelessTransmittingDevice> transmittingdevices = new HashSet<>();
-        ArrayList<RedstoneEtherFrequency> freqsToSave = new ArrayList<>();
+        final TreeMap<BlockCoord, TXNodeInfo> transmittingblocks = new TreeMap<>();
+        final TreeMap<BlockCoord, Integer> recievingblocks = new TreeMap<>();
+        final HashSet<WirelessTransmittingDevice> transmittingdevices = new HashSet<>();
+        final ArrayList<RedstoneEtherFrequency> freqsToSave = new ArrayList<>();
 
-        TreeSet<BlockCoord> jammerset = new TreeSet<>();
-        TreeMap<BlockCoord, Integer> jammednodes = new TreeMap<>();
+        final TreeSet<BlockCoord> jammerset = new TreeSet<>();
+        final TreeMap<BlockCoord, Integer> jammednodes = new TreeMap<>();
     }
 
     public final boolean remote;

@@ -32,15 +32,15 @@ import codechicken.lib.vec.Vector3;
 public class RenderWireless {
 
     private static MultiIconTransformation model_icont;
-    private static MultiIconTransformation[] base_icont = new MultiIconTransformation[2];
-    private static CCModel[][] models = new CCModel[3][24];
+    private static final MultiIconTransformation[] base_icont = new MultiIconTransformation[2];
+    private static final CCModel[][] models = new CCModel[3][24];
 
-    private static LightModel lm = new LightModel().setAmbient(new Vector3(0.7, 0.7, 0.7))
+    private static final LightModel lm = new LightModel().setAmbient(new Vector3(0.7, 0.7, 0.7))
             .addLight(new Light(new Vector3(0.2, 1, -0.7)).setDiffuse(new Vector3(0.3, 0.3, 0.3)))
             .addLight(new Light(new Vector3(-0.2, 1, 0.7)).setDiffuse(new Vector3(0.3, 0.3, 0.3)))
             .addLight(new Light(new Vector3(0.7, -1, -0.2)).setDiffuse(new Vector3(0.2, 0.2, 0.2)))
             .addLight(new Light(new Vector3(-0.7, -1, 0.2)).setDiffuse(new Vector3(0.2, 0.2, 0.2)));
-    private static PlanarLightModel rlm = lm.reducePlanar();
+    private static final PlanarLightModel rlm = lm.reducePlanar();
 
     static {
         Map<String, CCModel> modelMap = CCModel
