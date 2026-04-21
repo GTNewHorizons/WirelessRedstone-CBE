@@ -13,9 +13,9 @@ import codechicken.wirelessredstone.core.RedstoneEther;
 
 public class RemoteTexManager {
 
-    private static Colour texGrad[];
-    private static Colour texOff[];
-    private static Colour texOn[];
+    private static Colour[] texGrad;
+    private static Colour[] texOff;
+    private static Colour[] texOn;
     private static int[] imageData = new int[256];
     private static TextureSpecial[] icons = new TextureSpecial[(RedstoneEther.numcolours + 1) * 2];
 

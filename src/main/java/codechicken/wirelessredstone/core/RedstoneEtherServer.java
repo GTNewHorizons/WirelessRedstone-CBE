@@ -295,9 +295,9 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     public void loadJammedFrequencies(String jammedString, String username) {
-        String freqranges[] = jammedString.split(",");
+        String[] freqranges = jammedString.split(",");
         for (int i = 0; i < freqranges.length; i++) {
-            String currentrange[] = freqranges[i].split("-");
+            String[] currentrange = freqranges[i].split("-");
             int startfreq;
             int endfreq;
             if (currentrange.length == 1) {

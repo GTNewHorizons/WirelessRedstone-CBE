@@ -32,7 +32,7 @@ import codechicken.lib.vec.Vector3;
 public class RenderWireless {
 
     private static MultiIconTransformation model_icont;
-    private static MultiIconTransformation base_icont[] = new MultiIconTransformation[2];
+    private static MultiIconTransformation[] base_icont = new MultiIconTransformation[2];
     private static CCModel[][] models = new CCModel[3][24];
 
     private static LightModel lm = new LightModel().setAmbient(new Vector3(0.7, 0.7, 0.7))

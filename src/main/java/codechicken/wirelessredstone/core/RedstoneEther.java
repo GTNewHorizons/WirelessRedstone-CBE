@@ -86,13 +86,13 @@ public abstract class RedstoneEther {
     public static final float maxrps = 2.98F;
     public static final double gradrps = maxrps / 5000D;
 
-    public static final String localdyenames[] = { "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray",
+    public static final String[] localdyenames = { "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray",
             "pink", "lime", "yellow", "lightBlue", "magenta", "orange" };
 
-    public static final String fulldyenames[] = { "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "Light Gray",
+    public static final String[] fulldyenames = { "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "Light Gray",
             "Gray", "Pink", "Lime", "Yellow", "Light Blue", "Magenta", "Orange" };
 
-    public static final int colours[] = { 0xFFB3312C, 0xFF336600, 0xFF51301A, 0xFF253192, 0xFF7B2FBE, 0xFF287697,
+    public static final int[] colours = { 0xFFB3312C, 0xFF336600, 0xFF51301A, 0xFF253192, 0xFF7B2FBE, 0xFF287697,
             0xFF848484, 0xFF434343, 0xFFD88198, 0xFF41CD34, 0xFFDECF2A, 0xFF6689D3, 0xFFC354CD, 0xFFEB8844 };
 
     static {
@@ -175,7 +175,7 @@ public abstract class RedstoneEther {
     }
 
     public static int[] parseFrequencyRange(String freqstring) {
-        String splitstring[] = freqstring.split("-");
+        String[] splitstring = freqstring.split("-");
         if (splitstring.length == 1) {
             try {
                 return (new int[] { Integer.parseInt(splitstring[0]), Integer.parseInt(splitstring[0]) });
@@ -302,7 +302,7 @@ public abstract class RedstoneEther {
         int endfreq = publicfrequencyend;
         StringBuilder jammedfreqs = new StringBuilder();
         do {
-            int jammedrange[] = getNextFrequencyRange(username, endfreq + 1, true);
+            int[] jammedrange = getNextFrequencyRange(username, endfreq + 1, true);
             int startfreq = jammedrange[0];
             endfreq = jammedrange[1];
             if (startfreq == -1) break;
@@ -319,7 +319,7 @@ public abstract class RedstoneEther {
     }
 
     public int[] getNextFrequencyRange(String username, int beginfreq, boolean jammed) {
-        boolean jammedFreqs[] = getJammedFreqs(username);
+        boolean[] jammedFreqs = getJammedFreqs(username);
         int currentfreq = beginfreq;
         int startfreq = -1;
         do {

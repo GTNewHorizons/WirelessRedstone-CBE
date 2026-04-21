@@ -94,7 +94,7 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
         info.sniffer = new Sniffer(player);
         RedstoneEther.server().addReceivingDevice(info.sniffer);
 
-        byte ethercopy[] = new byte[625];
+        byte[] ethercopy = new byte[625];
         for (int freq = 1; freq <= 5000; freq++) {
             int arrayindex = (freq - 1) >> 3;
             int bit = (freq - 1) & 7;
