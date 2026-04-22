@@ -28,57 +28,16 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 public abstract class RedstoneEther {
 
-    public static class TXNodeInfo {
-
-        public final int freq;
-        public boolean on;
-
-        public TXNodeInfo(int freq2, boolean b) {
-            freq = freq2;
-            on = b;
-        }
-    }
-
-    public static class DimensionalEtherHash {
-
-        final TreeMap<BlockCoord, TXNodeInfo> transmittingblocks = new TreeMap<>();
-        final TreeMap<BlockCoord, Integer> recievingblocks = new TreeMap<>();
-        final HashSet<WirelessTransmittingDevice> transmittingdevices = new HashSet<>();
-        final ArrayList<RedstoneEtherFrequency> freqsToSave = new ArrayList<>();
-
-        final TreeSet<BlockCoord> jammerset = new TreeSet<>();
-        final TreeMap<BlockCoord, Integer> jammednodes = new TreeMap<>();
-    }
-
-    public final boolean remote;
-    protected RedstoneEtherFrequency[] freqarray;
-    protected Int2ObjectOpenHashMap<DimensionalEtherHash> ethers = new Int2ObjectOpenHashMap<>();
-
-    protected int publicfrequencyend;
-    protected int sharedfrequencyend;
-    protected int numprivatefreqs;
-
-    protected HashSet<WirelessReceivingDevice> receivingdevices = new HashSet<>();
-    protected HashMap<String, boolean[]> playerJammedMap;
-    protected Int2ObjectOpenHashMap<String> privateFreqs;
-
-    protected Object2IntOpenHashMap<EntityLivingBase> jammedentities;
-
     public static final int numfreqs = 5000;
-
-    public static final int jammerrange = SaveManager.config().getTag("core.jammer.range").setComment("Range In Blocks")
-            .getIntValue(10);
+    // spotless:off
+    public static final int jammerrange = SaveManager.config().getTag("core.jammer.range").setComment("Range In Blocks").getIntValue(10);
     public static final int jammerrangePow2 = jammerrange * jammerrange;
-    public static final int jammertimeout = SaveManager.config().getTag("core.jammer.timeout")
-            .setComment("Timeout In Seconds:Applies to both blocks and players").getIntValue(60) * 20;
+    public static final int jammertimeout = SaveManager.config().getTag("core.jammer.timeout").setComment("Timeout In Seconds:Applies to both blocks and players").getIntValue(60) * 20;
     public static final int jammerrandom = jammertimeout / 3;
-    public static final int jammerentitywait = SaveManager.config().getTag("core.jammer.entitydelay").getIntValue(5)
-            * 20;
-    public static final int jammerentityretry = SaveManager.config().getTag("core.jammer.entityretry")
-            .setComment("Jam an entity again after x seconds").getIntValue(10) * 20;
-    public static final int jammerblockwait = SaveManager.config().getTag("core.jammer.blockdelay")
-            .setComment("Delay in seconds before jamming the first time").getIntValue(10) * 20;
-
+    public static final int jammerentitywait = SaveManager.config().getTag("core.jammer.entitydelay").getIntValue(5) * 20;
+    public static final int jammerentityretry = SaveManager.config().getTag("core.jammer.entityretry").setComment("Jam an entity again after x seconds").getIntValue(10) * 20;
+    public static final int jammerblockwait = SaveManager.config().getTag("core.jammer.blockdelay").setComment("Delay in seconds before jamming the first time").getIntValue(10) * 20;
+    // spotless:on
     public static ItemStack[] coloursetters;
 
     public static final int numcolours = 14;
@@ -101,6 +60,37 @@ public abstract class RedstoneEther {
 
     private static RedstoneEtherServer serverEther;
     private static RedstoneEtherClient clientEther;
+
+    public final boolean remote;
+    protected RedstoneEtherFrequency[] freqarray;
+    protected Int2ObjectOpenHashMap<DimensionalEtherHash> ethers = new Int2ObjectOpenHashMap<>();
+
+    protected int publicfrequencyend;
+    protected int sharedfrequencyend;
+    protected int numprivatefreqs;
+
+    protected HashSet<WirelessReceivingDevice> receivingdevices = new HashSet<>();
+    protected HashMap<String, boolean[]> playerJammedMap;
+    protected Int2ObjectOpenHashMap<String> privateFreqs;
+    protected Object2IntOpenHashMap<EntityLivingBase> jammedentities;
+
+    protected RedstoneEther(boolean client) {
+        remote = client;
+    }
+
+    public void init(World world) {
+        freqarray = new RedstoneEtherFrequency[numfreqs + 1];
+        // it appears freq==0 is not supposed to happen
+        // however under certain circumstance some device will end up being freq==0
+        // I don't quite have a good idea on how it ends up that way, so I will just
+        // put freq==0 into use
+        for (int freq = 0; freq <= numfreqs; freq++) {
+            freqarray[freq] = new RedstoneEtherFrequency(this, freq);
+        }
+        jammedentities = new Object2IntOpenHashMap<>();
+        playerJammedMap = new HashMap<>();
+        privateFreqs = new Int2ObjectOpenHashMap<>();
+    }
 
     public static int pythagorasPow2(BlockCoord node1, BlockCoord node2) {
         return (node1.x - node2.x) * (node1.x - node2.x) + (node1.y - node2.y) * (node1.y - node2.y)
@@ -211,24 +201,6 @@ public abstract class RedstoneEther {
 
     public static double getSineWave(double renderTime, int speed) {
         return MathHelper.sin(renderTime * 0.017453 * speed);
-    }
-
-    protected RedstoneEther(boolean client) {
-        remote = client;
-    }
-
-    public void init(World world) {
-        freqarray = new RedstoneEtherFrequency[numfreqs + 1];
-        // it appears freq==0 is not supposed to happen
-        // however under certain circumstance some device will end up being freq==0
-        // I don't quite have a good idea on how it ends up that way, so I will just
-        // put freq==0 into use
-        for (int freq = 0; freq <= numfreqs; freq++) {
-            freqarray[freq] = new RedstoneEtherFrequency(this, freq);
-        }
-        jammedentities = new Object2IntOpenHashMap<>();
-        playerJammedMap = new HashMap<>();
-        privateFreqs = new Int2ObjectOpenHashMap<>();
     }
 
     protected void addEther(World world, int dimension) {
@@ -546,4 +518,26 @@ public abstract class RedstoneEther {
     }
 
     public abstract void setFreq(ITileWireless tile, int freq);
+
+    public static class TXNodeInfo {
+
+        public final int freq;
+        public boolean on;
+
+        public TXNodeInfo(int freq2, boolean b) {
+            freq = freq2;
+            on = b;
+        }
+    }
+
+    public static class DimensionalEtherHash {
+
+        final TreeMap<BlockCoord, TXNodeInfo> transmittingblocks = new TreeMap<>();
+        final TreeMap<BlockCoord, Integer> recievingblocks = new TreeMap<>();
+        final HashSet<WirelessTransmittingDevice> transmittingdevices = new HashSet<>();
+        final ArrayList<RedstoneEtherFrequency> freqsToSave = new ArrayList<>();
+
+        final TreeSet<BlockCoord> jammerset = new TreeSet<>();
+        final TreeMap<BlockCoord, Integer> jammednodes = new TreeMap<>();
+    }
 }
