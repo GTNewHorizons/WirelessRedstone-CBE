@@ -29,8 +29,9 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class WRCoreProxy {
 
     public void preInit() {
-        MinecraftForge.EVENT_BUS.register(new WRCoreEventHandler());
-        FMLCommonHandler.instance().bus().register(new WRCoreEventHandler());
+        final WRCoreEventHandler handler = new WRCoreEventHandler();
+        MinecraftForge.EVENT_BUS.register(handler);
+        FMLCommonHandler.instance().bus().register(handler);
     }
 
     public void init() {

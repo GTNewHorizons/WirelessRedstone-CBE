@@ -129,6 +129,10 @@ public abstract class RedstoneEther {
         }
     }
 
+    public static void unloadClient() {
+        clientEther = null;
+    }
+
     public static RedstoneEther get(boolean remote) {
         return remote ? clientEther : serverEther;
     }
