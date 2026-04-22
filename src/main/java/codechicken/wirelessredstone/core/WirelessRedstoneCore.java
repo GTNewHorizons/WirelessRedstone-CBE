@@ -16,7 +16,9 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
         modid = "WR-CBE|Core",
         version = WirelessRedstoneCore.version,
         dependencies = "required-after:CodeChickenCore@[" + CodeChickenCorePlugin.version
-                + ",);required-after:ForgeMultipart",
+                + ",);"
+                + "required-after:ForgeMultipart;"
+                + "required-after:gtnhlib@[0.9.52,)",
         acceptedMinecraftVersions = "[1.7.10]",
         name = "WR-CBE Core")
 public class WirelessRedstoneCore {

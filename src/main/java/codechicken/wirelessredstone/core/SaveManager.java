@@ -10,7 +10,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,6 +21,7 @@ import codechicken.core.CommonUtils;
 import codechicken.lib.config.ConfigFile;
 import codechicken.lib.config.SimpleProperties;
 import codechicken.lib.vec.BlockCoord;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 public class SaveManager {
 
@@ -50,7 +50,7 @@ public class SaveManager {
 
     private static boolean loadinginfo;
 
-    private static final HashMap<Integer, SaveManager> managers = new HashMap<>();
+    private static final Int2ObjectOpenHashMap<SaveManager> dimensionManagers = new Int2ObjectOpenHashMap<>();
 
     private final int largesectorsize = 256;
     private final int largesectornodes = largesectorsize / 12;
@@ -69,21 +69,21 @@ public class SaveManager {
     }
 
     public static SaveManager getInstance(int dimension) {
-        return managers.get(dimension);
+        return dimensionManagers.get(dimension);
     }
 
     public static void reloadSave(World world) {
-        managers.put(CommonUtils.getDimension(world), new SaveManager(world));
+        dimensionManagers.put(CommonUtils.getDimension(world), new SaveManager(world));
     }
 
     public static void unloadSave(int dimension) {
-        SaveManager m = managers.remove(dimension);
+        SaveManager m = dimensionManagers.remove(dimension);
         if (m != null) m.unload();
     }
 
     public static void resetWorld() {
         try {
-            if (managers.size() == 0) // dim 0 global save stuff
+            if (dimensionManagers.isEmpty()) // dim 0 global save stuff
             {
                 File etherdir = getEtherDir(CommonUtils.getSaveLocation(0));
                 File file = new File(etherdir, "fprop.dat");
@@ -571,8 +571,10 @@ public class SaveManager {
     }
 
     public static void unloadAll() {
-        for (SaveManager manager : managers.values()) manager.unload();
-        managers.clear();
+        for (SaveManager manager : dimensionManagers.values()) {
+            manager.unload();
+        }
+        dimensionManagers.clear();
     }
 
     private void unload() {

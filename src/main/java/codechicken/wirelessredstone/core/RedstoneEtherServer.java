@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -22,6 +21,7 @@ import codechicken.core.CommonUtils;
 import codechicken.core.ServerUtils;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
 public class RedstoneEtherServer extends RedstoneEther {
 
@@ -580,16 +580,18 @@ public class RedstoneEtherServer extends RedstoneEther {
         if (world.getTotalWorldTime() % 600 != 0) // 30 seconds
             return;
 
-        for (Entry<Integer, DimensionalEtherHash> entry : ethers.entrySet()) if (entry.getValue().jammerset != null)
-            for (Iterator<BlockCoord> iterator = entry.getValue().jammerset.iterator(); iterator.hasNext();)
-                jamNodesInAOEOfJammer(world, iterator.next(), entry.getKey());
+        for (Int2ObjectMap.Entry<DimensionalEtherHash> entry : ethers.int2ObjectEntrySet()) {
+            for (BlockCoord blockCoord : entry.getValue().jammerset) {
+                jamNodesInAOEOfJammer(world, blockCoord, entry.getIntKey());
+            }
+        }
     }
 
     private void updateJammedEntities(World world) {
         int dimension = CommonUtils.getDimension(world);
         for (Iterator<EntityLivingBase> iterator = jammedentities.keySet().iterator(); iterator.hasNext();) {
             EntityLivingBase entity = iterator.next();
-            int inactivetime = jammedentities.get(entity);
+            int inactivetime = jammedentities.getInt(entity);
             inactivetime--;
 
             if (entity == null || entity.isDead) // logged out or killed
@@ -631,8 +633,7 @@ public class RedstoneEtherServer extends RedstoneEther {
 
         int dimension = CommonUtils.getDimension(world);
         if (ethers.get(dimension) == null || ethers.get(dimension).jammerset == null) return;
-        for (Iterator<BlockCoord> iterator = ethers.get(dimension).jammerset.iterator(); iterator.hasNext();) {
-            BlockCoord jammer = iterator.next();
+        for (BlockCoord jammer : ethers.get(dimension).jammerset) {
             List<Entity> entitiesinrange = world.getEntitiesWithinAABBExcludingEntity(
                     null,
                     AxisAlignedBB.getBoundingBox(
@@ -642,8 +643,7 @@ public class RedstoneEtherServer extends RedstoneEther {
                             jammer.x + 10.5,
                             jammer.y + 10.5,
                             jammer.z + 10.5));
-            for (Iterator<Entity> iterator2 = entitiesinrange.iterator(); iterator2.hasNext();) {
-                Entity entity = iterator2.next();
+            for (Entity entity : entitiesinrange) {
                 if (!(entity instanceof EntityLivingBase)) continue;
 
                 if (entity instanceof EntityPlayer) if (isPlayerJammed((EntityPlayer) entity)) continue;

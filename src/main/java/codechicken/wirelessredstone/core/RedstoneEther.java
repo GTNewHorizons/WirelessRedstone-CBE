@@ -3,8 +3,6 @@ package codechicken.wirelessredstone.core;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map.Entry;
 import java.util.Random;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -23,6 +21,10 @@ import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntIterator;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 public abstract class RedstoneEther {
 
@@ -50,7 +52,7 @@ public abstract class RedstoneEther {
 
     public final boolean remote;
     protected RedstoneEtherFrequency[] freqarray;
-    protected HashMap<Integer, DimensionalEtherHash> ethers = new HashMap<>();
+    protected Int2ObjectOpenHashMap<DimensionalEtherHash> ethers = new Int2ObjectOpenHashMap<>();
 
     protected int publicfrequencyend;
     protected int sharedfrequencyend;
@@ -58,9 +60,9 @@ public abstract class RedstoneEther {
 
     protected HashSet<WirelessReceivingDevice> receivingdevices = new HashSet<>();
     protected HashMap<String, boolean[]> playerJammedMap;
-    protected HashMap<Integer, String> privateFreqs;
+    protected Int2ObjectOpenHashMap<String> privateFreqs;
 
-    protected HashMap<EntityLivingBase, Integer> jammedentities;
+    protected Object2IntOpenHashMap<EntityLivingBase> jammedentities;
 
     public static final int numfreqs = 5000;
 
@@ -224,9 +226,9 @@ public abstract class RedstoneEther {
         for (int freq = 0; freq <= numfreqs; freq++) {
             freqarray[freq] = new RedstoneEtherFrequency(this, freq);
         }
-        jammedentities = new HashMap<>();
+        jammedentities = new Object2IntOpenHashMap<>();
         playerJammedMap = new HashMap<>();
-        privateFreqs = new HashMap<>();
+        privateFreqs = new Int2ObjectOpenHashMap<>();
     }
 
     protected void addEther(World world, int dimension) {
@@ -254,8 +256,7 @@ public abstract class RedstoneEther {
     }
 
     public boolean isPlayerJammed(EntityPlayer player) {
-        Integer timeout = jammedentities.get(player);
-        return timeout != null && timeout > 0;
+        return jammedentities.containsKey(player) && jammedentities.getInt(player) > 0;
     }
 
     public abstract void jamEntity(EntityLivingBase entity, boolean jam);
@@ -353,8 +354,8 @@ public abstract class RedstoneEther {
     }
 
     private void verifyPrivateFreqs() {
-        for (Iterator<Integer> iterator = privateFreqs.keySet().iterator(); iterator.hasNext();) {
-            int freq = iterator.next();
+        for (IntIterator iterator = privateFreqs.keySet().intIterator(); iterator.hasNext();) {
+            int freq = iterator.nextInt();
 
             if (freq <= publicfrequencyend || freq > sharedfrequencyend) {
                 iterator.remove();
@@ -420,9 +421,10 @@ public abstract class RedstoneEther {
     }
 
     public int getFreqColourId(int freq) {
-        if (freq == 0 || freqarray == null || freqarray[freq] == null) // sometimes render gets in before init on
-                                                                       // servers
+        // sometimes render gets in before init on servers
+        if (freq == 0 || freqarray == null || freqarray[freq] == null) {
             return -1;
+        }
 
         return freqarray[freq].getColourId();
     }
@@ -484,7 +486,7 @@ public abstract class RedstoneEther {
 
         for (int freq = 1; freq <= numfreqs; freq++) {
             String name = freqarray[freq].getName();
-            if (name == null || name.equals("")) {
+            if (name == null || name.isEmpty()) {
                 continue;
             }
             allnames.add(name);
@@ -505,8 +507,8 @@ public abstract class RedstoneEther {
 
     public ArrayList<Integer> getPrivateFrequencies(String username) {
         ArrayList<Integer> list = new ArrayList<>();
-        for (Entry<Integer, String> entry : privateFreqs.entrySet()) {
-            if (entry.getValue().equalsIgnoreCase(username)) list.add(entry.getKey());
+        for (Int2ObjectMap.Entry<String> entry : privateFreqs.int2ObjectEntrySet()) {
+            if (entry.getValue().equalsIgnoreCase(username)) list.add(entry.getIntKey());
         }
         return list;
     }
@@ -529,7 +531,7 @@ public abstract class RedstoneEther {
     }
 
     public void setFreqOwner(int freq, String username) {
-        if (username == null || username.equals("")) {
+        if (username == null || username.isEmpty()) {
             removeFreqOwner(freq);
         } else {
             privateFreqs.put(freq, username);
