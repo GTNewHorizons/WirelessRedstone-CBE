@@ -53,14 +53,9 @@ public class SaveManager {
     private static final Int2ObjectOpenHashMap<SaveManager> dimensionManagers = new Int2ObjectOpenHashMap<>();
 
     private final int largesectorsize = 256;
-    private final int largesectornodes = largesectorsize / 12;
     private final int smallsectorsize = 64;
-    private final int smallsectornodes = smallsectorsize / 12;
 
     private final int largesectoroffset = 32767;
-    private final int maxsmallnodes = 5;
-
-    private final int cleanuptimeneeded = 300 * 1000; // 5 min
 
     static {
         globalconfig = new ConfigFile(new File(CommonUtils.getMinecraftDir() + "/config", "WirelessRedstone.cfg"))
@@ -205,7 +200,8 @@ public class SaveManager {
     }
 
     private int getUnusedSector(int numnodes) {
-        boolean largesector = (numnodes > maxsmallnodes);
+        final int maxsmallnodes = 5;
+        final boolean largesector = (numnodes > maxsmallnodes);
         ArrayList<Boolean> usedsectors = largesector ? usedLargeSectors : usedSmallSectors;
 
         for (int i = 0; i < usedsectors.size(); i++)
@@ -287,6 +283,9 @@ public class SaveManager {
             int writtennodes;
             boolean largesector;
             int nodespersector;
+
+            final int largesectornodes = largesectorsize / 12;
+            final int smallsectornodes = smallsectorsize / 12;
 
             while (true) // sector following / creation loop
             {
@@ -435,6 +434,7 @@ public class SaveManager {
 
     public void removeTrailingSectors() {
         try {
+            final int cleanuptimeneeded = 300 * 1000; // 5 min
             if (lastcleanuptime != 0 && System.currentTimeMillis() - lastcleanuptime < cleanuptimeneeded) // 0 means
                                                                                                           // loading
             {
