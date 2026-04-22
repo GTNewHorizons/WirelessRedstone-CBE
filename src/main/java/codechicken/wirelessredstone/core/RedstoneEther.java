@@ -60,8 +60,6 @@ public abstract class RedstoneEther {
     protected HashMap<String, boolean[]> playerJammedMap;
     protected HashMap<Integer, String> privateFreqs;
 
-    protected int processingAddittions = Integer.MAX_VALUE;
-    protected HashMap<BlockCoord, Integer> backupmap;
     protected HashMap<EntityLivingBase, Integer> jammedentities;
 
     public static final int numfreqs = 5000;
@@ -114,8 +112,10 @@ public abstract class RedstoneEther {
 
     public static void loadServerWorld(World world) {
         int dimension = CommonUtils.getDimension(world);
-        if (serverEther == null) new RedstoneEtherServer().init(world);
-
+        if (serverEther == null) {
+            serverEther = new RedstoneEtherServer();
+            serverEther.init(world);
+        }
         serverEther.addEther(world, dimension);
     }
 
@@ -125,7 +125,8 @@ public abstract class RedstoneEther {
     }
 
     public static void loadClientEther(World world) {
-        new RedstoneEtherClient().init(world);
+        clientEther = new RedstoneEtherClient();
+        clientEther.init(world);
         clientEther.addEther(world, CommonUtils.getDimension(world));
     }
 
@@ -215,9 +216,6 @@ public abstract class RedstoneEther {
     }
 
     public void init(World world) {
-        if (world.isRemote) clientEther = (RedstoneEtherClient) this;
-        else serverEther = (RedstoneEtherServer) this;
-
         freqarray = new RedstoneEtherFrequency[numfreqs + 1];
         // it appears freq==0 is not supposed to happen
         // however under certain circumstance some device will end up being freq==0
