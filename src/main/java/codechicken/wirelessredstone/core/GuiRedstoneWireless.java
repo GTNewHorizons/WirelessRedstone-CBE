@@ -15,7 +15,7 @@ import codechicken.lib.util.LangProxy;
 
 public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUseable {
 
-    private static LangProxy lang = new LangProxy("wrcbe_core");
+    private static final LangProxy lang = new LangProxy("wrcbe_core");
     RedstoneEther ether = RedstoneEther.get(true);
 
     public GuiRedstoneWireless(InventoryPlayer inventoryplayer, ITileWireless tileentityredstonewireless) {

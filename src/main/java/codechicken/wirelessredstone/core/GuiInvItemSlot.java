@@ -10,7 +10,7 @@ import codechicken.core.gui.GuiWidget;
 
 public class GuiInvItemSlot extends GuiWidget {
 
-    private static RenderItem itemRenderer = new RenderItem();
+    private static final RenderItem itemRenderer = new RenderItem();
 
     protected ItemStack[] invitems;
     protected int[] invslotnumbers;

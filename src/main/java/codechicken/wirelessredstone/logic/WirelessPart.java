@@ -47,7 +47,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIconHitEffects, IFaceRedstonePart,
         JNormalOcclusion, JPartialOcclusion, JMicroShrinkRender {
 
-    private static Cuboid6[] nBoxes = new Cuboid6[6];
+    private static final Cuboid6[] nBoxes = new Cuboid6[6];
 
     static {
         Cuboid6 base = new Cuboid6(1 / 8D, 0, 1 / 8D, 7 / 8D, 1 / 8D, 7 / 8D);

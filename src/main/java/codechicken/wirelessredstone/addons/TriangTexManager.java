@@ -1,7 +1,5 @@
 package codechicken.wirelessredstone.addons;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 import net.minecraft.client.Minecraft;
@@ -15,28 +13,31 @@ import codechicken.lib.math.MathHelper;
 import codechicken.lib.render.ManagedTextureFX;
 import codechicken.lib.render.TextureUtils;
 import codechicken.wirelessredstone.core.RedstoneEther;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntIterator;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 
 public class TriangTexManager {
 
     private static Colour[] texRing = new Colour[256];
     private static Colour[] texGrad = new Colour[256];
-    private static int[] imageData = new int[256];
-    private static ManagedTextureFX[] textures = new ManagedTextureFX[256];
+    private static final int[] imageData = new int[256];
+    private static final ManagedTextureFX[] textures = new ManagedTextureFX[256];
 
-    private static ColourRGBA pr = new ColourRGBA(0xFF0000FF); // pointer colour redstone
-    private static ColourRGBA pb = new ColourRGBA(0x0000FFFF); // pointer colour blue
-    private static ColourRGBA pg = new ColourRGBA(0x808080FF); // pointer colour grey
-    private static ColourRGBA pd = new ColourRGBA(0x404040FF); // pointer colour dark grey
+    private static final ColourRGBA pr = new ColourRGBA(0xFF0000FF); // pointer colour redstone
+    private static final ColourRGBA pb = new ColourRGBA(0x0000FFFF); // pointer colour blue
+    private static final ColourRGBA pg = new ColourRGBA(0x808080FF); // pointer colour grey
+    private static final ColourRGBA pd = new ColourRGBA(0x404040FF); // pointer colour dark grey
 
-    private static HashMap<Integer, Integer> freqslotmap = new HashMap<Integer, Integer>(256);
-    private static LinkedList<Integer> freeslots = new LinkedList<Integer>();
-    private static HashSet<Integer> activetextures = new HashSet<Integer>(256);
-    private static HashSet<Integer> visibletextures = new HashSet<Integer>(256);
+    private static final Int2IntOpenHashMap freqslotmap = new Int2IntOpenHashMap(256);
+    private static final LinkedList<Integer> freeslots = new LinkedList<>();
+    private static final IntOpenHashSet activetextures = new IntOpenHashSet(256);
+    private static final IntOpenHashSet visibletextures = new IntOpenHashSet(256);
 
-    private static ColourRGBA[] pointercolours = new ColourRGBA[] { pb, pr, pr, pr, pr, pr, pr, pr, pb, pr, pr, pr, pb,
-            pb };
-    private static ColourRGBA[] pointersidecolours = new ColourRGBA[] { pg, pg, pg, pg, pg, pg, pd, pg, pd, pd, pd, pd,
-            pg, pg };
+    private static final ColourRGBA[] pointercolours = new ColourRGBA[] { pb, pr, pr, pr, pr, pr, pr, pr, pb, pr, pr,
+            pr, pb, pb };
+    private static final ColourRGBA[] pointersidecolours = new ColourRGBA[] { pg, pg, pg, pg, pg, pg, pd, pg, pd, pd,
+            pd, pd, pg, pg };
 
     static {
         for (int i = 1; i < textures.length; i++) freeslots.add(i);
@@ -64,8 +65,12 @@ public class TriangTexManager {
 
         visibletextures.add(freq);
 
-        Integer iconindex = freqslotmap.get(freq);
-        if (iconindex == null) iconindex = allocateSlot(freq);
+        final int iconindex;
+        if (!freqslotmap.containsKey(freq)) {
+            iconindex = allocateSlot(freq);
+        } else {
+            iconindex = freqslotmap.get(freq);
+        }
 
         return iconindex;
     }
@@ -130,8 +135,9 @@ public class TriangTexManager {
     }
 
     public static void processAllTextures() {
-        HashSet<Integer> wasActive = new HashSet<Integer>(activetextures);
-        for (int freq : visibletextures) {
+        IntOpenHashSet wasActive = new IntOpenHashSet(activetextures);
+        for (IntIterator it = visibletextures.intIterator(); it.hasNext();) {
+            int freq = it.nextInt();
             int slot = freqslotmap.get(freq);
             if (!wasActive.remove(freq)) {
                 RedstoneEtherAddons.client().setTriangRequired(Minecraft.getMinecraft().thePlayer, freq, true);
@@ -142,7 +148,8 @@ public class TriangTexManager {
             processTexture(freq, slot);
         }
 
-        for (int freq : wasActive) {
+        for (IntIterator it = wasActive.intIterator(); it.hasNext();) {
+            int freq = it.nextInt();
             RedstoneEtherAddons.client().setTriangRequired(Minecraft.getMinecraft().thePlayer, freq, false);
             freeslots.add(freqslotmap.get(freq));
             activetextures.remove(freq);

@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -22,6 +21,7 @@ import codechicken.core.CommonUtils;
 import codechicken.core.ServerUtils;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
 public class RedstoneEtherServer extends RedstoneEther {
 
@@ -78,7 +78,7 @@ public class RedstoneEtherServer extends RedstoneEther {
         int blockzmin = chunkz * 16;
         int blockzmax = blockzmin + 15;
 
-        ArrayList<BlockCoord> transmittingblocks = new ArrayList<BlockCoord>(ether.transmittingblocks.keySet());
+        ArrayList<BlockCoord> transmittingblocks = new ArrayList<>(ether.transmittingblocks.keySet());
 
         for (BlockCoord node : transmittingblocks) {
             if (node.x >= blockxmin && node.x <= blockxmax && node.z >= blockzmin && node.z <= blockzmax) {
@@ -295,9 +295,9 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     public void loadJammedFrequencies(String jammedString, String username) {
-        String freqranges[] = jammedString.split(",");
+        String[] freqranges = jammedString.split(",");
         for (int i = 0; i < freqranges.length; i++) {
-            String currentrange[] = freqranges[i].split("-");
+            String[] currentrange = freqranges[i].split("-");
             int startfreq;
             int endfreq;
             if (currentrange.length == 1) {
@@ -361,7 +361,7 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     private void sendFreqInfoTo(EntityPlayer player) {
-        ArrayList<Integer> freqsWithInfo = new ArrayList<Integer>();
+        ArrayList<Integer> freqsWithInfo = new ArrayList<>();
         for (int freq = 1; freq <= numfreqs; freq++) {
             if (!freqarray[freq].getName().equals("") || freqarray[freq].getColourId() != -1) freqsWithInfo.add(freq);
         }
@@ -370,7 +370,7 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     private void sendPrivateFreqsTo(EntityPlayer player) {
-        ArrayList<Integer> freqsWithOwners = new ArrayList<Integer>();
+        ArrayList<Integer> freqsWithOwners = new ArrayList<>();
         for (int freq = 1; freq <= numfreqs; freq++) {
             if (isFreqPrivate(freq)) freqsWithOwners.add(freq);
         }
@@ -379,7 +379,7 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     public TreeMap<Integer, Integer> getLoadedFrequencies() {
-        TreeMap<Integer, Integer> treemap = new TreeMap<Integer, Integer>();
+        TreeMap<Integer, Integer> treemap = new TreeMap<>();
         for (int freq = 1; freq <= numfreqs; freq++) {
             if (freqarray[freq].nodeCount() != 0) {
                 treemap.put(freq, freqarray[freq].getActiveTransmitters());
@@ -406,7 +406,7 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     public ArrayList<FreqCoord> getActiveTransmittersOnFreq(int freq, int dimension) {
-        ArrayList<FreqCoord> txnodes = new ArrayList<FreqCoord>();
+        ArrayList<FreqCoord> txnodes = new ArrayList<>();
         freqarray[freq].putActiveTransmittersInList(dimension, txnodes);
         return txnodes;
     }
@@ -421,7 +421,7 @@ public class RedstoneEtherServer extends RedstoneEther {
 
     public TreeSet<BlockCoord> getNodesInRangeofPoint(int dimension, Vector3 point, float range,
             boolean includejammed) {
-        TreeSet<BlockCoord> nodes = new TreeSet<BlockCoord>();
+        TreeSet<BlockCoord> nodes = new TreeSet<>();
         float rangePow2 = range * range;
         for (int freq = 1; freq <= numfreqs; freq++) {
             TreeMap<BlockCoord, Boolean> transmittermap = freqarray[freq].getTransmitters(dimension);
@@ -456,7 +456,7 @@ public class RedstoneEtherServer extends RedstoneEther {
 
     public TreeSet<BlockCoord> getNodesInRangeofNode(int dimension, BlockCoord block, float range,
             boolean includejammed) {
-        TreeSet<BlockCoord> nodes = new TreeSet<BlockCoord>();
+        TreeSet<BlockCoord> nodes = new TreeSet<>();
         float rangePow2 = range * range;
         for (int freq = 1; freq <= numfreqs; freq++) {
             TreeMap<BlockCoord, Boolean> transmittermap = freqarray[freq].getTransmitters(dimension);
@@ -580,16 +580,18 @@ public class RedstoneEtherServer extends RedstoneEther {
         if (world.getTotalWorldTime() % 600 != 0) // 30 seconds
             return;
 
-        for (Entry<Integer, DimensionalEtherHash> entry : ethers.entrySet()) if (entry.getValue().jammerset != null)
-            for (Iterator<BlockCoord> iterator = entry.getValue().jammerset.iterator(); iterator.hasNext();)
-                jamNodesInAOEOfJammer(world, iterator.next(), entry.getKey());
+        for (Int2ObjectMap.Entry<DimensionalEtherHash> entry : ethers.int2ObjectEntrySet()) {
+            for (BlockCoord blockCoord : entry.getValue().jammerset) {
+                jamNodesInAOEOfJammer(world, blockCoord, entry.getIntKey());
+            }
+        }
     }
 
     private void updateJammedEntities(World world) {
         int dimension = CommonUtils.getDimension(world);
         for (Iterator<EntityLivingBase> iterator = jammedentities.keySet().iterator(); iterator.hasNext();) {
             EntityLivingBase entity = iterator.next();
-            int inactivetime = jammedentities.get(entity);
+            int inactivetime = jammedentities.getInt(entity);
             inactivetime--;
 
             if (entity == null || entity.isDead) // logged out or killed
@@ -631,8 +633,7 @@ public class RedstoneEtherServer extends RedstoneEther {
 
         int dimension = CommonUtils.getDimension(world);
         if (ethers.get(dimension) == null || ethers.get(dimension).jammerset == null) return;
-        for (Iterator<BlockCoord> iterator = ethers.get(dimension).jammerset.iterator(); iterator.hasNext();) {
-            BlockCoord jammer = iterator.next();
+        for (BlockCoord jammer : ethers.get(dimension).jammerset) {
             List<Entity> entitiesinrange = world.getEntitiesWithinAABBExcludingEntity(
                     null,
                     AxisAlignedBB.getBoundingBox(
@@ -642,8 +643,7 @@ public class RedstoneEtherServer extends RedstoneEther {
                             jammer.x + 10.5,
                             jammer.y + 10.5,
                             jammer.z + 10.5));
-            for (Iterator<Entity> iterator2 = entitiesinrange.iterator(); iterator2.hasNext();) {
-                Entity entity = iterator2.next();
+            for (Entity entity : entitiesinrange) {
                 if (!(entity instanceof EntityLivingBase)) continue;
 
                 if (entity instanceof EntityPlayer) if (isPlayerJammed((EntityPlayer) entity)) continue;

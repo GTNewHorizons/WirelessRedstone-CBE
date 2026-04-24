@@ -28,15 +28,15 @@ import codechicken.wirelessredstone.core.WirelessTransmittingDevice;
 
 public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
 
-    private HashMap<String, AddonPlayerInfo> playerInfos = new HashMap<String, AddonPlayerInfo>();
+    private final HashMap<String, AddonPlayerInfo> playerInfos = new HashMap<>();
     /**
      * A list of trackers and the players who are 'tracking' them on their clients.
      */
-    private HashMap<EntityWirelessTracker, HashSet<EntityPlayerMP>> trackerPlayerMap = new HashMap<EntityWirelessTracker, HashSet<EntityPlayerMP>>();
+    private final HashMap<EntityWirelessTracker, HashSet<EntityPlayerMP>> trackerPlayerMap = new HashMap<>();
     /**
      * Trackers that are attached to players.
      */
-    private HashSet<EntityWirelessTracker> playerTrackers = new HashSet<EntityWirelessTracker>();
+    private final HashSet<EntityWirelessTracker> playerTrackers = new HashSet<>();
 
     public void setTriangRequired(EntityPlayer player, int freq, boolean required) {
         AddonPlayerInfo info = getPlayerInfo(player);
@@ -94,7 +94,7 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
         info.sniffer = new Sniffer(player);
         RedstoneEther.server().addReceivingDevice(info.sniffer);
 
-        byte ethercopy[] = new byte[625];
+        byte[] ethercopy = new byte[625];
         for (int freq = 1; freq <= 5000; freq++) {
             int arrayindex = (freq - 1) >> 3;
             int bit = (freq - 1) & 7;
@@ -144,8 +144,8 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
 
             updatePlayerMapData(player, world, mapdata, txnodes, devices);
 
-            TreeSet<FreqCoord> addednodes = new TreeSet<FreqCoord>(mapnodes.nodes);
-            TreeSet<FreqCoord> removednodes = new TreeSet<FreqCoord>();
+            TreeSet<FreqCoord> addednodes = new TreeSet<>(mapnodes.nodes);
+            TreeSet<FreqCoord> removednodes = new TreeSet<>();
 
             if (oldnodes.size() != 0) {
                 for (Iterator<FreqCoord> nodeiterator = oldnodes.iterator(); nodeiterator.hasNext();) {
@@ -171,8 +171,8 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
 
     private void updatePlayerMapData(EntityPlayer player, World world, MapData mapdata,
             Map<BlockCoord, TXNodeInfo> txnodes, Set<WirelessTransmittingDevice> devices) {
-        TreeSet<FreqCoord> mnodes = new TreeSet<FreqCoord>();
-        TreeSet<FreqCoord> mdevices = new TreeSet<FreqCoord>();
+        TreeSet<FreqCoord> mnodes = new TreeSet<>();
+        TreeSet<FreqCoord> mdevices = new TreeSet<>();
 
         int blockwidth = 1 << mapdata.scale;
         int minx = mapdata.xCenter - blockwidth * 64;
@@ -307,7 +307,7 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
     }
 
     public void addTracker(EntityWirelessTracker tracker) {
-        trackerPlayerMap.put(tracker, new HashSet<EntityPlayerMP>());
+        trackerPlayerMap.put(tracker, new HashSet<>());
 
         if (tracker.attachedPlayerName != null) playerTrackers.add(tracker);
     }
@@ -329,7 +329,7 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
 
     public void updateTracker(EntityWirelessTracker tracker) {
         HashSet<EntityPlayerMP> trackedPlayers = trackerPlayerMap.get(tracker);
-        if (trackedPlayers == null) trackerPlayerMap.put(tracker, trackedPlayers = new HashSet<EntityPlayerMP>());
+        if (trackedPlayers == null) trackerPlayerMap.put(tracker, trackedPlayers = new HashSet<>());
 
         for (EntityPlayerMP player : trackedPlayers) {
             WRAddonSPH.sendTrackerUpdatePacketTo(player, tracker);
@@ -343,7 +343,7 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
 
     public void processTrackers() {
         trackerTicks++;
-        HashSet<EntityPlayer> playerEntities = new HashSet<EntityPlayer>(ServerUtils.getPlayers());
+        HashSet<EntityPlayer> playerEntities = new HashSet<>(ServerUtils.getPlayers());
 
         boolean updateFree = trackerTicks % 5 == 0;
         boolean updateAttached = trackerTicks % 100 == 0;
@@ -353,7 +353,7 @@ public class RedstoneEtherServerAddons extends RedstoneEtherAddons {
             Entry<EntityWirelessTracker, HashSet<EntityPlayerMP>> entry = iterator.next();
 
             HashSet<EntityPlayerMP> trackedPlayers = entry.getValue();
-            HashSet<EntityPlayerMP> playersToTrack = new HashSet<EntityPlayerMP>();
+            HashSet<EntityPlayerMP> playersToTrack = new HashSet<>();
 
             EntityWirelessTracker tracker = entry.getKey();
             ChunkCoordIntPair chunk = new ChunkCoordIntPair(tracker.chunkCoordX, tracker.chunkCoordZ);

@@ -6,7 +6,7 @@ import codechicken.core.commands.CoreCommand;
 
 public class CommandFreq extends CoreCommand {
 
-    public static LinkedList<FreqParam> paramHandlers = new LinkedList<FreqParam>();
+    public static LinkedList<FreqParam> paramHandlers = new LinkedList<>();
 
     static {
         paramHandlers.add(new ParamScan());

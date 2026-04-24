@@ -122,31 +122,31 @@ public class WirelessBolt {
         public int splitno;
     }
 
-    ArrayList<Segment> segments = new ArrayList<Segment>();
+    ArrayList<Segment> segments = new ArrayList<>();
     Vector3 start;
     Vector3 end;
     BlockCoord target;
-    HashMap<Integer, Integer> splitparents = new HashMap<Integer, Integer>();
+    HashMap<Integer, Integer> splitparents = new HashMap<>();
 
     public double length;
     public int numsegments0;
     private int numsplits;
     private boolean finalized;
     private boolean canhittarget = true;
-    private Random rand;
+    private final Random rand;
     public long seed;
 
     public int particleAge;
     public int particleMaxAge;
     public boolean isDead;
-    private AxisAlignedBB boundingBox;
+    private final AxisAlignedBB boundingBox;
 
     public World world;
     private Entity wrapper;
-    private RedstoneEther ether;
+    private final RedstoneEther ether;
 
-    public static ArrayList<WirelessBolt> serverboltlist = new ArrayList<WirelessBolt>();
-    public static ArrayList<WirelessBolt> clientboltlist = new ArrayList<WirelessBolt>();
+    public static ArrayList<WirelessBolt> serverboltlist = new ArrayList<>();
+    public static ArrayList<WirelessBolt> clientboltlist = new ArrayList<>();
 
     public static final float speed = 3; // ticks per metre
     public static final int fadetime = 20;
@@ -205,7 +205,7 @@ public class WirelessBolt {
         }
 
         ArrayList<Segment> oldsegments = segments;
-        segments = new ArrayList<Segment>();
+        segments = new ArrayList<>();
 
         Segment prev = null;
 
@@ -341,7 +341,7 @@ public class WirelessBolt {
     }
 
     private void calculateCollisionAndDiffs() {
-        HashMap<Integer, Integer> lastactivesegment = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> lastactivesegment = new HashMap<>();
 
         Collections.sort(segments, new SegmentSorter());
 

@@ -113,7 +113,7 @@ public class GuiNameSlot extends GuiScrollSlot {
         return selectedslot == -1 ? "" : names.get(selectedslot);
     }
 
-    private ArrayList<String> names = new ArrayList<String>();
+    private ArrayList<String> names = new ArrayList<>();
     private String match = "";
     private int selectedslot = -1;
 }

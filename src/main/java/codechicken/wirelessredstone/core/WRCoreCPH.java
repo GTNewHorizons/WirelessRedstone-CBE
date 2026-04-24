@@ -14,7 +14,7 @@ import codechicken.lib.vec.Vector3;
 
 public class WRCoreCPH implements IClientPacketHandler {
 
-    public static List<IClientPacketHandler> delegates = new LinkedList<IClientPacketHandler>();
+    public static List<IClientPacketHandler> delegates = new LinkedList<>();
 
     @Override
     public void handlePacket(PacketCustom packet, Minecraft mc, INetHandlerPlayClient handler) {

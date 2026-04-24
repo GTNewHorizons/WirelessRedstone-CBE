@@ -12,7 +12,7 @@ public class RedstoneEtherClient extends RedstoneEther {
     @Override
     public void jamEntity(EntityLivingBase entity, boolean jam) {
         if (jam) jammedentities.put(entity, 1);
-        else jammedentities.remove(entity);
+        else jammedentities.removeInt(entity);
     }
 
     @Override

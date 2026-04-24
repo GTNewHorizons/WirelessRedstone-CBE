@@ -19,45 +19,13 @@ import codechicken.lib.vec.BlockCoord;
 
 public class RedstoneEtherFrequency {
 
-    public static class DelayedModification {
-
-        public DelayedModification(BlockCoord node, int i) {
-            coord = node;
-            function = i;
-        }
-
-        BlockCoord coord;
-        int function;
-    }
-
-    public class DimensionalNodeTracker {
-
-        public DimensionalNodeTracker(World world2) {
-            world = world2;
-            dimension = CommonUtils.getDimension(world2);
-        }
-
-        public TreeMap<BlockCoord, Boolean> transmittermap = new TreeMap<BlockCoord, Boolean>();
-        public TreeSet<BlockCoord> receiverset = new TreeSet<BlockCoord>();
-        public LinkedList<DelayedModification> temporarySet = new LinkedList<DelayedModification>();
-
-        public void setDirty() {
-            if (!isdirty) ((RedstoneEtherServer) ether).addFreqToSave(RedstoneEtherFrequency.this, dimension);
-            isdirty = true;
-        }
-
-        public World world;
-        public int dimension;
-        private boolean isdirty = false;
-    }
-
     private boolean powered;
-    private int freq;
-    private RedstoneEther ether;
+    private final int freq;
+    private final RedstoneEther ether;
 
-    private HashMap<Integer, DimensionalNodeTracker> nodetrackers = new HashMap<Integer, DimensionalNodeTracker>();
-    private HashMap<Integer, Integer> activeDimensions = new HashMap<Integer, Integer>();
-    private ArrayList<WirelessTransmittingDevice> transmittingdevices = new ArrayList<WirelessTransmittingDevice>();
+    private final HashMap<Integer, DimensionalNodeTracker> nodetrackers = new HashMap<>();
+    private final HashMap<Integer, Integer> activeDimensions = new HashMap<>();
+    private final ArrayList<WirelessTransmittingDevice> transmittingdevices = new ArrayList<>();
 
     private boolean useTemporarySet = false;
 
@@ -314,5 +282,36 @@ public class RedstoneEtherFrequency {
 
     public Map<Integer, Integer> getDimensionHash() {
         return Collections.unmodifiableMap(activeDimensions);
+    }
+
+    public static class DelayedModification {
+
+        final BlockCoord coord;
+        final int function;
+
+        public DelayedModification(BlockCoord node, int i) {
+            coord = node;
+            function = i;
+        }
+    }
+
+    public class DimensionalNodeTracker {
+
+        public final TreeMap<BlockCoord, Boolean> transmittermap = new TreeMap<>();
+        public final TreeSet<BlockCoord> receiverset = new TreeSet<>();
+        public final LinkedList<DelayedModification> temporarySet = new LinkedList<>();
+        public final World world;
+        public final int dimension;
+        private boolean isdirty = false;
+
+        public DimensionalNodeTracker(World world2) {
+            world = world2;
+            dimension = CommonUtils.getDimension(world2);
+        }
+
+        public void setDirty() {
+            if (!isdirty) ((RedstoneEtherServer) ether).addFreqToSave(RedstoneEtherFrequency.this, dimension);
+            isdirty = true;
+        }
     }
 }

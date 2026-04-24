@@ -10,7 +10,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,17 +21,18 @@ import codechicken.core.CommonUtils;
 import codechicken.lib.config.ConfigFile;
 import codechicken.lib.config.SimpleProperties;
 import codechicken.lib.vec.BlockCoord;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 public class SaveManager {
 
-    private RandomAccessFile freqMapFile;
-    private RandomAccessFile smallSectorFile;
-    private RandomAccessFile largeSectorFile;
+    private final RandomAccessFile freqMapFile;
+    private final RandomAccessFile smallSectorFile;
+    private final RandomAccessFile largeSectorFile;
     private RandomAccessFile rwfile;
 
     protected static SimpleProperties freqProp;
     protected static SimpleProperties generalProp;
-    private static ConfigFile globalconfig;
+    private static final ConfigFile globalconfig;
 
     private static File activeMapFile;
 
@@ -42,24 +42,20 @@ public class SaveManager {
 
     private long lastcleanuptime;
 
-    private int dimension;
+    private final int dimension;
 
-    private static ArrayList<Entry<Integer, Integer>>[] freqDimensionHashes = new ArrayList[RedstoneEther.numfreqs + 1];
+    private static final ArrayList<Entry<Integer, Integer>>[] freqDimensionHashes = new ArrayList[RedstoneEther.numfreqs
+            + 1];
     private static boolean hashChanged = false;
 
     private static boolean loadinginfo;
 
-    private static HashMap<Integer, SaveManager> managers = new HashMap<Integer, SaveManager>();
+    private static final Int2ObjectOpenHashMap<SaveManager> dimensionManagers = new Int2ObjectOpenHashMap<>();
 
     private final int largesectorsize = 256;
-    private final int largesectornodes = largesectorsize / 12;
     private final int smallsectorsize = 64;
-    private final int smallsectornodes = smallsectorsize / 12;
 
     private final int largesectoroffset = 32767;
-    private final int maxsmallnodes = 5;
-
-    private final int cleanuptimeneeded = 300 * 1000; // 5 min
 
     static {
         globalconfig = new ConfigFile(new File(CommonUtils.getMinecraftDir() + "/config", "WirelessRedstone.cfg"))
@@ -68,21 +64,21 @@ public class SaveManager {
     }
 
     public static SaveManager getInstance(int dimension) {
-        return managers.get(dimension);
+        return dimensionManagers.get(dimension);
     }
 
     public static void reloadSave(World world) {
-        managers.put(CommonUtils.getDimension(world), new SaveManager(world));
+        dimensionManagers.put(CommonUtils.getDimension(world), new SaveManager(world));
     }
 
     public static void unloadSave(int dimension) {
-        SaveManager m = managers.remove(dimension);
+        SaveManager m = dimensionManagers.remove(dimension);
         if (m != null) m.unload();
     }
 
     public static void resetWorld() {
         try {
-            if (managers.size() == 0) // dim 0 global save stuff
+            if (dimensionManagers.isEmpty()) // dim 0 global save stuff
             {
                 File etherdir = getEtherDir(CommonUtils.getSaveLocation(0));
                 File file = new File(etherdir, "fprop.dat");
@@ -204,7 +200,8 @@ public class SaveManager {
     }
 
     private int getUnusedSector(int numnodes) {
-        boolean largesector = (numnodes > maxsmallnodes);
+        final int maxsmallnodes = 5;
+        final boolean largesector = (numnodes > maxsmallnodes);
         ArrayList<Boolean> usedsectors = largesector ? usedLargeSectors : usedSmallSectors;
 
         for (int i = 0; i < usedsectors.size(); i++)
@@ -287,6 +284,9 @@ public class SaveManager {
             boolean largesector;
             int nodespersector;
 
+            final int largesectornodes = largesectorsize / 12;
+            final int smallsectornodes = smallsectorsize / 12;
+
             while (true) // sector following / creation loop
             {
                 seekSector(nextsector);
@@ -329,11 +329,11 @@ public class SaveManager {
     public void saveFreq(int freq, int activetransmitters, TreeMap<BlockCoord, Boolean> transmittermap,
             Map<Integer, Integer> dimensionHash) {
         try {
-            freqDimensionHashes[freq] = new ArrayList<Entry<Integer, Integer>>(dimensionHash.entrySet());
+            freqDimensionHashes[freq] = new ArrayList<>(dimensionHash.entrySet());
             hashChanged = true;
 
             int numnodes = 0;
-            ArrayList<BlockCoord> nodes = new ArrayList<BlockCoord>(activetransmitters);
+            ArrayList<BlockCoord> nodes = new ArrayList<>(activetransmitters);
 
             for (Iterator<BlockCoord> iterator = transmittermap.keySet().iterator(); iterator.hasNext()
                     && numnodes < activetransmitters;) {
@@ -383,13 +383,13 @@ public class SaveManager {
             throw new RuntimeException(e);
         }
 
-        usedSmallSectors = new ArrayList<Boolean>(numsmallsectors);
+        usedSmallSectors = new ArrayList<>(numsmallsectors);
         for (int i = 0; i < numsmallsectors; i++) // intialize array
         {
             usedSmallSectors.add(false);
         }
 
-        usedLargeSectors = new ArrayList<Boolean>(numlargesectors);
+        usedLargeSectors = new ArrayList<>(numlargesectors);
         for (int i = 0; i < numlargesectors; i++) // intialize array
         {
             usedLargeSectors.add(false);
@@ -434,6 +434,7 @@ public class SaveManager {
 
     public void removeTrailingSectors() {
         try {
+            final int cleanuptimeneeded = 300 * 1000; // 5 min
             if (lastcleanuptime != 0 && System.currentTimeMillis() - lastcleanuptime < cleanuptimeneeded) // 0 means
                                                                                                           // loading
             {
@@ -570,8 +571,10 @@ public class SaveManager {
     }
 
     public static void unloadAll() {
-        for (SaveManager manager : managers.values()) manager.unload();
-        managers.clear();
+        for (SaveManager manager : dimensionManagers.values()) {
+            manager.unload();
+        }
+        dimensionManagers.clear();
     }
 
     private void unload() {

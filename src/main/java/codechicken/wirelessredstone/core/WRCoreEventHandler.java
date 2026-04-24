@@ -16,6 +16,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -39,6 +40,11 @@ public class WRCoreEventHandler {
         RedstoneEther.unloadServerWorld(event.world);
 
         if (!ServerUtils.mc().isServerRunning()) RedstoneEther.unloadServer();
+    }
+
+    @SubscribeEvent
+    public void onClientDisconnect(ClientDisconnectionFromServerEvent event) {
+        RedstoneEther.unloadClient();
     }
 
     @SubscribeEvent

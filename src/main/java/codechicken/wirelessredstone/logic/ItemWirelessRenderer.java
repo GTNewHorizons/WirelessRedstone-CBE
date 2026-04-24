@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 public class ItemWirelessRenderer implements IItemRenderer {
 
-    private WirelessPart[] renderParts = new WirelessPart[3];
+    private final WirelessPart[] renderParts = new WirelessPart[3];
 
     public ItemWirelessRenderer() {
         for (int i = 0; i < renderParts.length; i++) renderParts[i] = ItemWirelessPart.getPart(i);
