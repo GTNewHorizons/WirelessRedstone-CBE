@@ -7,6 +7,7 @@ import net.minecraftforge.event.world.WorldEvent.Load;
 
 import codechicken.core.ClientUtils;
 import codechicken.core.ServerUtils;
+import codechicken.wirelessredstone.core.RedstoneEther;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -61,9 +62,12 @@ public class WRAddonEventHandler {
 
     @SubscribeEvent
     public void clientTick(ClientTickEvent event) {
-        if (ClientUtils.inWorld()) {
-            if (event.phase == Phase.START) TriangTexManager.processAllTextures();
-            else RedstoneEtherAddons.client().tick();
+        if (ClientUtils.inWorld() && RedstoneEther.client() != null) {
+            if (event.phase == Phase.START) {
+                TriangTexManager.processAllTextures();
+            } else {
+                RedstoneEtherAddons.client().tick();
+            }
         }
     }
 
