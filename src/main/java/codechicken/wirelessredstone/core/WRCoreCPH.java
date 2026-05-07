@@ -7,12 +7,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.INetHandlerPlayClient;
+import net.minecraft.tileentity.TileEntity;
 
 import codechicken.lib.packet.PacketCustom;
 import codechicken.lib.packet.PacketCustom.IClientPacketHandler;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
-import net.minecraft.tileentity.TileEntity;
 
 public class WRCoreCPH implements IClientPacketHandler {
 
