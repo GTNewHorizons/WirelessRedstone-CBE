@@ -7,6 +7,7 @@ import net.minecraft.util.MovingObjectPosition;
 
 import codechicken.lib.data.MCDataInput;
 import codechicken.lib.data.MCDataOutput;
+import codechicken.lib.packet.PacketCustom;
 import codechicken.lib.vec.Vector3;
 import codechicken.wirelessredstone.core.ITileWireless;
 import codechicken.wirelessredstone.core.RedstoneEther;
@@ -90,7 +91,11 @@ public abstract class TransceiverPart extends WirelessPart implements ITileWirel
         if (super.activate(player, hit, held)) return true;
 
         if (hit.sideHit == (side() ^ 1) && !player.isSneaking()) {
-            if (world().isRemote) WirelessRedstoneCore.proxy.openTileWirelessGui(player, (ITileWireless) tile());
+            if (!world().isRemote) {
+                PacketCustom packet = new PacketCustom(WirelessRedstoneCore.channel, 11);
+                packet.writeCoord(x(), y(), z());
+                packet.sendToPlayer(player);
+            }
             return true;
         }
         return false;

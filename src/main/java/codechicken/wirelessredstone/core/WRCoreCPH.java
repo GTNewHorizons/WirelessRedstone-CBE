@@ -7,9 +7,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.INetHandlerPlayClient;
+import net.minecraft.tileentity.TileEntity;
 
 import codechicken.lib.packet.PacketCustom;
 import codechicken.lib.packet.PacketCustom.IClientPacketHandler;
+import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
 
 public class WRCoreCPH implements IClientPacketHandler {
@@ -59,6 +61,17 @@ public class WRCoreCPH implements IClientPacketHandler {
             case 10:
                 handleFreqOwnerList(packet);
                 break;
+            case 11:
+                handleOpenTileGui(world, player, packet);
+                break;
+        }
+    }
+
+    private void handleOpenTileGui(WorldClient world, EntityPlayer player, PacketCustom packet) {
+        BlockCoord pos = packet.readCoord();
+        TileEntity tile = world.getTileEntity(pos.x, pos.y, pos.z);
+        if (tile instanceof ITileWireless wirelessTile) {
+            WirelessRedstoneCore.proxy.openTileWirelessGui(player, wirelessTile);
         }
     }
 
