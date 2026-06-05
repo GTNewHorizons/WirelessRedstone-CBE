@@ -39,7 +39,7 @@ public class ReceiverPart extends TransceiverPart implements ITileReceiver {
     public void setActive(boolean on) {
         super.setActive(on);
         updateChange();
-        tile().notifyNeighborChange(Rotation.rotateSide(side(), rotation()));
+        if (tile() != null) tile().notifyNeighborChange(Rotation.rotateSide(side(), rotation()));
     }
 
     @Override

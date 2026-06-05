@@ -199,6 +199,7 @@ public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIc
     }
 
     public void updateChange() {
+        if (tile() == null) return;
         tile().markDirty();
         tile().notifyPartChange(this);
         sendDescUpdate();
