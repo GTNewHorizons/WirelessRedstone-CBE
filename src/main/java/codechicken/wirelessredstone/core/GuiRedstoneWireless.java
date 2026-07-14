@@ -253,7 +253,7 @@ public class GuiRedstoneWireless extends GuiScreenWidget implements IGuiRemoteUs
             toggle = true;
         } else if (ident.equals("setFreq")) {
             try {
-                selectedfreq = Integer.parseInt(textboxfreq.getText());
+                selectedfreq = Math.max(0, Math.min(Integer.parseInt(textboxfreq.getText()), RedstoneEther.numfreqs));
             } catch (NumberFormatException e) {
                 // revert to previous selected frequency if number format is wrong somehow
                 textboxfreq.setText(String.valueOf(selectedfreq));
