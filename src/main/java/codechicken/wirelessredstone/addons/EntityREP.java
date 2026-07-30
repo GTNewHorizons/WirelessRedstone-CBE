@@ -9,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
@@ -251,9 +252,15 @@ public class EntityREP extends Entity {
                 break;
             }
             BlockCoord node = iterator.next();
-            ITileWireless tile = (ITileWireless) RedstoneEther.getTile(worldObj, node);
+            // the ether keeps nodes whose chunk is unloaded, and jammed ones whose tile is already gone
+            TileEntity tile = RedstoneEther.getTile(worldObj, node);
+            if (!(tile instanceof ITileWireless)) continue;
 
-            WirelessBolt bolt = new WirelessBolt(worldObj, Vector3.fromEntity(this), tile, worldObj.rand.nextLong());
+            WirelessBolt bolt = new WirelessBolt(
+                    worldObj,
+                    Vector3.fromEntity(this),
+                    (ITileWireless) tile,
+                    worldObj.rand.nextLong());
             bolt.defaultFractal();
             bolt.finalizeBolt();
             boltsgen++;

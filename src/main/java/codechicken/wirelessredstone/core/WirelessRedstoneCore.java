@@ -4,6 +4,9 @@ import net.minecraft.command.CommandHandler;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import codechicken.core.launch.CodeChickenCorePlugin;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -11,6 +14,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 
 @Mod(
         modid = "WR-CBE|Core",
@@ -35,6 +39,8 @@ public class WirelessRedstoneCore {
     public static final String channel = "WRCBE";
     public static final String version = "GRADLETOKEN_VERSION";
 
+    public static final Logger LOGGER_CORE = LogManager.getLogger("WR-CBE|Core");
+
     @SidedProxy(
             clientSide = "codechicken.wirelessredstone.core.WRCoreClientProxy",
             serverSide = "codechicken.wirelessredstone.core.WRCoreProxy")
@@ -54,5 +60,11 @@ public class WirelessRedstoneCore {
     public void serverStarting(FMLServerStartingEvent event) {
         CommandHandler commandManager = (CommandHandler) event.getServer().getCommandManager();
         commandManager.registerCommand(new CommandFreq());
+    }
+
+    @EventHandler
+    public void serverStopped(FMLServerStoppedEvent event) {
+        WirelessBolt.serverboltlist.clear();
+        RedstoneEther.unloadServer();
     }
 }

@@ -10,8 +10,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -21,6 +21,7 @@ import codechicken.core.CommonUtils;
 import codechicken.lib.config.ConfigFile;
 import codechicken.lib.config.SimpleProperties;
 import codechicken.lib.vec.BlockCoord;
+import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 public class SaveManager {
@@ -44,8 +45,8 @@ public class SaveManager {
 
     private final int dimension;
 
-    private static final ArrayList<Entry<Integer, Integer>>[] freqDimensionHashes = new ArrayList[RedstoneEther.numfreqs
-            + 1];
+    /** Per frequency, a flattened [dimension, activetransmitters, ...] snapshot taken at save time. */
+    private static final int[][] freqDimensionHashes = new int[RedstoneEther.numfreqs + 1][];
     private static boolean hashChanged = false;
 
     private static boolean loadinginfo;
@@ -80,6 +81,9 @@ public class SaveManager {
         try {
             if (dimensionManagers.isEmpty()) // dim 0 global save stuff
             {
+                Arrays.fill(freqDimensionHashes, null);
+                hashChanged = false;
+
                 File etherdir = getEtherDir(CommonUtils.getSaveLocation(0));
                 File file = new File(etherdir, "fprop.dat");
                 if (!file.exists()) file.createNewFile();
@@ -327,9 +331,16 @@ public class SaveManager {
     }
 
     public void saveFreq(int freq, int activetransmitters, TreeMap<BlockCoord, Boolean> transmittermap,
-            Map<Integer, Integer> dimensionHash) {
+            Int2IntMap dimensionHash) {
         try {
-            freqDimensionHashes[freq] = new ArrayList<>(dimensionHash.entrySet());
+            // copy the counts out; the map keeps mutating between here and saveDimensionHash
+            int[] flattened = new int[dimensionHash.size() * 2];
+            int i = 0;
+            for (Int2IntMap.Entry entry : dimensionHash.int2IntEntrySet()) {
+                flattened[i++] = entry.getIntKey();
+                flattened[i++] = entry.getIntValue();
+            }
+            freqDimensionHashes[freq] = flattened;
             hashChanged = true;
 
             int numnodes = 0;
@@ -544,14 +555,14 @@ public class SaveManager {
             DataOutputStream dout = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(activeMapFile)));
 
             for (int freq = 1; freq <= RedstoneEther.numfreqs; freq++) {
-                ArrayList<Entry<Integer, Integer>> map = freqDimensionHashes[freq];
-                if (map == null) continue;
+                int[] flattened = freqDimensionHashes[freq];
+                if (flattened == null) continue;
 
-                for (Entry<Integer, Integer> entry : map) {
-                    if (entry.getValue() > 0) {
+                for (int i = 0; i < flattened.length; i += 2) {
+                    if (flattened[i + 1] > 0) {
                         dout.writeShort(freq);
-                        dout.writeInt(entry.getKey());
-                        dout.writeInt(entry.getValue());
+                        dout.writeInt(flattened[i]);
+                        dout.writeInt(flattened[i + 1]);
                     }
                 }
             }

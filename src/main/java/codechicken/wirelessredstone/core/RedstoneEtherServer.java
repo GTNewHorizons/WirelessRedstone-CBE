@@ -1,5 +1,7 @@
 package codechicken.wirelessredstone.core;
 
+import static codechicken.wirelessredstone.core.WirelessRedstoneCore.LOGGER_CORE;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,7 +23,6 @@ import codechicken.core.CommonUtils;
 import codechicken.core.ServerUtils;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Vector3;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
 public class RedstoneEtherServer extends RedstoneEther {
 
@@ -86,16 +87,13 @@ public class RedstoneEtherServer extends RedstoneEther {
                 int freq = ether.transmittingblocks.get(node).freq;
                 if (tile == null || !(tile instanceof ITileWireless) || ((ITileWireless) tile).getFreq() != freq) {
                     remTransmitter(world, node.x, node.y, node.z, freq);
-                    System.out.println(
-                            "Removed Badly Synced node at:" + node.x
-                                    + ","
-                                    + node.y
-                                    + ","
-                                    + node.z
-                                    + " on "
-                                    + freq
-                                    + " in dim"
-                                    + dimension);
+                    LOGGER_CORE.info(
+                            "Removed Badly Synced node at:{},{},{} on {} in dim{}",
+                            node.x,
+                            node.y,
+                            node.z,
+                            freq,
+                            dimension);
                 }
             }
         }
@@ -207,9 +205,12 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     public BlockCoord getClosestJammer(Vector3 point, int dimension) {
+        DimensionalEtherHash ether = ethers.get(dimension);
+        if (ether == null) return null;
+
         BlockCoord closestjammer = null;
         double closestdist = jammerrangePow2;
-        for (Iterator<BlockCoord> iterator = ethers.get(dimension).jammerset.iterator(); iterator.hasNext();) {
+        for (Iterator<BlockCoord> iterator = ether.jammerset.iterator(); iterator.hasNext();) {
             BlockCoord jammer = iterator.next();
             double distance = pythagorasPow2(jammer, point);
             if (distance < closestdist) {
@@ -525,11 +526,16 @@ public class RedstoneEtherServer extends RedstoneEther {
         ethers.get(dimension).freqsToSave.add(freq);
     }
 
+    /** Per-dimension work, fired once for every loaded world each tick. */
     public void tick(World world) {
         updateJammedNodes(world);
         randomJamTest(world);
-        updateJammedEntities(world);
         entityJamTest(world);
+    }
+
+    /** Work on state shared by all dimensions, fired once per server tick. */
+    public void serverTick() {
+        updateJammedEntities();
         unloadJammedMap();
     }
 
@@ -580,25 +586,29 @@ public class RedstoneEtherServer extends RedstoneEther {
         if (world.getTotalWorldTime() % 600 != 0) // 30 seconds
             return;
 
-        for (Int2ObjectMap.Entry<DimensionalEtherHash> entry : ethers.int2ObjectEntrySet()) {
-            for (BlockCoord blockCoord : entry.getValue().jammerset) {
-                jamNodesInAOEOfJammer(world, blockCoord, entry.getIntKey());
-            }
+        int dimension = CommonUtils.getDimension(world);
+        DimensionalEtherHash ether = ethers.get(dimension);
+        if (ether == null) return;
+
+        for (BlockCoord jammer : ether.jammerset) {
+            jamNodesInAOEOfJammer(world, jammer, dimension);
         }
     }
 
-    private void updateJammedEntities(World world) {
-        int dimension = CommonUtils.getDimension(world);
+    private void updateJammedEntities() {
         for (Iterator<EntityLivingBase> iterator = jammedentities.keySet().iterator(); iterator.hasNext();) {
             EntityLivingBase entity = iterator.next();
-            int inactivetime = jammedentities.getInt(entity);
-            inactivetime--;
 
             if (entity == null || entity.isDead) // logged out or killed
             {
                 iterator.remove();
                 continue;
             }
+
+            // the entity's own world, not whichever one happens to be ticking
+            World world = entity.worldObj;
+            int dimension = CommonUtils.getDimension(world);
+            int inactivetime = jammedentities.getInt(entity) - 1;
 
             if (inactivetime == 0 // time for unjam or rejam
                     || (inactivetime < 0 && inactivetime % jammerentitywait == 0) // time to jam from the sometime

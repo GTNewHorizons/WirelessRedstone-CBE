@@ -46,6 +46,10 @@ public abstract class RedstoneEtherAddons {
         serverManager = null;
     }
 
+    public static void unloadClient() {
+        clientManager = null;
+    }
+
     public static void loadClientManager() {
         clientManager = new RedstoneEtherClientAddons();
     }

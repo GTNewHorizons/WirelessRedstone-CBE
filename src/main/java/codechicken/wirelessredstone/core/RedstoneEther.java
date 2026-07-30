@@ -123,7 +123,7 @@ public abstract class RedstoneEther {
     }
 
     public static void unloadServer() {
-        if (serverEther != null && serverEther.ethers.isEmpty()) {
+        if (serverEther != null) {
             serverEther.unload();
             serverEther = null;
         }
@@ -208,12 +208,15 @@ public abstract class RedstoneEther {
     }
 
     protected void addEther(World world, int dimension) {
-        DimensionalEtherHash dimensionalEther = new DimensionalEtherHash();
-        ethers.put(dimension, dimensionalEther);
+        ethers.put(dimension, new DimensionalEtherHash(world));
+    }
 
-        for (int freq = 1; freq <= numfreqs; freq++) {
-            freqarray[freq].addEther(world, dimension);
-        }
+    /**
+     * @return the world of a loaded dimension, or null if that dimension isn't in the ether
+     */
+    World getWorld(int dimension) {
+        DimensionalEtherHash dimensionalEther = ethers.get(dimension);
+        return dimensionalEther == null ? null : dimensionalEther.world;
     }
 
     public void remEther(World world, int dimension) {
@@ -536,6 +539,8 @@ public abstract class RedstoneEther {
 
     public static class DimensionalEtherHash {
 
+        final World world;
+
         final TreeMap<BlockCoord, TXNodeInfo> transmittingblocks = new TreeMap<>();
         final TreeMap<BlockCoord, Integer> recievingblocks = new TreeMap<>();
         final HashSet<WirelessTransmittingDevice> transmittingdevices = new HashSet<>();
@@ -543,5 +548,9 @@ public abstract class RedstoneEther {
 
         final TreeSet<BlockCoord> jammerset = new TreeSet<>();
         final TreeMap<BlockCoord, Integer> jammednodes = new TreeMap<>();
+
+        public DimensionalEtherHash(World world) {
+            this.world = world;
+        }
     }
 }
