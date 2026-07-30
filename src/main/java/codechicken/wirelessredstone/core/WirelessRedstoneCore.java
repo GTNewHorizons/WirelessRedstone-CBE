@@ -4,6 +4,9 @@ import net.minecraft.command.CommandHandler;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import codechicken.core.launch.CodeChickenCorePlugin;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -34,6 +37,8 @@ public class WirelessRedstoneCore {
     public static DamageSource damagebolt;
     public static final String channel = "WRCBE";
     public static final String version = "GRADLETOKEN_VERSION";
+
+    public static final Logger LOGGER_CORE = LogManager.getLogger("WR-CBE|Core");
 
     @SidedProxy(
             clientSide = "codechicken.wirelessredstone.core.WRCoreClientProxy",

@@ -1,5 +1,7 @@
 package codechicken.wirelessredstone.core;
 
+import static codechicken.wirelessredstone.core.WirelessRedstoneCore.LOGGER_CORE;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -206,14 +208,12 @@ public class RedstoneEtherFrequency {
         if (tileentity instanceof ITileReceiver) {
             ((ITileReceiver) tileentity).setActive(on);
         } else {
-            System.out.println(
-                    "Null Receiver at:" + node.x
-                            + ","
-                            + node.y
-                            + ","
-                            + node.z
-                            + " in dim"
-                            + CommonUtils.getDimension(world));
+            LOGGER_CORE.info(
+                    "Null Receiver at:{},{},{} in dim{}",
+                    node.x,
+                    node.y,
+                    node.z,
+                    CommonUtils.getDimension(world));
         }
     }
 

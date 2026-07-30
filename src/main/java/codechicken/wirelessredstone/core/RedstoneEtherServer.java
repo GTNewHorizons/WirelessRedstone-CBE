@@ -1,5 +1,7 @@
 package codechicken.wirelessredstone.core;
 
+import static codechicken.wirelessredstone.core.WirelessRedstoneCore.LOGGER_CORE;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -85,16 +87,13 @@ public class RedstoneEtherServer extends RedstoneEther {
                 int freq = ether.transmittingblocks.get(node).freq;
                 if (tile == null || !(tile instanceof ITileWireless) || ((ITileWireless) tile).getFreq() != freq) {
                     remTransmitter(world, node.x, node.y, node.z, freq);
-                    System.out.println(
-                            "Removed Badly Synced node at:" + node.x
-                                    + ","
-                                    + node.y
-                                    + ","
-                                    + node.z
-                                    + " on "
-                                    + freq
-                                    + " in dim"
-                                    + dimension);
+                    LOGGER_CORE.info(
+                            "Removed Badly Synced node at:{},{},{} on {} in dim{}",
+                            node.x,
+                            node.y,
+                            node.z,
+                            freq,
+                            dimension);
                 }
             }
         }
