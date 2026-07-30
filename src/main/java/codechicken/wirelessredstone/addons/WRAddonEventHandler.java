@@ -6,7 +6,6 @@ import net.minecraftforge.event.world.ChunkEvent.Unload;
 import net.minecraftforge.event.world.WorldEvent.Load;
 
 import codechicken.core.ClientUtils;
-import codechicken.core.ServerUtils;
 import codechicken.wirelessredstone.core.RedstoneEther;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
@@ -17,6 +16,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -72,6 +72,11 @@ public class WRAddonEventHandler {
     }
 
     @SubscribeEvent
+    public void onClientDisconnect(ClientDisconnectionFromServerEvent event) {
+        RedstoneEtherAddons.unloadClient();
+    }
+
+    @SubscribeEvent
     public void onWorldLoad(Load event) {
         if (event.world.isRemote) RedstoneEtherAddons.loadClientManager();
         else RedstoneEtherAddons.loadServerWorld();
@@ -95,12 +100,5 @@ public class WRAddonEventHandler {
             RemoteTexManager.load(event.map);
             TriangTexManager.loadTextures();
         }
-    }
-
-    @SubscribeEvent
-    public void onWorldUnload(net.minecraftforge.event.world.WorldEvent.Unload event) {
-        if (event.world.isRemote) return;
-
-        if (!ServerUtils.mc().isServerRunning()) RedstoneEtherAddons.unloadServer();
     }
 }

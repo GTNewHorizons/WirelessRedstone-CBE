@@ -10,6 +10,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 
 @Mod(
         modid = "WR-CBE|Addons",
@@ -44,5 +45,10 @@ public class WirelessRedstoneAddons {
     @EventHandler
     public void init(FMLInitializationEvent event) {
         proxy.init();
+    }
+
+    @EventHandler
+    public void serverStopped(FMLServerStoppedEvent event) {
+        RedstoneEtherAddons.unloadServer();
     }
 }

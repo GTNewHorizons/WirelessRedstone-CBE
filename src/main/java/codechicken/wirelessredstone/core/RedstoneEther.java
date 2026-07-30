@@ -123,7 +123,7 @@ public abstract class RedstoneEther {
     }
 
     public static void unloadServer() {
-        if (serverEther != null && serverEther.ethers.isEmpty()) {
+        if (serverEther != null) {
             serverEther.unload();
             serverEther = null;
         }

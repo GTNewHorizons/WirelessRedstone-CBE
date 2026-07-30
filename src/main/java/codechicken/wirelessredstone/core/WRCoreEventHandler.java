@@ -6,7 +6,6 @@ import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
-import codechicken.core.ServerUtils;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -38,12 +37,11 @@ public class WRCoreEventHandler {
         if (event.world.isRemote) return;
 
         RedstoneEther.unloadServerWorld(event.world);
-
-        if (!ServerUtils.mc().isServerRunning()) RedstoneEther.unloadServer();
     }
 
     @SubscribeEvent
     public void onClientDisconnect(ClientDisconnectionFromServerEvent event) {
+        WirelessBolt.clientboltlist.clear();
         RedstoneEther.unloadClient();
     }
 

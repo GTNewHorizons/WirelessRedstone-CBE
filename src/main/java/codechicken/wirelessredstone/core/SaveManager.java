@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -80,6 +81,9 @@ public class SaveManager {
         try {
             if (dimensionManagers.isEmpty()) // dim 0 global save stuff
             {
+                Arrays.fill(freqDimensionHashes, null);
+                hashChanged = false;
+
                 File etherdir = getEtherDir(CommonUtils.getSaveLocation(0));
                 File file = new File(etherdir, "fprop.dat");
                 if (!file.exists()) file.createNewFile();

@@ -14,6 +14,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 
 @Mod(
         modid = "WR-CBE|Core",
@@ -59,5 +60,11 @@ public class WirelessRedstoneCore {
     public void serverStarting(FMLServerStartingEvent event) {
         CommandHandler commandManager = (CommandHandler) event.getServer().getCommandManager();
         commandManager.registerCommand(new CommandFreq());
+    }
+
+    @EventHandler
+    public void serverStopped(FMLServerStoppedEvent event) {
+        WirelessBolt.serverboltlist.clear();
+        RedstoneEther.unloadServer();
     }
 }
