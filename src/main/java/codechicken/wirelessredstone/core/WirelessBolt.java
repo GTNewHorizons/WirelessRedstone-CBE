@@ -26,7 +26,7 @@ import codechicken.lib.vec.Vector3;
 
 public class WirelessBolt {
 
-    public class BoltPoint {
+    public static class BoltPoint {
 
         public BoltPoint(Vector3 basepoint, Vector3 offsetvec) {
             this.point = basepoint.copy().add(offsetvec);
