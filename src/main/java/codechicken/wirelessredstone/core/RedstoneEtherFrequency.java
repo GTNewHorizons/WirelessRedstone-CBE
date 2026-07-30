@@ -1,13 +1,9 @@
 package codechicken.wirelessredstone.core;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -16,6 +12,11 @@ import net.minecraft.world.World;
 
 import codechicken.core.CommonUtils;
 import codechicken.lib.vec.BlockCoord;
+import it.unimi.dsi.fastutil.ints.Int2IntMap;
+import it.unimi.dsi.fastutil.ints.Int2IntMaps;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntIterator;
 
 public class RedstoneEtherFrequency {
 
@@ -27,8 +28,11 @@ public class RedstoneEtherFrequency {
     private final int freq;
     private final RedstoneEther ether;
 
-    private final HashMap<Integer, DimensionalNodeTracker> nodetrackers = new HashMap<>();
-    private final HashMap<Integer, Integer> activeDimensions = new HashMap<>();
+    // null until this frequency is actually used in some dimension. fastutil allocates its backing arrays eagerly,
+    // so holding empty ones for all 5000 frequencies would cost more than the boxing they save.
+    private Int2ObjectOpenHashMap<DimensionalNodeTracker> nodetrackers;
+    private Int2IntOpenHashMap activeDimensions;
+
     private final ArrayList<WirelessTransmittingDevice> transmittingdevices = new ArrayList<>();
 
     private boolean useTemporarySet = false;
@@ -42,7 +46,11 @@ public class RedstoneEtherFrequency {
     }
 
     public void remEther(int dimension) {
-        nodetrackers.remove(dimension);
+        if (nodetrackers != null) nodetrackers.remove(dimension);
+    }
+
+    private DimensionalNodeTracker getTracker(int dimension) {
+        return nodetrackers == null ? null : nodetrackers.get(dimension);
     }
 
     /**
@@ -51,12 +59,13 @@ public class RedstoneEtherFrequency {
      * @return null if the dimension isn't loaded
      */
     private DimensionalNodeTracker getOrCreateTracker(int dimension) {
-        DimensionalNodeTracker tracker = nodetrackers.get(dimension);
+        DimensionalNodeTracker tracker = getTracker(dimension);
         if (tracker == null) {
             World world = ether.getWorld(dimension);
             if (world == null) return null;
 
             tracker = new DimensionalNodeTracker(world);
+            if (nodetrackers == null) nodetrackers = new Int2ObjectOpenHashMap<>(2);
             nodetrackers.put(dimension, tracker);
         }
         return tracker;
@@ -67,7 +76,7 @@ public class RedstoneEtherFrequency {
     }
 
     public void saveFreq(int dimension) {
-        DimensionalNodeTracker nodetracker = nodetrackers.get(dimension);
+        DimensionalNodeTracker nodetracker = getTracker(dimension);
         if (nodetracker == null || !nodetracker.isdirty) {
             return;
         }
@@ -91,7 +100,7 @@ public class RedstoneEtherFrequency {
     }
 
     public void remTransmitter(World world, BlockCoord node, int dimension) {
-        DimensionalNodeTracker tracker = nodetrackers.get(dimension);
+        DimensionalNodeTracker tracker = getTracker(dimension);
         if (tracker == null) return;
 
         if (useTemporarySet) {
@@ -108,7 +117,7 @@ public class RedstoneEtherFrequency {
     }
 
     public void remReceiver(World world, BlockCoord node, int dimension) {
-        DimensionalNodeTracker tracker = nodetrackers.get(dimension);
+        DimensionalNodeTracker tracker = getTracker(dimension);
         if (tracker == null) return;
 
         if (useTemporarySet) {
@@ -163,6 +172,7 @@ public class RedstoneEtherFrequency {
 
     public void updateAllReceivers() {
         ((RedstoneEtherServer) ether).updateReceivingDevices(freq, powered);
+        if (nodetrackers == null) return;
 
         // snapshot: updating a receiver can call back in and create a tracker for another dimension
         for (DimensionalNodeTracker tracker : nodetrackers.values().toArray(new DimensionalNodeTracker[0])) {
@@ -222,11 +232,13 @@ public class RedstoneEtherFrequency {
     }
 
     public void setClean(int dimension) {
-        DimensionalNodeTracker tracker = nodetrackers.get(dimension);
+        DimensionalNodeTracker tracker = getTracker(dimension);
         if (tracker != null) tracker.isdirty = false;
     }
 
     public int nodeCount() {
+        if (nodetrackers == null) return 0;
+
         int count = 0;
         for (DimensionalNodeTracker tracker : nodetrackers.values()) {
             count += tracker.transmittermap.size() + tracker.receiverset.size();
@@ -235,12 +247,12 @@ public class RedstoneEtherFrequency {
     }
 
     public TreeSet<BlockCoord> getReceivers(int dimension) {
-        DimensionalNodeTracker tracker = nodetrackers.get(dimension);
+        DimensionalNodeTracker tracker = getTracker(dimension);
         return tracker == null ? NO_RECEIVERS : tracker.receiverset;
     }
 
     public TreeMap<BlockCoord, Boolean> getTransmitters(int dimension) {
-        DimensionalNodeTracker tracker = nodetrackers.get(dimension);
+        DimensionalNodeTracker tracker = getTracker(dimension);
         return tracker == null ? NO_TRANSMITTERS : tracker.transmittermap;
     }
 
@@ -261,7 +273,7 @@ public class RedstoneEtherFrequency {
     }
 
     public void putActiveTransmittersInList(int dimension, ArrayList<FreqCoord> txnodes) {
-        DimensionalNodeTracker nodetracker = nodetrackers.get(dimension);
+        DimensionalNodeTracker nodetracker = getTracker(dimension);
         if (nodetracker == null) return;
 
         for (Iterator<BlockCoord> iterator = nodetracker.transmittermap.keySet().iterator(); iterator.hasNext();) {
@@ -276,16 +288,17 @@ public class RedstoneEtherFrequency {
      */
 
     public int getActiveTransmitters() {
+        if (activeDimensions == null) return 0;
+
         int num = 0;
-        for (Entry<Integer, Integer> entry : activeDimensions.entrySet()) {
-            num += entry.getValue();
+        for (IntIterator iterator = activeDimensions.values().iterator(); iterator.hasNext();) {
+            num += iterator.nextInt();
         }
         return num;
     }
 
     public int getActiveTransmittersInDim(int dim) {
-        Integer val = activeDimensions.get(dim);
-        return val == null ? 0 : val;
+        return activeDimensions == null ? 0 : activeDimensions.get(dim);
     }
 
     /**
@@ -294,8 +307,11 @@ public class RedstoneEtherFrequency {
     public void setActiveTransmittersInDim(int dim, int num) {
         // an absent dimension already counts as zero, and SaveManager doesn't persist zeroes either. Only update
         // entries that exist, so dimensions that never had a transmitter on this frequency cost nothing.
-        if (num != 0 || activeDimensions.containsKey(dim)) {
+        if (num != 0) {
+            if (activeDimensions == null) activeDimensions = new Int2IntOpenHashMap(2);
             activeDimensions.put(dim, num);
+        } else if (activeDimensions != null && activeDimensions.containsKey(dim)) {
+            activeDimensions.put(dim, 0);
         }
 
         if ((num == 0) == powered) // powered and setting 0 or not powered and setting >0
@@ -308,8 +324,8 @@ public class RedstoneEtherFrequency {
         }
     }
 
-    public Map<Integer, Integer> getDimensionHash() {
-        return Collections.unmodifiableMap(activeDimensions);
+    public Int2IntMap getDimensionHash() {
+        return activeDimensions == null ? Int2IntMaps.EMPTY_MAP : Int2IntMaps.unmodifiable(activeDimensions);
     }
 
     public static class DelayedModification {
