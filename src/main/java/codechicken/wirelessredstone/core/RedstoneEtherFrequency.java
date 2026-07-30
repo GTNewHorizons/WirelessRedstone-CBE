@@ -199,11 +199,21 @@ public class RedstoneEtherFrequency {
     public void updateAllReceivers(DimensionalNodeTracker tracker) {}
 
     public void updateReceiver(World world, BlockCoord node, boolean on) {
+        // receivers stay in the ether while their chunk is unloaded, and re-sync through addReceiver on world join
+        if (!world.blockExists(node.x, node.y, node.z)) return;
+
         TileEntity tileentity = RedstoneEther.getTile(world, node);
         if (tileentity instanceof ITileReceiver) {
             ((ITileReceiver) tileentity).setActive(on);
         } else {
-            System.out.println("Null Receiver");
+            System.out.println(
+                    "Null Receiver at:" + node.x
+                            + ","
+                            + node.y
+                            + ","
+                            + node.z
+                            + " in dim"
+                            + CommonUtils.getDimension(world));
         }
     }
 
