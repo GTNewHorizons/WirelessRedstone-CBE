@@ -19,6 +19,10 @@ import codechicken.lib.vec.BlockCoord;
 
 public class RedstoneEtherFrequency {
 
+    /** Returned for dimensions with no nodes on this frequency. Callers only ever read from them. */
+    private static final TreeMap<BlockCoord, Boolean> NO_TRANSMITTERS = new TreeMap<>();
+    private static final TreeSet<BlockCoord> NO_RECEIVERS = new TreeSet<>();
+
     private boolean powered;
     private final int freq;
     private final RedstoneEther ether;
@@ -37,12 +41,25 @@ public class RedstoneEtherFrequency {
         this.freq = freq;
     }
 
-    public void addEther(World world, int dimension) {
-        nodetrackers.put(dimension, new DimensionalNodeTracker(world));
-    }
-
     public void remEther(int dimension) {
         nodetrackers.remove(dimension);
+    }
+
+    /**
+     * Trackers are created on demand
+     *
+     * @return null if the dimension isn't loaded
+     */
+    private DimensionalNodeTracker getOrCreateTracker(int dimension) {
+        DimensionalNodeTracker tracker = nodetrackers.get(dimension);
+        if (tracker == null) {
+            World world = ether.getWorld(dimension);
+            if (world == null) return null;
+
+            tracker = new DimensionalNodeTracker(world);
+            nodetrackers.put(dimension, tracker);
+        }
+        return tracker;
     }
 
     public boolean isOn() {
@@ -61,72 +78,78 @@ public class RedstoneEtherFrequency {
     }
 
     public void addReceiver(World world, BlockCoord node, int dimension) {
+        DimensionalNodeTracker tracker = getOrCreateTracker(dimension);
+        if (tracker == null) return;
+
         if (useTemporarySet) {
-            nodetrackers.get(dimension).temporarySet.add(new DelayedModification(node, 1));
+            tracker.temporarySet.add(new DelayedModification(node, 1));
             return;
         }
 
-        nodetrackers.get(dimension).receiverset.add(node);
+        tracker.receiverset.add(node);
         updateReceiver(world, node, isOn());
     }
 
     public void remTransmitter(World world, BlockCoord node, int dimension) {
+        DimensionalNodeTracker tracker = nodetrackers.get(dimension);
+        if (tracker == null) return;
+
         if (useTemporarySet) {
-            nodetrackers.get(dimension).temporarySet.add(new DelayedModification(node, 2));
+            tracker.temporarySet.add(new DelayedModification(node, 2));
             return;
         }
 
-        Boolean wason = nodetrackers.get(dimension).transmittermap.get(node);
-        nodetrackers.get(dimension).transmittermap.remove(node);
+        Boolean wason = tracker.transmittermap.remove(node);
 
         if (wason != null && wason) {
             decrementActiveTransmitters(dimension);
-            nodetrackers.get(dimension).setDirty();
+            tracker.setDirty();
         }
     }
 
     public void remReceiver(World world, BlockCoord node, int dimension) {
+        DimensionalNodeTracker tracker = nodetrackers.get(dimension);
+        if (tracker == null) return;
+
         if (useTemporarySet) {
-            nodetrackers.get(dimension).temporarySet.add(new DelayedModification(node, 0));
+            tracker.temporarySet.add(new DelayedModification(node, 0));
             return;
         }
 
-        nodetrackers.get(dimension).receiverset.remove(node);
+        tracker.receiverset.remove(node);
     }
 
     public void loadTransmitter(BlockCoord node, int dimension) {
-        nodetrackers.get(dimension).transmittermap.put(node, true);
+        DimensionalNodeTracker tracker = getOrCreateTracker(dimension);
+        if (tracker == null) return;
+
+        tracker.transmittermap.put(node, true);
         incrementActiveTransmitters(dimension);
     }
 
     public void setTransmitter(World world, BlockCoord node, int dimension, boolean on) {
+        DimensionalNodeTracker tracker = getOrCreateTracker(dimension);
+        if (tracker == null) return;
+
         if (useTemporarySet) {
-            nodetrackers.get(dimension).temporarySet.add(new DelayedModification(node, 4 | (on ? 1 : 0)));
+            tracker.temporarySet.add(new DelayedModification(node, 4 | (on ? 1 : 0)));
             return;
         }
 
-        Boolean wasnodeon = nodetrackers.get(dimension).transmittermap.get(node);
-        boolean newtransmitter = wasnodeon == null; // if the get returned null the transmitter needsadding to the list
-
-        nodetrackers.get(dimension).transmittermap.put(node, on);
+        // if the put returned null the transmitter needed adding to the list
+        Boolean wasnodeon = tracker.transmittermap.put(node, on);
+        boolean newtransmitter = wasnodeon == null;
 
         if (!newtransmitter && (on == wasnodeon)) {
             return;
         }
 
-        if (newtransmitter) {
-            if (on) {
-                incrementActiveTransmitters(dimension);
-                nodetrackers.get(dimension).setDirty();
-            }
-        } else {
-            if (on) {
-                incrementActiveTransmitters(dimension);
-                nodetrackers.get(dimension).setDirty();
-            } else {
-                decrementActiveTransmitters(dimension);
-                nodetrackers.get(dimension).setDirty();
-            }
+        if (on) {
+            incrementActiveTransmitters(dimension);
+            tracker.setDirty();
+        } else if (!newtransmitter) {
+            decrementActiveTransmitters(dimension);
+            tracker.setDirty();
         }
     }
 
@@ -141,9 +164,9 @@ public class RedstoneEtherFrequency {
     public void updateAllReceivers() {
         ((RedstoneEtherServer) ether).updateReceivingDevices(freq, powered);
 
-        for (Entry<Integer, DimensionalNodeTracker> entry : nodetrackers.entrySet()) {
-            int dimension = entry.getKey();
-            DimensionalNodeTracker tracker = entry.getValue();
+        // snapshot: updating a receiver can call back in and create a tracker for another dimension
+        for (DimensionalNodeTracker tracker : nodetrackers.values().toArray(new DimensionalNodeTracker[0])) {
+            int dimension = tracker.dimension;
 
             useTemporarySet = true;
             for (BlockCoord coord : tracker.receiverset) {
@@ -199,23 +222,26 @@ public class RedstoneEtherFrequency {
     }
 
     public void setClean(int dimension) {
-        nodetrackers.get(dimension).isdirty = false;
+        DimensionalNodeTracker tracker = nodetrackers.get(dimension);
+        if (tracker != null) tracker.isdirty = false;
     }
 
     public int nodeCount() {
         int count = 0;
-        for (Entry<Integer, DimensionalNodeTracker> entry : nodetrackers.entrySet()) {
-            count += entry.getValue().transmittermap.size() + entry.getValue().receiverset.size();
+        for (DimensionalNodeTracker tracker : nodetrackers.values()) {
+            count += tracker.transmittermap.size() + tracker.receiverset.size();
         }
         return count;
     }
 
     public TreeSet<BlockCoord> getReceivers(int dimension) {
-        return nodetrackers.get(dimension).receiverset;
+        DimensionalNodeTracker tracker = nodetrackers.get(dimension);
+        return tracker == null ? NO_RECEIVERS : tracker.receiverset;
     }
 
     public TreeMap<BlockCoord, Boolean> getTransmitters(int dimension) {
-        return nodetrackers.get(dimension).transmittermap;
+        DimensionalNodeTracker tracker = nodetrackers.get(dimension);
+        return tracker == null ? NO_TRANSMITTERS : tracker.transmittermap;
     }
 
     public void addTransmittingDevice(WirelessTransmittingDevice device) {
@@ -236,6 +262,8 @@ public class RedstoneEtherFrequency {
 
     public void putActiveTransmittersInList(int dimension, ArrayList<FreqCoord> txnodes) {
         DimensionalNodeTracker nodetracker = nodetrackers.get(dimension);
+        if (nodetracker == null) return;
+
         for (Iterator<BlockCoord> iterator = nodetracker.transmittermap.keySet().iterator(); iterator.hasNext();) {
             BlockCoord node = iterator.next();
             if (nodetracker.transmittermap.get(node)) txnodes.add(new FreqCoord(node, freq));
@@ -257,18 +285,18 @@ public class RedstoneEtherFrequency {
 
     public int getActiveTransmittersInDim(int dim) {
         Integer val = activeDimensions.get(dim);
-        if (val == null) {
-            val = 0;
-            activeDimensions.put(dim, 0);
-        }
-        return val;
+        return val == null ? 0 : val;
     }
 
     /**
      * Note: Causes updates
      */
     public void setActiveTransmittersInDim(int dim, int num) {
-        activeDimensions.put(dim, num);
+        // an absent dimension already counts as zero, and SaveManager doesn't persist zeroes either. Only update
+        // entries that exist, so dimensions that never had a transmitter on this frequency cost nothing.
+        if (num != 0 || activeDimensions.containsKey(dim)) {
+            activeDimensions.put(dim, num);
+        }
 
         if ((num == 0) == powered) // powered and setting 0 or not powered and setting >0
         {
