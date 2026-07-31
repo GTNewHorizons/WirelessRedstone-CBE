@@ -80,16 +80,32 @@ public abstract class RedstoneEther {
 
     public void init(World world) {
         freqarray = new RedstoneEtherFrequency[numfreqs + 1];
+        jammedentities = new Object2IntOpenHashMap<>();
+        playerJammedMap = new HashMap<>();
+        privateFreqs = new Int2ObjectOpenHashMap<>();
+    }
+
+    protected RedstoneEtherFrequency getFreq(int freq) {
         // it appears freq==0 is not supposed to happen
         // however under certain circumstance some device will end up being freq==0
         // I don't quite have a good idea on how it ends up that way, so I will just
         // put freq==0 into use
-        for (int freq = 0; freq <= numfreqs; freq++) {
-            freqarray[freq] = new RedstoneEtherFrequency(this, freq);
+        if (freq < 0 || numfreqs < freq) {
+            throw new ArrayIndexOutOfBoundsException();
         }
-        jammedentities = new Object2IntOpenHashMap<>();
-        playerJammedMap = new HashMap<>();
-        privateFreqs = new Int2ObjectOpenHashMap<>();
+        final RedstoneEtherFrequency[] arr = freqarray;
+        if (arr[freq] != null) {
+            return arr[freq];
+        }
+        arr[freq] = new RedstoneEtherFrequency(this, freq);
+        return arr[freq];
+    }
+
+    protected boolean freqExists(int freq) {
+        if (freq < 0 || numfreqs < freq) {
+            return false;
+        }
+        return freqarray[freq] != null;
     }
 
     public static int pythagorasPow2(BlockCoord node1, BlockCoord node2) {
@@ -221,17 +237,24 @@ public abstract class RedstoneEther {
 
     public void remEther(World world, int dimension) {
         ethers.remove(dimension);
-        for (int freq = 1; freq <= numfreqs; freq++) freqarray[freq].remEther(dimension);
+        for (int freq = 1; freq <= numfreqs; freq++) {
+            if (this.freqExists(freq)) {
+                freqarray[freq].remEther(dimension);
+            }
+        }
     }
 
     public void loadTransmitter(int dimension, int x, int y, int z, int freq) {
         BlockCoord node = new BlockCoord(x, y, z);
         ethers.get(dimension).transmittingblocks.put(node, new TXNodeInfo(freq, true));
-        freqarray[freq].loadTransmitter(node, dimension);
+        getFreq(freq).loadTransmitter(node, dimension);
     }
 
     public boolean isFreqOn(int freq) {
-        return freqarray[freq].isOn();
+        if (freqExists(freq)) {
+            return freqarray[freq].isOn();
+        }
+        return false;
     }
 
     public boolean isPlayerJammed(EntityPlayer player) {
@@ -404,7 +427,6 @@ public abstract class RedstoneEther {
         if (freq == 0 || freqarray == null || freqarray[freq] == null) {
             return -1;
         }
-
         return freqarray[freq].getColourId();
     }
 
@@ -415,26 +437,30 @@ public abstract class RedstoneEther {
     }
 
     public void setFreqColour(int freq, int colourid) {
-        freqarray[freq].setColour(colourid);
+        getFreq(freq).setColour(colourid);
     }
 
     public String getFreqName(int freq) {
         if (freq == 0) {
             return null;
         }
-        return freqarray[freq].getName();
+        if (this.freqExists(freq)) {
+            return freqarray[freq].getName();
+        }
+        return "";
     }
 
     public void setFreqName(int freq, String name) {
-        freqarray[freq].setName(name);
+        getFreq(freq).setName(name);
     }
 
     public ArrayList<String> getMatchingAllowedNames(EntityPlayer player, String match) {
         ArrayList<String> allnames = new ArrayList<>();
 
         for (int freq = 1; freq <= numfreqs; freq++) {
+            if (!this.freqExists(freq)) continue;
             String name = freqarray[freq].getName();
-            if (name == null || name.equals("")
+            if (name == null || name.isEmpty()
                     || !canBroadcastOnFrequency(player, freq)
                     || name.length() < match.length()
                     || !name.substring(0, match.length()).equalsIgnoreCase(match)) {
@@ -450,8 +476,9 @@ public abstract class RedstoneEther {
         ArrayList<String> allnames = new ArrayList<>();
 
         for (int freq = 1; freq <= numfreqs; freq++) {
+            if (!this.freqExists(freq)) continue;
             String name = freqarray[freq].getName();
-            if (name == null || name.equals("") || !canBroadcastOnFrequency(player, freq)) {
+            if (name == null || name.isEmpty() || !canBroadcastOnFrequency(player, freq)) {
                 continue;
             }
             allnames.add(name);
@@ -464,6 +491,7 @@ public abstract class RedstoneEther {
         ArrayList<String> allnames = new ArrayList<>();
 
         for (int freq = 1; freq <= numfreqs; freq++) {
+            if (!this.freqExists(freq)) continue;
             String name = freqarray[freq].getName();
             if (name == null || name.isEmpty()) {
                 continue;
@@ -476,6 +504,7 @@ public abstract class RedstoneEther {
 
     public int getFreqByName(String slotname) {
         for (int freq = 1; freq <= numfreqs; freq++) {
+            if (!this.freqExists(freq)) continue;
             String name = freqarray[freq].getName();
             if (name != null && name.equals(slotname)) {
                 return freq;

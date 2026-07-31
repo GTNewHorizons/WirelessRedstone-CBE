@@ -232,7 +232,7 @@ public class RedstoneEtherFrequency {
     public void setName(String name) {
         this.name = name;
         if (!ether.remote && !SaveManager.isLoading()) {
-            if (name == null || name.equals("")) SaveManager.freqProp.removeProperty(freq + ".name");
+            if (name == null || name.isEmpty()) SaveManager.freqProp.removeProperty(freq + ".name");
             else SaveManager.freqProp.setProperty(freq + ".name", name);
         }
     }

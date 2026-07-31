@@ -113,7 +113,7 @@ public class RedstoneEtherServer extends RedstoneEther {
         TXNodeInfo info = ethers.get(dimension).transmittingblocks.get(node);
         if (info == null) ethers.get(dimension).transmittingblocks.put(node, new TXNodeInfo(freq, on));
         else info.on = on;
-        freqarray[freq].setTransmitter(world, node, dimension, on);
+        getFreq(freq).setTransmitter(world, node, dimension, on);
     }
 
     public void remTransmitter(World world, int x, int y, int z, int freq) {
@@ -126,7 +126,7 @@ public class RedstoneEtherServer extends RedstoneEther {
 
         ethers.get(dimension).jammednodes.remove(node);
         ethers.get(dimension).transmittingblocks.remove(node);
-        freqarray[freq].remTransmitter(world, node, dimension);
+        getFreq(freq).remTransmitter(world, node, dimension);
     }
 
     public void addReceiver(World world, int x, int y, int z, int freq) {
@@ -139,7 +139,7 @@ public class RedstoneEtherServer extends RedstoneEther {
             jamNodeSometime(world, node, dimension, freq);
         }
         ethers.get(dimension).recievingblocks.put(node, freq);
-        freqarray[freq].addReceiver(world, node, dimension);
+        getFreq(freq).addReceiver(world, node, dimension);
     }
 
     public void remReceiver(World world, int x, int y, int z, int freq) {
@@ -150,7 +150,7 @@ public class RedstoneEtherServer extends RedstoneEther {
 
         ethers.get(dimension).jammednodes.remove(node);
         ethers.get(dimension).recievingblocks.remove(node);
-        freqarray[freq].remReceiver(world, node, dimension);
+        getFreq(freq).remReceiver(world, node, dimension);
     }
 
     public void addJammer(World world, int x, int y, int z) {
@@ -232,8 +232,8 @@ public class RedstoneEtherServer extends RedstoneEther {
     public void jamNode(World world, BlockCoord node, int dimension, int freq) {
         ethers.get(dimension).jammednodes.put(node, getRandomTimeout(world.rand));
 
-        freqarray[freq].remTransmitter(world, node, dimension);
-        freqarray[freq].remReceiver(world, node, dimension);
+        getFreq(freq).remTransmitter(world, node, dimension);
+        getFreq(freq).remReceiver(world, node, dimension);
     }
 
     public void jamNode(World world, int x, int y, int z, int freq) {
@@ -255,17 +255,16 @@ public class RedstoneEtherServer extends RedstoneEther {
 
     public void jamNodesInAOEOfJammer(World world, BlockCoord jammer, int dimension) {
         for (int freq = 1; freq <= numfreqs; freq++) {
+            if (!this.freqExists(freq)) continue;
             TreeMap<BlockCoord, Boolean> transmittermap = freqarray[freq].getTransmitters(dimension);
-            for (Iterator<BlockCoord> iterator = transmittermap.keySet().iterator(); iterator.hasNext();) {
-                BlockCoord node = iterator.next();
+            for (BlockCoord node : transmittermap.keySet()) {
                 if (pythagorasPow2(node, jammer) < jammerrangePow2) {
                     jamNodeSometime(world, node, dimension, freq);
                 }
             }
 
             TreeSet<BlockCoord> receiverset = freqarray[freq].getReceivers(dimension);
-            for (Iterator<BlockCoord> iterator = receiverset.iterator(); iterator.hasNext();) {
-                BlockCoord node = iterator.next();
+            for (BlockCoord node : receiverset) {
                 if (pythagorasPow2(node, jammer) < jammerrangePow2) {
                     jamNodeSometime(world, node, dimension, freq);
                 }
@@ -342,7 +341,7 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     public void setFreqClean(int freq, int dimension) {
-        freqarray[freq].setClean(dimension);
+        getFreq(freq).setClean(dimension);
     }
 
     public void resetPlayer(EntityPlayer player) {
@@ -364,7 +363,10 @@ public class RedstoneEtherServer extends RedstoneEther {
     private void sendFreqInfoTo(EntityPlayer player) {
         ArrayList<Integer> freqsWithInfo = new ArrayList<>();
         for (int freq = 1; freq <= numfreqs; freq++) {
-            if (!freqarray[freq].getName().equals("") || freqarray[freq].getColourId() != -1) freqsWithInfo.add(freq);
+            if (!this.freqExists(freq)) continue;
+            if (!freqarray[freq].getName().isEmpty() || freqarray[freq].getColourId() != -1) {
+                freqsWithInfo.add(freq);
+            }
         }
 
         WRCoreSPH.sendFreqInfoTo(player, freqsWithInfo);
@@ -382,19 +384,21 @@ public class RedstoneEtherServer extends RedstoneEther {
     public TreeMap<Integer, Integer> getLoadedFrequencies() {
         TreeMap<Integer, Integer> treemap = new TreeMap<>();
         for (int freq = 1; freq <= numfreqs; freq++) {
+            if (!this.freqExists(freq)) continue;
             if (freqarray[freq].nodeCount() != 0) {
                 treemap.put(freq, freqarray[freq].getActiveTransmitters());
             }
         }
-
         return treemap;
     }
 
     public Map<BlockCoord, Boolean> getTransmittersOnFreq(int freq, int dimension) {
+        if (!this.freqExists(freq)) return Collections.emptyMap();
         return Collections.unmodifiableMap(freqarray[freq].getTransmitters(dimension));
     }
 
     public Collection<BlockCoord> getReceiversOnFreq(int freq, int dimension) {
+        if (!this.freqExists(freq)) return Collections.emptyList();
         return Collections.unmodifiableCollection(freqarray[freq].getReceivers(dimension));
     }
 
@@ -408,7 +412,7 @@ public class RedstoneEtherServer extends RedstoneEther {
 
     public ArrayList<FreqCoord> getActiveTransmittersOnFreq(int freq, int dimension) {
         ArrayList<FreqCoord> txnodes = new ArrayList<>();
-        freqarray[freq].putActiveTransmittersInList(dimension, txnodes);
+        getFreq(freq).putActiveTransmittersInList(dimension, txnodes);
         return txnodes;
     }
 
@@ -425,17 +429,16 @@ public class RedstoneEtherServer extends RedstoneEther {
         TreeSet<BlockCoord> nodes = new TreeSet<>();
         float rangePow2 = range * range;
         for (int freq = 1; freq <= numfreqs; freq++) {
+            if (!this.freqExists(freq)) continue;
             TreeMap<BlockCoord, Boolean> transmittermap = freqarray[freq].getTransmitters(dimension);
-            for (Iterator<BlockCoord> iterator = transmittermap.keySet().iterator(); iterator.hasNext();) {
-                BlockCoord node = iterator.next();
+            for (BlockCoord node : transmittermap.keySet()) {
                 if (pythagorasPow2(node, point) < rangePow2) {
                     nodes.add(node);
                 }
             }
 
             TreeSet<BlockCoord> receiverset = freqarray[freq].getReceivers(dimension);
-            for (Iterator<BlockCoord> iterator = receiverset.iterator(); iterator.hasNext();) {
-                BlockCoord node = iterator.next();
+            for (BlockCoord node : receiverset) {
                 if (pythagorasPow2(node, point) < rangePow2) {
                     nodes.add(node);
                 }
@@ -460,17 +463,16 @@ public class RedstoneEtherServer extends RedstoneEther {
         TreeSet<BlockCoord> nodes = new TreeSet<>();
         float rangePow2 = range * range;
         for (int freq = 1; freq <= numfreqs; freq++) {
+            if (!this.freqExists(freq)) continue;
             TreeMap<BlockCoord, Boolean> transmittermap = freqarray[freq].getTransmitters(dimension);
-            for (Iterator<BlockCoord> iterator = transmittermap.keySet().iterator(); iterator.hasNext();) {
-                BlockCoord node = iterator.next();
+            for (BlockCoord node : transmittermap.keySet()) {
                 if (pythagorasPow2(node, block) < rangePow2) {
                     nodes.add(node);
                 }
             }
 
             TreeSet<BlockCoord> receiverset = freqarray[freq].getReceivers(dimension);
-            for (Iterator<BlockCoord> iterator = receiverset.iterator(); iterator.hasNext();) {
-                BlockCoord node = iterator.next();
+            for (BlockCoord node : receiverset) {
                 if (pythagorasPow2(node, block) < rangePow2) {
                     nodes.add(node);
                 }
@@ -497,17 +499,18 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     public List<WirelessTransmittingDevice> getTransmittingDevicesOnFreq(int freq) {
+        if (!this.freqExists(freq)) return Collections.emptyList();
         return Collections.unmodifiableList(freqarray[freq].getTransmittingDevices());
     }
 
     public void addTransmittingDevice(WirelessTransmittingDevice device) {
         ethers.get(device.getDimension()).transmittingdevices.add(device);
-        freqarray[device.getFreq()].addTransmittingDevice(device);
+        getFreq(device.getFreq()).addTransmittingDevice(device);
     }
 
     public void removeTransmittingDevice(WirelessTransmittingDevice device) {
         ethers.get(device.getDimension()).transmittingdevices.remove(device);
-        freqarray[device.getFreq()].removeTransmittingDevice(device);
+        getFreq(device.getFreq()).removeTransmittingDevice(device);
     }
 
     public void addReceivingDevice(WirelessReceivingDevice device) {
@@ -519,7 +522,10 @@ public class RedstoneEtherServer extends RedstoneEther {
     }
 
     public void setDimensionTransmitterCount(int freq, int dimension, int count) {
-        freqarray[freq].setActiveTransmittersInDim(dimension, count);
+        if (count == 0 && !this.freqExists(freq)) {
+            return;
+        }
+        getFreq(freq).setActiveTransmittersInDim(dimension, count);
     }
 
     public void addFreqToSave(RedstoneEtherFrequency freq, int dimension) {
