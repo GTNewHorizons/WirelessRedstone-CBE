@@ -1,8 +1,10 @@
 package codechicken.wirelessredstone.core;
 
-import net.minecraft.client.Minecraft;
+import java.util.ArrayList;
+
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -12,7 +14,15 @@ import codechicken.wirelessredstone.core.WirelessBolt.Segment;
 
 public class RenderWirelessBolt {
 
+    private static final ResourceLocation glowstoneTexture = new ResourceLocation(
+            "wrcbe_core:textures/lightning_glowstone.png");
+    private static final ResourceLocation redstoneTexture = new ResourceLocation(
+            "wrcbe_core:textures/lightning_redstone.png");
+
     public static void render(float frame, Entity entity) {
+        ArrayList<WirelessBolt> bolts = WirelessBolt.clientboltlist;
+        if (bolts.isEmpty()) return;
+
         GL11.glPushMatrix();
         RenderUtils.translateToWorldCoords(entity, frame);
 
@@ -20,17 +30,21 @@ public class RenderWirelessBolt {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
+        double playerX = entity.posX;
+        double playerY = entity.posY + entity.getEyeHeight();
+        double playerZ = entity.posZ;
+
         final CCRenderState state = CCRenderState.instance();
         state.resetInstance();
         state.setBrightnessInstance(0xF000F0);
-        CCRenderState.changeTexture("wrcbe_core:textures/lightning_glowstone.png");
+        state.changeTexture(glowstoneTexture);
         state.startDrawingInstance(7);
-        for (WirelessBolt bolt : WirelessBolt.clientboltlist) renderBolt(bolt, 0);
+        for (int i = 0; i < bolts.size(); i++) renderBolt(bolts.get(i), 0, playerX, playerY, playerZ);
         state.drawInstance();
 
-        CCRenderState.changeTexture("wrcbe_core:textures/lightning_redstone.png");
+        state.changeTexture(redstoneTexture);
         state.startDrawingInstance(7);
-        for (WirelessBolt bolt : WirelessBolt.clientboltlist) renderBolt(bolt, 1);
+        for (int i = 0; i < bolts.size(); i++) renderBolt(bolts.get(i), 1, playerX, playerY, playerZ);
         state.drawInstance();
 
         GL11.glDisable(GL11.GL_BLEND);
@@ -39,7 +53,7 @@ public class RenderWirelessBolt {
         GL11.glPopMatrix();
     }
 
-    private static void renderBolt(WirelessBolt bolt, int pass) {
+    private static void renderBolt(WirelessBolt bolt, int pass, double camX, double camY, double camZ) {
         Tessellator t = Tessellator.instance;
         float boltage = bolt.particleAge < 0 ? 0 : (float) bolt.particleAge / (float) bolt.particleMaxAge;
         float mainalpha;
@@ -51,17 +65,18 @@ public class RenderWirelessBolt {
                 * bolt.numsegments0);
         int renderend = (int) ((bolt.particleAge + expandTime) / (float) expandTime * bolt.numsegments0);
 
-        for (Segment rendersegment : bolt.segments) {
+        ArrayList<Segment> segments = bolt.segments;
+        for (int i = 0; i < segments.size(); i++) {
+            Segment rendersegment = segments.get(i);
             if (rendersegment.segmentno < renderstart || rendersegment.segmentno > renderend) continue;
 
-            Entity viewEntity = Minecraft.getMinecraft().renderViewEntity;
             double startX = rendersegment.startpoint.point.x;
             double startY = rendersegment.startpoint.point.y;
             double startZ = rendersegment.startpoint.point.z;
 
-            double playerX = viewEntity.posX - startX;
-            double playerY = viewEntity.posY + viewEntity.getEyeHeight() - startY;
-            double playerZ = viewEntity.posZ - startZ;
+            double playerX = camX - startX;
+            double playerY = camY - startY;
+            double playerZ = camZ - startZ;
 
             double playerMag = Math.sqrt(playerX * playerX + playerY * playerY + playerZ * playerZ);
             double width = 0.025F * (playerMag / 5 + 1) * (1 + rendersegment.light) * 0.5F;
