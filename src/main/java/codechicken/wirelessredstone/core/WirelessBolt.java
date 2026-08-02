@@ -140,6 +140,7 @@ public class WirelessBolt {
     public int particleMaxAge;
     public boolean isDead;
     final AxisAlignedBB boundingBox;
+    RenderWirelessBolt.BoltRender boltCache;
 
     public World world;
     private Entity wrapper;
