@@ -3,7 +3,10 @@ package codechicken.wirelessredstone.core;
 import java.util.ArrayList;
 
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.culling.ClippingHelperImpl;
+import net.minecraft.client.renderer.culling.Frustrum;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -11,8 +14,13 @@ import org.lwjgl.opengl.GL11;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.RenderUtils;
 import codechicken.wirelessredstone.core.WirelessBolt.Segment;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class RenderWirelessBolt {
+
+    private static final Frustrum frustum = new Frustrum();
 
     private static final ResourceLocation glowstoneTexture = new ResourceLocation(
             "wrcbe_core:textures/lightning_glowstone.png");
@@ -23,6 +31,17 @@ public class RenderWirelessBolt {
         ArrayList<WirelessBolt> bolts = WirelessBolt.clientboltlist;
         if (bolts.isEmpty()) return;
 
+        double camX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * frame;
+        double camY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * frame;
+        double camZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * frame;
+
+        ClippingHelperImpl.getInstance();
+        frustum.setPosition(camX, camY, camZ);
+
+        double playerX = entity.posX;
+        double playerY = entity.posY + entity.getEyeHeight();
+        double playerZ = entity.posZ;
+
         GL11.glPushMatrix();
         RenderUtils.translateToWorldCoords(entity, frame);
 
@@ -30,27 +49,41 @@ public class RenderWirelessBolt {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        double playerX = entity.posX;
-        double playerY = entity.posY + entity.getEyeHeight();
-        double playerZ = entity.posZ;
-
         final CCRenderState state = CCRenderState.instance();
         state.resetInstance();
         state.setBrightnessInstance(0xF000F0);
         state.changeTexture(glowstoneTexture);
         state.startDrawingInstance(7);
-        for (int i = 0; i < bolts.size(); i++) renderBolt(bolts.get(i), 0, playerX, playerY, playerZ);
+        for (int i = 0; i < bolts.size(); i++) {
+            WirelessBolt bolt = bolts.get(i);
+            if (isVisible(bolt)) renderBolt(bolt, 0, playerX, playerY, playerZ);
+        }
         state.drawInstance();
 
         state.changeTexture(redstoneTexture);
         state.startDrawingInstance(7);
-        for (int i = 0; i < bolts.size(); i++) renderBolt(bolts.get(i), 1, playerX, playerY, playerZ);
+        for (int i = 0; i < bolts.size(); i++) {
+            WirelessBolt bolt = bolts.get(i);
+            if (isVisible(bolt)) renderBolt(bolt, 1, playerX, playerY, playerZ);
+        }
         state.drawInstance();
 
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glDepthMask(true);
 
         GL11.glPopMatrix();
+    }
+
+    private static boolean isVisible(WirelessBolt bolt) {
+        AxisAlignedBB box = bolt.boundingBox;
+        double margin = bolt.length;
+        return frustum.isBoxInFrustum(
+                box.minX - margin,
+                box.minY - margin,
+                box.minZ - margin,
+                box.maxX + margin,
+                box.maxY + margin,
+                box.maxZ + margin);
     }
 
     private static void renderBolt(WirelessBolt bolt, int pass, double camX, double camY, double camZ) {
@@ -165,8 +198,4 @@ public class RenderWirelessBolt {
             }
         }
     }
-
-    static double interpPosX;
-    static double interpPosY;
-    static double interpPosZ;
 }
