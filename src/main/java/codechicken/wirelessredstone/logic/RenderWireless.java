@@ -33,7 +33,7 @@ public class RenderWireless {
     private static MultiIconTransformation model_icont;
     private static final MultiIconTransformation[] base_icont = new MultiIconTransformation[2];
     private static final CCModel[][] models = new CCModel[3][24];
-
+    private static final ResourceLocation PEARL = new ResourceLocation("wrcbe_core", "textures/hedronmap.png");
     private static final LightModel lm = new LightModel().setAmbient(new Vector3(0.7, 0.7, 0.7))
             .addLight(new Light(new Vector3(0.2, 1, -0.7)).setDiffuse(new Vector3(0.3, 0.3, 0.3)))
             .addLight(new Light(new Vector3(-0.2, 1, 0.7)).setDiffuse(new Vector3(0.3, 0.3, 0.3)))
@@ -154,7 +154,7 @@ public class RenderWireless {
         GL11.glDisable(GL11.GL_LIGHTING);
         final CCRenderState state = CCRenderState.instance();
         state.resetInstance();
-        CCRenderState.changeTexture("wrcbe_core:textures/hedronmap.png");
+        CCRenderState.changeTexture(PEARL);
         state.pullLightmapInstance();
         final byte lightByte = (byte) (0xFF * light);
         final byte alpha = (byte) 0xFF;
