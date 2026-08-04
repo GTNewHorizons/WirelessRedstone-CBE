@@ -26,7 +26,6 @@ import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.Vertex5;
 import codechicken.lib.render.uv.MultiIconTransformation;
 import codechicken.lib.vec.Transformation;
-import codechicken.lib.vec.Translation;
 import codechicken.lib.vec.Vector3;
 
 public class RenderWireless {
