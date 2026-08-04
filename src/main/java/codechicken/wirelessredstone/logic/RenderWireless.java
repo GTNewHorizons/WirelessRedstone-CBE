@@ -112,14 +112,14 @@ public class RenderWireless {
         GL11.glTranslated(pos.x + center.x, pos.y + center.y, pos.z + center.z);
         p.rotationT().glApply();
 
-        renderFreq(p.getFreq());
+        renderFreq(p.getFreqText());
         GL11.glRotatef(180, 0, 1, 0);
-        renderFreq(p.getFreq());
+        renderFreq(p.getFreqText());
 
         GL11.glPopMatrix();
     }
 
-    private static void renderFreq(int freq) {
+    private static void renderFreq(String s) {
         float scale = 1 / 64F;
 
         GL11.glPushMatrix();
@@ -129,7 +129,6 @@ public class RenderWireless {
         GL11.glScalef(scale, scale, scale);
 
         FontRenderer font = Minecraft.getMinecraft().fontRenderer;
-        String s = Integer.toString(freq);
         GL11.glDepthMask(false);
         font.drawString(s, -font.getStringWidth(s) / 2, 0, 0);
         GL11.glDepthMask(true);
@@ -141,7 +140,7 @@ public class RenderWireless {
         GL11.glPushMatrix();
 
         GL11.glTranslated(pos.x, pos.y, pos.z);
-        p.rotationT().at(center).glApply();
+        p.rotationTAtCenter().glApply();
         final Vector3 pearlPos = p.getPearlPos();
         GL11.glTranslated(pearlPos.x, pearlPos.y, pearlPos.z);
         p.getPearlRotation().glApply();

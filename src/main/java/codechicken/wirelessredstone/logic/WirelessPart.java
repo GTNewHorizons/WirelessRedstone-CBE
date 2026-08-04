@@ -121,8 +121,23 @@ public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIc
         return 0;
     }
 
+    private static final Transformation redundantRotation = new RedundantTransformation();
+    private int rotationCacheKey = Integer.MIN_VALUE;
+    private Transformation rotationTransform;
+    private Transformation rotationTransformAtCenter;
+
     public Transformation rotationT() {
-        return sideOrientation(side(), rotation());
+        if (state != rotationCacheKey) {
+            rotationTransform = sideOrientation(side(), rotation());
+            rotationTransformAtCenter = rotationTransform.at(center);
+            rotationCacheKey = state;
+        }
+        return rotationTransform;
+    }
+
+    public Transformation rotationTAtCenter() {
+        rotationT();
+        return rotationTransformAtCenter;
     }
 
     @Override
@@ -242,7 +257,7 @@ public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIc
     public abstract Vector3 getPearlPos();
 
     public Transformation getPearlRotation() {
-        return new RedundantTransformation();
+        return redundantRotation;
     }
 
     public double getPearlScale() {

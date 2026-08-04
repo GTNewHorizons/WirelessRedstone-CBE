@@ -19,6 +19,11 @@ public abstract class TransceiverPart extends WirelessPart implements ITileWirel
 
     public byte deadmap;
     public int currentfreq;
+    private String freqText = "0";
+
+    String getFreqText() {
+        return freqText;
+    }
 
     @Override
     public int getFreq() {
@@ -29,6 +34,7 @@ public abstract class TransceiverPart extends WirelessPart implements ITileWirel
     public void setFreq(int newfreq) {
         removeFromEther();
         currentfreq = newfreq;
+        freqText = Integer.toString(newfreq);
         addToEther();
         if (disabled()) RedstoneEther.server().jamNode(world(), x(), y(), z(), newfreq);
         updateChange();
@@ -38,6 +44,7 @@ public abstract class TransceiverPart extends WirelessPart implements ITileWirel
     public void load(NBTTagCompound tag) {
         super.load(tag);
         currentfreq = tag.getInteger("freq");
+        freqText = Integer.toString(currentfreq);
         deadmap = tag.getByte("deadmap");
     }
 
@@ -58,6 +65,7 @@ public abstract class TransceiverPart extends WirelessPart implements ITileWirel
     public void readDesc(MCDataInput packet) {
         super.readDesc(packet);
         currentfreq = packet.readUShort();
+        freqText = Integer.toString(currentfreq);
     }
 
     @Override
