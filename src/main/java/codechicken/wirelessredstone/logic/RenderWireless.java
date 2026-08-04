@@ -102,7 +102,7 @@ public class RenderWireless {
         Transformation t = p.renderTransform();
         state.setPipelineInstance(t, base_icont[p.textureSet()], rlm);
         BlockRenderer.renderCuboid(p.baseRenderBounds, p.baseRenderMask);
-        models[p.modelId()][p.side() << 2 | p.rotation()].render(t, model_icont);
+        models[p.modelId()][p.side() << 2 | p.rotation()].render(p.renderTranslation(), model_icont);
     }
 
     public static void renderFreq(Vector3 pos, TransceiverPart p) {

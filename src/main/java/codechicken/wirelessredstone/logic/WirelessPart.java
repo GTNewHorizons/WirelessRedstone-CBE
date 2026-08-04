@@ -67,16 +67,23 @@ public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIc
     private TileMultipart renderKeyTile;
     private int renderKeyState = Integer.MIN_VALUE;
     private Transformation renderTransform;
+    private Translation renderKeyWorldTranslation;
 
     public Transformation renderTransform() {
         TileMultipart tile = tile();
         if (tile != renderKeyTile || state != renderKeyState) {
             renderKeyTile = tile;
             renderKeyState = state;
+            renderKeyWorldTranslation = tile == null ? null : new Translation(tile.xCoord, tile.yCoord, tile.zCoord);
             renderTransform = tile == null ? rotationTAtCenter()
-                    : rotationT().at(center).with(new Translation(tile.xCoord, tile.yCoord, tile.zCoord));
+                    : rotationT().at(center).with(renderKeyWorldTranslation);
         }
         return renderTransform;
+    }
+
+    public Translation renderTranslation() {
+        renderTransform();
+        return renderKeyWorldTranslation;
     }
 
     public int rotation() {
