@@ -100,8 +100,8 @@ public class RenderWireless {
         final CCRenderState state = CCRenderState.instance();
         state.setBrightnessInstance(p.world(), p.x(), p.y(), p.z());
 
-        Transformation t = new Translation(p.x(), p.y(), p.z());
-        state.setPipelineInstance(p.rotationT().at(center).with(t), base_icont[p.textureSet()], rlm);
+        Transformation t = p.renderTransform();
+        state.setPipelineInstance(t, base_icont[p.textureSet()], rlm);
         BlockRenderer.renderCuboid(p.baseRenderBounds, p.baseRenderMask);
         models[p.modelId()][p.side() << 2 | p.rotation()].render(t, model_icont);
     }

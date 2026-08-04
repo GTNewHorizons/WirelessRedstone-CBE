@@ -76,7 +76,7 @@ public class ReceiverPart extends TransceiverPart implements ITileReceiver {
 
     @Override
     public Vector3 getPearlPos() {
-        return new Vector3(0, getFloating() * 0.02, 0).apply(getPearlRotation()).add(0.5, 0.755, 0.545);
+        return pearlPos.set(0, getFloating() * 0.02, 0).apply(getPearlRotation()).add(0.5, 0.755, 0.545);
     }
 
     @Override
