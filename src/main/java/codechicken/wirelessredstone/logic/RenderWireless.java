@@ -85,7 +85,7 @@ public class RenderWireless {
         final CCRenderState state = CCRenderState.instance();
         state.resetInstance();
         state.useNormals = true;
-        state.pushLightmapInstance();
+        state.pullLightmapInstance();
         state.startDrawingInstance(7);
         state.setPipelineInstance(base_icont[0]);
         BlockRenderer.renderCuboid(WirelessPart.baseBounds(0), 0);
@@ -155,7 +155,7 @@ public class RenderWireless {
         final CCRenderState state = CCRenderState.instance();
         state.resetInstance();
         CCRenderState.changeTexture("wrcbe_core:textures/hedronmap.png");
-        state.pushLightmapInstance();
+        state.pullLightmapInstance();
         final byte lightByte = (byte) (0xFF * light);
         final byte alpha = (byte) 0xFF;
         final int colorI = (lightByte & 0xFF) << 24 | (lightByte & 0xFF) << 16
