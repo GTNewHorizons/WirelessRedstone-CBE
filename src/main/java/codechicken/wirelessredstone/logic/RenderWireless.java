@@ -163,7 +163,8 @@ public class RenderWireless {
                 | (alpha & 0xFF);
         state.setColourInstance(colorI);
         state.startDrawingInstance(4);
-        CCModelLibrary.icosahedron4.render();
+        state.setModelInstance(CCModelLibrary.icosahedron4);
+        state.renderInstance();
         state.drawInstance();
         GL11.glEnable(GL11.GL_LIGHTING);
 
