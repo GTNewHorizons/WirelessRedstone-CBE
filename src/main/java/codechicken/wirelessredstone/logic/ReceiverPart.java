@@ -17,6 +17,8 @@ import codechicken.wirelessredstone.core.RedstoneEther;
 
 public class ReceiverPart extends TransceiverPart implements ITileReceiver {
 
+    private static final Transformation PEARL_ROTATION = new Rotation(0.7854, 1, 0, 0);
+
     public static Cuboid6[] extensionBB = new Cuboid6[24];
 
     static {
@@ -74,12 +76,12 @@ public class ReceiverPart extends TransceiverPart implements ITileReceiver {
 
     @Override
     public Vector3 getPearlPos() {
-        return new Vector3(0, getFloating() * 0.02, 0).apply(getPearlRotation()).add(0.5, 0.755, 0.545);
+        return pearlPos.set(0, getFloating() * 0.02, 0).apply(getPearlRotation()).add(0.5, 0.755, 0.545);
     }
 
     @Override
     public Transformation getPearlRotation() {
-        return new Rotation(0.7854, 1, 0, 0);
+        return PEARL_ROTATION;
     }
 
     @Override

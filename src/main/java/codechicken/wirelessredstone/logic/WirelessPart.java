@@ -24,6 +24,7 @@ import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.RedundantTransformation;
 import codechicken.lib.vec.Rotation;
 import codechicken.lib.vec.Transformation;
+import codechicken.lib.vec.Translation;
 import codechicken.lib.vec.Vector3;
 import codechicken.microblock.FaceMicroClass;
 import codechicken.microblock.JMicroShrinkRender;
@@ -61,6 +62,29 @@ public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIc
     public Cuboid6 baseRenderBounds;
     public int baseRenderMask;
     protected int spinoffset;
+    protected final Vector3 pearlPos = new Vector3();
+
+    private TileMultipart renderKeyTile;
+    private int renderKeyState = Integer.MIN_VALUE;
+    private Transformation renderTransform;
+    private Translation renderKeyWorldTranslation;
+
+    public Transformation renderTransform() {
+        TileMultipart tile = tile();
+        if (tile != renderKeyTile || state != renderKeyState) {
+            renderKeyTile = tile;
+            renderKeyState = state;
+            renderKeyWorldTranslation = tile == null ? null : new Translation(tile.xCoord, tile.yCoord, tile.zCoord);
+            renderTransform = tile == null ? rotationTAtCenter()
+                    : rotationT().at(center).with(renderKeyWorldTranslation);
+        }
+        return renderTransform;
+    }
+
+    public Translation renderTranslation() {
+        renderTransform();
+        return renderKeyWorldTranslation;
+    }
 
     public int rotation() {
         return state & 3;
@@ -121,8 +145,23 @@ public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIc
         return 0;
     }
 
+    private static final Transformation redundantRotation = new RedundantTransformation();
+    private int rotationCacheKey = Integer.MIN_VALUE;
+    private Transformation rotationTransform;
+    private Transformation rotationTransformAtCenter;
+
     public Transformation rotationT() {
-        return sideOrientation(side(), rotation());
+        if (state != rotationCacheKey) {
+            rotationTransform = sideOrientation(side(), rotation());
+            rotationTransformAtCenter = rotationTransform.at(center);
+            rotationCacheKey = state;
+        }
+        return rotationTransform;
+    }
+
+    public Transformation rotationTAtCenter() {
+        rotationT();
+        return rotationTransformAtCenter;
     }
 
     @Override
@@ -242,7 +281,7 @@ public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIc
     public abstract Vector3 getPearlPos();
 
     public Transformation getPearlRotation() {
-        return new RedundantTransformation();
+        return redundantRotation;
     }
 
     public double getPearlScale() {
@@ -326,7 +365,7 @@ public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIc
     public void recalcBounds() {
         baseRenderBounds = getBounds().copy();
         baseRenderMask = MicroOcclusion.recalcBounds(this, baseRenderBounds);
-        baseRenderBounds = baseRenderBounds.apply(rotationT().at(center).inverse());
+        baseRenderBounds = baseRenderBounds.apply(rotationTAtCenter().inverse());
     }
 
     @Override

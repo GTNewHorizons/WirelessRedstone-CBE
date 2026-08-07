@@ -47,7 +47,7 @@ public class JammerPart extends WirelessPart implements ITileJammer {
 
     @Override
     public Vector3 getPearlPos() {
-        return new Vector3(0.5, 0.74 + getFloating() * 0.04, 5 / 16D);
+        return pearlPos.set(0.5, 0.74 + getFloating() * 0.04, 5 / 16D);
     }
 
     @Override
