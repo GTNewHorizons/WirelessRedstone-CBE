@@ -258,6 +258,9 @@ public abstract class RedstoneEther {
     }
 
     public boolean isPlayerJammed(EntityPlayer player) {
+        if (player == null || jammedentities == null) {
+            return false;
+        }
         return jammedentities.containsKey(player) && jammedentities.getInt(player) > 0;
     }
 
