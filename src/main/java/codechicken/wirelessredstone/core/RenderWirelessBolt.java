@@ -56,9 +56,8 @@ public class RenderWirelessBolt {
         state.startDrawingInstance(7);
         for (int i = 0; i < bolts.size(); i++) {
             WirelessBolt bolt = bolts.get(i);
-            BoltRender cache = bolt.boltCache;
-            if (cache == null) bolt.boltCache = cache = BoltRender.create(bolt);
-            if (isVisible(bolt)) renderBolt(bolt, cache, 0, playerX, playerY, playerZ);
+            BoltRender cache = visibleCache(bolt);
+            if (cache != null) renderBolt(bolt, cache, 0, playerX, playerY, playerZ);
         }
         state.drawInstance();
 
@@ -66,9 +65,8 @@ public class RenderWirelessBolt {
         state.startDrawingInstance(7);
         for (int i = 0; i < bolts.size(); i++) {
             WirelessBolt bolt = bolts.get(i);
-            BoltRender cache = bolt.boltCache;
-            if (cache == null) bolt.boltCache = cache = BoltRender.create(bolt);
-            if (isVisible(bolt)) renderBolt(bolt, cache, 1, playerX, playerY, playerZ);
+            BoltRender cache = visibleCache(bolt);
+            if (cache != null) renderBolt(bolt, cache, 1, playerX, playerY, playerZ);
         }
         state.drawInstance();
 
@@ -76,6 +74,15 @@ public class RenderWirelessBolt {
         GL11.glDepthMask(true);
 
         GL11.glPopMatrix();
+    }
+
+    /** @return the bolt's render cache, built on first use, or null if the bolt is off screen */
+    private static BoltRender visibleCache(WirelessBolt bolt) {
+        if (!isVisible(bolt)) return null;
+
+        BoltRender cache = bolt.boltCache;
+        if (cache == null) bolt.boltCache = cache = new BoltRender(bolt);
+        return cache;
     }
 
     private static boolean isVisible(WirelessBolt bolt) {
@@ -268,10 +275,6 @@ public class RenderWirelessBolt {
                 hasNext[i] = s.next == null ? 0 : 1;
                 segmentNo[i] = s.segmentno;
             }
-        }
-
-        static BoltRender create(WirelessBolt bolt) {
-            return new BoltRender(bolt);
         }
     }
 }
