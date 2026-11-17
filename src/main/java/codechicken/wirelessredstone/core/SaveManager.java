@@ -465,6 +465,7 @@ public class SaveManager {
             }
             largeSectorFile.setLength((lastusedsector + 1) * largesectorsize); // truncate the file
 
+            lastusedsector = -1;
             for (int i = 0; i < usedSmallSectors.size(); i++) {
                 if (usedSmallSectors.get(i)) {
                     lastusedsector = i;
