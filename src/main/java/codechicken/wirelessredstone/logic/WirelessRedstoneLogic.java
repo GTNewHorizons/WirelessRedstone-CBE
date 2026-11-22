@@ -11,7 +11,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(
         modid = "WR-CBE|Logic",
-        dependencies = "required-after:WR-CBE|Core;required-after:ForgeMultipart",
+        dependencies = "required-after:WR-CBE|Core;required-after:ForgeMultipart@[2.0.0,)",
         acceptedMinecraftVersions = "[1.7.10]",
         name = "WR-CBE Logic",
         version = WirelessRedstoneCore.version)
