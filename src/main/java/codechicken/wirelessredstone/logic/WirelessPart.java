@@ -336,6 +336,8 @@ public abstract class WirelessPart extends JCuboidPart implements TFacePart, JIc
     @Override
     public boolean renderStatic(Vector3 pos, int pass) {
         if (pass == 0) {
+            // Worldless FMP previews skip the callbacks that normally set these.
+            if (baseRenderBounds == null) recalcBounds();
             RenderWireless.renderWorld(this);
             return true;
         }
